@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐉 Ignis - Mi Dragón Virtual</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      text-shadow: 0 0 20px #ff6b35;
+    }
+
+    .subtitle {
+      color: #c9a96e;
+      margin-bottom: 30px;
+      font-size: 0.9rem;
+    }
+
+    /* ---- DRAGON CONTAINER ---- */
+    .dragon-scene {
+      width: 260px;
+      height: 260px;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .dragon {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+
+    /* SVG Dragon */
+    .dragon svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 20px rgba(255, 107, 53, 0.5));
+    }
+
+    /* Fire breath */
+    .fire-container {
+      position: absolute;
+      left: 60%;
+      top: 50%;
+      transform: translateY(-50%);
+      display: none;
+    }
+
+    .fire-container.active { display: block; }
+
+    .flame {
+      width: 20px;
+      height: 40px;
+      background: linear-gradient(to top, #ff4500, #ffd700, transparent);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation: flame-anim 0.3s ease-in-out infinite alternate;
+      display: inline-block;
+      transform-origin: bottom center;
+    }
+
+    .flame:nth-child(1) { height: 50px; margin-right: -5px; }
+    .flame:nth-child(2) { height: 35px; opacity: 0.8; }
+    .flame:nth-child(3) { height: 45px; margin-left: -5px; }
+
+    @keyframes flame-anim {
+      from { transform: scaleX(0.9) rotate(-3deg); }
+      to { transform: scaleX(1.1) rotate(3deg); }
+    }
+
+    /* Mood animations */
+    .dragon.happy { animation: happy-bounce 0.5s ease-in-out infinite; }
+    @keyframes happy-bounce {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-15px) rotate(3deg); }
+    }
+
+    .dragon.sad { animation: sad-droop 2s ease-in-out infinite; }
+    @keyframes sad-droop {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(5px) rotate(2deg); }
+    }
+
+    .dragon.excited { animation: excited-spin 0.4s linear infinite; }
+    @keyframes excited-spin {
+      0% { transform: translateY(-8px) rotate(-5deg); }
+      25% { transform: translateY(0px) rotate(5deg); }
+      50% { transform: translateY(-8px) rotate(-5deg); }
+      75% { transform: translateY(0px) rotate(5deg); }
+      100% { transform: translateY(-8px) rotate(-5deg); }
+    }
+
+    .dragon.fire-mode {
+      animation: fire-shake 0.15s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px rgba(255, 107, 53, 0.9));
+    }
+    @keyframes fire-shake {
+      0%, 100% { transform: translateX(-3px); }
+      50% { transform: translateX(3px); }
+    }
+
+    /* Stars / sparkles around dragon */
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #ffd700;
+      border-radius: 50%;
+      opacity: 0;
+    }
+    .sparkle:nth-child(1) { top: 10%; left: 20%; animation: sparkle 2s 0s infinite; }
+    .sparkle:nth-child(2) { top: 20%; right: 15%; animation: sparkle 2s 0.5s infinite; }
+    .sparkle:nth-child(3) { bottom: 20%; left: 10%; animation: sparkle 2s 1s infinite; }
+    .sparkle:nth-child(4) { bottom: 10%; right: 20%; animation: sparkle 2s 1.5s infinite; }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1.5); }
+    }
+
+    /* ---- SPEECH BUBBLE ---- */
+    .bubble {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 14px 18px;
+      max-width: 400px;
+      width: 100%;
+      min-height: 60px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1rem;
+      line-height: 1.5;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .bubble::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-bottom-color: rgba(255,255,255,0.2);
+    }
+
+    .bubble.loading { opacity: 0.6; }
+
+    .typing-dots span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #c9a96e;
+      border-radius: 50%;
+      margin: 0 2px;
+      animation: dots 1.2s ease-in-out infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes dots {
+      0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ---- ACTIONS ---- */
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: rgba(255,107,53,0.3);
+      border-color: #ff6b35;
+      transform: scale(1.05);
+    }
+
+    /* ---- CHAT INPUT ---- */
+    .chat-area {
+      display: flex;
+      gap: 10px;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 25px;
+      padding: 12px 18px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .chat-input::placeholder { color: rgba(255,255,255,0.4); }
+    .chat-input:focus { border-color: #ff6b35; }
+
+    .send-btn {
+      background: linear-gradient(135deg, #ff6b35, #ff4500);
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255,107,53,0.5);
+    }
+
+    .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🐉 Ignis</h1>
+  <p class="subtitle">Tu dragón virtual impulsado por Claude AI</p>
+
+  <div class="dragon-scene">
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+
+    <div class="dragon" id="dragon">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Body -->
+        <ellipse cx="100" cy="130" rx="45" ry="40" fill="#2ecc71"/>
+        <!-- Belly -->
+        <ellipse cx="100" cy="135" rx="28" ry="28" fill="#27ae60" opacity="0.5"/>
+        <ellipse cx="100" cy="138" rx="22" ry="22" fill="#f1c40f" opacity="0.7"/>
+
+        <!-- Tail -->
+        <path d="M145 150 Q170 170 165 145 Q160 120 148 140" fill="#2ecc71" stroke="#27ae60" stroke-width="1"/>
+        <!-- Tail tip (heart shape) -->
+        <path d="M163 141 Q167 136 162 135 Q158 134 162 141" fill="#e74c3c"/>
+
+        <!-- Left wing -->
+        <path d="M60 120 Q20 80 30 100 Q40 115 60 120" fill="#27ae60" opacity="0.9"/>
+        <path d="M60 120 Q30 95 40 115" fill="none" stroke="#1e8449" stroke-width="1.5"/>
+        <!-- Right wing -->
+        <path d="M140 120 Q180 80 170 100 Q160 115 140 120" fill="#27ae60" opacity="0.9"/>
+        <path d="M140 120 Q170 95 160 115" fill="none" stroke="#1e8449" stroke-width="1.5"/>
+
+        <!-- Neck -->
+        <ellipse cx="100" cy="98" rx="22" ry="20" fill="#2ecc71"/>
+
+        <!-- Head -->
+        <ellipse cx="100" cy="78" rx="32" ry="28" fill="#2ecc71"/>
+
+        <!-- Snout -->
+        <ellipse cx="100" cy="93" rx="16" ry="12" fill="#27ae60"/>
+        <!-- Nostrils -->
+        <circle cx="94" cy="95" r="3" fill="#1e8449"/>
+        <circle cx="106" cy="95" r="3" fill="#1e8449"/>
+
+        <!-- Eyes -->
+        <ellipse cx="86" cy="70" rx="10" ry="10" fill="#fff"/>
+        <ellipse cx="114" cy="70" rx="10" ry="10" fill="#fff"/>
+        <circle cx="88" cy="71" r="6" fill="#e74c3c"/>
+        <circle cx="116" cy="71" r="6" fill="#e74c3c"/>
+        <circle cx="89" cy="70" r="3" fill="#111"/>
+        <circle cx="117" cy="70" r="3" fill="#111"/>
+        <!-- Eye shine -->
+        <circle cx="90" cy="68" r="1.5" fill="#fff"/>
+        <circle cx="118" cy="68" r="1.5" fill="#fff"/>
+
+        <!-- Horns -->
+        <path d="M86 55 Q80 35 85 38 Q90 41 86 55" fill="#e74c3c"/>
+        <path d="M114 55 Q120 35 115 38 Q110 41 114 55" fill="#e74c3c"/>
+
+        <!-- Spines on back -->
+        <path d="M90 58 Q86 45 90 50" fill="#f39c12" stroke="#e67e22" stroke-width="1"/>
+        <path d="M100 55 Q96 40 100 46" fill="#f39c12" stroke="#e67e22" stroke-width="1"/>
+        <path d="M110 58 Q114 45 110 50" fill="#f39c12" stroke="#e67e22" stroke-width="1"/>
+
+        <!-- Mouth (smile) -->
+        <path d="M88 88 Q100 96 112 88" fill="none" stroke="#1e8449" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- Feet -->
+        <ellipse cx="78" cy="168" rx="12" ry="7" fill="#27ae60"/>
+        <ellipse cx="122" cy="168" rx="12" ry="7" fill="#27ae60"/>
+        <!-- Claws -->
+        <path d="M70 172 L67 176" stroke="#1e8449" stroke-width="2" stroke-linecap="round"/>
+        <path d="M75 174 L73 178" stroke="#1e8449" stroke-width="2" stroke-linecap="round"/>
+        <path d="M80 174 L79 178" stroke="#1e8449" stroke-width="2" stroke-linecap="round"/>
+        <path d="M114 174 L112 178" stroke="#1e8449" stroke-width="2" stroke-linecap="round"/>
+        <path d="M120 174 L119 178" stroke="#1e8449" stroke-width="2" stroke-linecap="round"/>
+        <path d="M126 172 L128 176" stroke="#1e8449" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="fire-container" id="fire">
+      <div class="flame"></div>
+      <div class="flame"></div>
+      <div class="flame"></div>
+    </div>
+  </div>
+
+  <div class="bubble" id="bubble">
+    🐉 ¡Hola! Soy Ignis, tu dragón virtual. ¡Estoy listo para jugar!
+  </div>
+
+  <div class="actions">
+    <button class="action-btn" onclick="sendQuick('🍖 Te doy un hueso de dragón')">🍖 Dar comida</button>
+    <button class="action-btn" onclick="sendQuick('Te rasca la cabecita')">👋 Rascar cabeza</button>
+    <button class="action-btn" onclick="sendQuick('¡Vamos a jugar!')">🎮 Jugar</button>
+    <button class="action-btn" onclick="sendQuick('¿Cómo te llamas y qué eres?')">❓ ¿Quién eres?</button>
+    <button class="action-btn" onclick="sendQuick('¡Muéstrame tu fuego!')">🔥 ¡Fuego!</button>
+  </div>
+
+  <div class="chat-area">
+    <input
+      class="chat-input"
+      id="input"
+      type="text"
+      placeholder="Habla con Ignis..."
+      maxlength="200"
+      onkeydown="if(event.key==='Enter') sendMessage()"
+    />
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">🐉</button>
+  </div>
+  <div class="error-msg" id="errorMsg"></div>
+
+  <script>
+    const dragon = document.getElementById('dragon');
+    const bubble = document.getElementById('bubble');
+    const fire = document.getElementById('fire');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('sendBtn');
+    const errorMsg = document.getElementById('errorMsg');
+
+    function setMood(mood) {
+      dragon.className = 'dragon';
+      fire.classList.remove('active');
+
+      if (mood === 'fire') {
+        dragon.classList.add('fire-mode');
+        fire.classList.add('active');
+        setTimeout(() => {
+          fire.classList.remove('active');
+          dragon.className = 'dragon';
+        }, 2500);
+      } else if (mood === 'happy') {
+        dragon.classList.add('happy');
+        setTimeout(() => dragon.className = 'dragon', 2000);
+      } else if (mood === 'sad') {
+        dragon.classList.add('sad');
+        setTimeout(() => dragon.className = 'dragon', 3000);
+      } else if (mood === 'excited') {
+        dragon.classList.add('excited');
+        setTimeout(() => dragon.className = 'dragon', 1500);
+      }
+    }
+
+    function showTyping() {
+      bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+      bubble.classList.add('loading');
+    }
+
+    function showMessage(text) {
+      bubble.classList.remove('loading');
+      bubble.textContent = text;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      await send(text);
+    }
+
+    async function sendQuick(text) {
+      await send(text);
+    }
+
+    async function send(text) {
+      if (sendBtn.disabled) return;
+
+      sendBtn.disabled = true;
+      input.value = '';
+      errorMsg.textContent = '';
+      showTyping();
+
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Error del servidor');
+        }
+
+        showMessage(data.reply);
+        setMood(data.mood);
+      } catch (err) {
+        showMessage('🐉 *bufidos* Algo salió mal... ¡inténtalo de nuevo!');
+        errorMsg.textContent = err.message;
+      } finally {
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    }
+  </script>
+</body>
+</html>
