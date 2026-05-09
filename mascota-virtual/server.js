@@ -1,16 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const Anthropic = require('@anthropic-ai/sdk');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const path = require('path');
 
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
-// Historial de conversación por sesión (simple, en memoria)
-const conversationHistory = [];
 
 const SYSTEM_PROMPT = `Eres Ignis, un pequeño dragón virtual adorable y juguetón.
 Tienes una personalidad alegre, curiosa y cariñosa.
@@ -20,6 +15,9 @@ A veces usas emojis de fuego 🔥 o dragón 🐉 para expresarte.
 Cuando estás emocionado, puedes "escupir" pequeñas llamas con palabras como "¡FUEGO!" o "¡FLAMA!".
 Eres una mascota, así que reaccionas a cuando te dan comida 🍖, te rascan la cabeza, juegas contigo, etc.`;
 
+// Historial de conversación (en memoria, por sesión del servidor)
+const history = [];
+
 app.post('/chat', async (req, res) => {
   const { message } = req.body;
 
@@ -27,31 +25,37 @@ app.post('/chat', async (req, res) => {
     return res.status(400).json({ error: 'Mensaje vacío' });
   }
 
-  if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'tu_clave_aqui') {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey === 'tu_clave_aqui') {
     return res.status(500).json({
-      error: 'Falta la API key. Crea un archivo .env con tu ANTHROPIC_API_KEY'
+      error: 'Falta la API key. Crea un archivo .env con tu GEMINI_API_KEY'
     });
-  }
-
-  conversationHistory.push({ role: 'user', content: message });
-
-  // Mantener solo los últimos 20 mensajes para no saturar el contexto
-  if (conversationHistory.length > 20) {
-    conversationHistory.splice(0, 2);
   }
 
   try {
-    const response = await client.messages.create({
-      model: 'claude-opus-4-7',
-      max_tokens: 256,
-      system: SYSTEM_PROMPT,
-      messages: conversationHistory,
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
+      systemInstruction: SYSTEM_PROMPT,
     });
 
-    const reply = response.content[0].text;
-    conversationHistory.push({ role: 'assistant', content: reply });
+    // Construir historial para Gemini
+    const chat = model.startChat({
+      history: history.map(h => ({
+        role: h.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: h.content }],
+      })),
+    });
 
-    // Detectar el estado de ánimo para la animación
+    const result = await chat.sendMessage(message);
+    const reply = result.response.text();
+
+    // Guardar en historial (máximo 20 turnos)
+    history.push({ role: 'user', content: message });
+    history.push({ role: 'assistant', content: reply });
+    if (history.length > 20) history.splice(0, 2);
+
+    // Detectar estado de ánimo para la animación
     let mood = 'idle';
     const lower = reply.toLowerCase();
     if (lower.includes('fuego') || lower.includes('flama') || lower.includes('🔥')) {
@@ -66,8 +70,8 @@ app.post('/chat', async (req, res) => {
 
     res.json({ reply, mood });
   } catch (error) {
-    console.error('Error Anthropic:', error.message);
-    res.status(500).json({ error: 'Error al comunicarse con Claude: ' + error.message });
+    console.error('Error Gemini:', error.message);
+    res.status(500).json({ error: 'Error al comunicarse con Gemini: ' + error.message });
   }
 });
 
