@@ -18,7 +18,7 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
 APP_NAME = "Deanp3"
-APP_VERSION = "1.2.0"
+APP_VERSION = "1.3.0"
 CLI_FLAG = "--spotdl-cli"
 EVENT_PREFIX = "@@EVT "
 FORMATS = ["mp3", "m4a", "flac", "opus", "ogg", "wav"]
@@ -247,6 +247,8 @@ class App(tk.Tk):
         self.counts = {"ok": 0, "skip": 0, "err": 0}
         self.last_error = ""
         self.youtube_blocked = False
+        self.retrying = False
+        self.failed = {}
 
         self.query_var = tk.StringVar()
         folder = cfg.get("folder") or default_music_dir()
@@ -256,6 +258,7 @@ class App(tk.Tk):
         self.quality_var = tk.StringVar(value=quality if quality in QUALITIES else "Automática")
         self.subfolder_var = tk.BooleanVar(value=cfg.get("subfolder", True))
         self.overwrite_var = tk.BooleanVar(value=cfg.get("overwrite", False))
+        self.fallback_var = tk.BooleanVar(value=cfg.get("fallback", True))
         self.cookies_var = tk.StringVar(value=cfg.get("cookies", ""))
         self.status_var = tk.StringVar(value="Listo para descargar.")
         self.count_var = tk.StringVar(value="")
@@ -379,6 +382,11 @@ class App(tk.Tk):
         ttk.Checkbutton(
             self.advanced, text="Volver a descargar canciones que ya existen", variable=self.overwrite_var
         ).grid(row=2, column=0, columnspan=4, sticky="w")
+        ttk.Checkbutton(
+            self.advanced,
+            text="Si YouTube falla, buscar la canción en SoundCloud y Bandcamp",
+            variable=self.fallback_var,
+        ).grid(row=3, column=0, columnspan=4, sticky="w", pady=(4, 0))
 
         # Progreso general
         prog = ttk.Frame(root)
@@ -499,6 +507,7 @@ class App(tk.Tk):
             "quality": self.quality_var.get(),
             "subfolder": self.subfolder_var.get(),
             "overwrite": self.overwrite_var.get(),
+            "fallback": self.fallback_var.get(),
             "cookies": self.cookies_var.get(),
             "theme": self.theme,
         })
@@ -549,6 +558,8 @@ class App(tk.Tk):
         self.counts = {"ok": 0, "skip": 0, "err": 0}
         self.last_error = ""
         self.youtube_blocked = False
+        self.retrying = False
+        self.failed = {}
         self.cancelled = False
         self.progress["value"] = 0
         self.count_var.set("")
@@ -562,6 +573,7 @@ class App(tk.Tk):
             "bitrate": QUALITIES.get(self.quality_var.get(), "auto"),
             "subfolder": self.subfolder_var.get(),
             "overwrite": self.overwrite_var.get(),
+            "fallback": self.fallback_var.get(),
             "cookies": cookies,
         }
         threading.Thread(target=self._worker, args=(queries, settings), daemon=True).start()
@@ -589,10 +601,17 @@ class App(tk.Tk):
                 continue
             if line.startswith(EVENT_PREFIX):
                 try:
-                    self.events.put(json.loads(line[len(EVENT_PREFIX):]))
-                    continue
+                    ev = json.loads(line[len(EVENT_PREFIX):])
                 except ValueError:
-                    pass
+                    ev = None
+                if ev is not None:
+                    if ev.get("type") == "song":
+                        if ev["status"] == "Error":
+                            self.failed[ev["id"]] = ev["name"]
+                        elif ev["status"] in ("Done", "Skipped"):
+                            self.failed.pop(ev["id"], None)
+                    self.events.put(ev)
+                    continue
             self.events.put({"type": "log", "text": line})
         code = self.process.wait()
         self.process = None
@@ -630,7 +649,15 @@ class App(tk.Tk):
             ]
             if s["cookies"]:
                 args += ["--cookie-file", s["cookies"]]
+            self.failed = {}
             code = self._run(args)
+
+            # Reintenta en otras fuentes las canciones que fallaron en YouTube.
+            retry = [sid for sid in self.failed if sid.startswith("https://open.spotify.com/")]
+            if s["fallback"] and retry and not self.cancelled:
+                self.events.put({"type": "retry", "count": len(retry)})
+                code = self._run(["download", *retry, *args[1 + len(queries):],
+                                  "--audio", "soundcloud", "bandcamp"])
             self.events.put({"type": "done", "code": code})
         except Exception as exc:  # noqa: BLE001
             self.process = None
@@ -667,8 +694,15 @@ class App(tk.Tk):
             self.status_var.set(ev["text"])
             self._write_log(ev["text"])
         elif kind == "total":
+            if self.retrying:
+                return
             self.total += ev["count"]
             self._update_overall()
+        elif kind == "retry":
+            self.retrying = True
+            text = f"YouTube falló en {ev['count']} canción(es). Probando en SoundCloud y Bandcamp…"
+            self.status_var.set(text)
+            self._write_log(text)
         elif kind == "song":
             self._update_song(ev)
         elif kind == "done":
@@ -691,6 +725,11 @@ class App(tk.Tk):
         else:
             self.tree.item(row["iid"], values=values, tags=(tag,))
         entry = self.rows[sid]
+        if entry["final"] == "error" and tag != "error":
+            # Se está reintentando en otra fuente.
+            entry["final"] = None
+            self.counts["err"] -= 1
+            self._update_overall()
         if tag in ("done", "skip", "error") and entry["final"] is None:
             entry["final"] = tag
             self.counts[{"done": "ok", "skip": "skip", "error": "err"}[tag]] += 1
