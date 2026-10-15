@@ -132,6 +132,20 @@ jobs:
             Write-Error "No se descargó ningún archivo"; exit 1
           }
 
+      - name: Test fallback download (SoundCloud / Bandcamp)
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          New-Item -ItemType Directory -Force test_fb | Out-Null
+          $env:PATH = "$PWD\dist\Deanp3\deno;$env:PATH"
+          $out = "$PWD\test_fb\{artists} - {title}.{output-ext}"
+          $ff = "$PWD\dist\Deanp3\ffmpeg\ffmpeg.exe"
+          $p = Start-Process dist\Deanp3\Deanp3.exe -ArgumentList "--spotdl-cli","download","`"https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT`"","--output","`"$out`"","--format","mp3","--ffmpeg","`"$ff`"","--simple-tui","--log-level","DEBUG","--audio","soundcloud","bandcamp" -RedirectStandardOutput fb.txt -RedirectStandardError fb_err.txt -Wait -PassThru -NoNewWindow
+          Select-String -Path fb.txt, fb_err.txt -Pattern "soundcloud|bandcamp|Error|Downloaded|No results|failed to find|Skipping" | Select-Object -Last 40 | ForEach-Object { "FB: " + $_.Line }
+          $files = Get-ChildItem test_fb -Filter *.mp3
+          $files | ForEach-Object { "FB_FILE: $($_.Name) $($_.Length)" }
+          if (-not $files) { exit 1 }
+
       - name: Build installer (Inno Setup)
         shell: pwsh
         run: |
