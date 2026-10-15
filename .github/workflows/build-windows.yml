@@ -89,14 +89,14 @@ jobs:
             for ($i = 0; $i -lt $b64.Length; $i += 4000) { Write-Host ("B64 ${name}:" + $b64.Substring($i, [Math]::Min(4000, $b64.Length - $i))) }
             Write-Host "SHOT_END $name"
           }
-          $env:DEANP3_AUTOTEST = "https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT"
+          $env:DEANP3_AUTOTEST = "Cartoon - On & On"
           $p = Start-Process dist\Deanp3\Deanp3.exe -PassThru
           Start-Sleep -Seconds 8
           if ($p.HasExited) { Write-Error "La ventana se cerró con código $($p.ExitCode)"; exit 1 }
           Shot "gui-1-inicio"
           Start-Sleep -Seconds 20
           Shot "gui-2-descargando"
-          Start-Sleep -Seconds 45
+          Start-Sleep -Seconds 75
           Shot "gui-3-final"
           if ($p.HasExited) { Write-Error "La app se cerró sola"; exit 1 }
           Stop-Process -Id $p.Id -Force
@@ -140,7 +140,7 @@ jobs:
           $env:PATH = "$PWD\dist\Deanp3\deno;$env:PATH"
           $out = "$PWD\test_fb\{artists} - {title}.{output-ext}"
           $ff = "$PWD\dist\Deanp3\ffmpeg\ffmpeg.exe"
-          $p = Start-Process dist\Deanp3\Deanp3.exe -ArgumentList "--spotdl-cli","download","`"https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT`"","--output","`"$out`"","--format","mp3","--ffmpeg","`"$ff`"","--simple-tui","--log-level","DEBUG","--audio","soundcloud","bandcamp" -RedirectStandardOutput fb.txt -RedirectStandardError fb_err.txt -Wait -PassThru -NoNewWindow
+          $p = Start-Process dist\Deanp3\Deanp3.exe -ArgumentList "--spotdl-cli","download","`"Cartoon - On & On`"","--output","`"$out`"","--format","mp3","--ffmpeg","`"$ff`"","--simple-tui","--log-level","DEBUG","--audio","soundcloud","bandcamp" -RedirectStandardOutput fb.txt -RedirectStandardError fb_err.txt -Wait -PassThru -NoNewWindow
           Select-String -Path fb.txt, fb_err.txt -Pattern "soundcloud|bandcamp|Error|Downloaded|No results|failed to find|Skipping" | Select-Object -Last 40 | ForEach-Object { "FB: " + $_.Line }
           $files = Get-ChildItem test_fb -Filter *.mp3
           $files | ForEach-Object { "FB_FILE: $($_.Name) $($_.Length)" }
