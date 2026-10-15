@@ -1,0 +1,2 @@
+spotdl==4.5.2
+pyinstaller==6.16.0

@@ -1,0 +1,7 @@
+build/
+dist/
+Output/
+ffmpeg/
+ffmpeg_tmp/
+*.spec
+__pycache__/
