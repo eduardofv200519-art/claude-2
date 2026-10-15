@@ -68,6 +68,24 @@ def find_ffmpeg():
     return None
 
 
+def bundled_deno_dir():
+    """Carpeta con deno.exe incluido (yt-dlp lo necesita para YouTube)."""
+    exe = "deno.exe" if os.name == "nt" else "deno"
+    for d in (app_dir() / "deno", app_dir()):
+        if (d / exe).is_file():
+            return str(d)
+    return None
+
+
+def has_deno():
+    exe = "deno.exe" if os.name == "nt" else "deno"
+    return bool(
+        bundled_deno_dir()
+        or shutil.which("deno")
+        or (Path.home() / ".spotdl" / exe).is_file()
+    )
+
+
 def default_music_dir():
     music = Path.home() / "Music"
     return str(music if music.is_dir() else Path.home())
@@ -221,6 +239,9 @@ class App(tk.Tk):
 
     def _run(self, args):
         env = dict(os.environ, PYTHONIOENCODING="utf-8", NO_COLOR="1", TERM="dumb")
+        deno_dir = bundled_deno_dir()
+        if deno_dir:
+            env["PATH"] = deno_dir + os.pathsep + env.get("PATH", "")
         flags = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
         self.process = subprocess.Popen(
             spotdl_command(args),
@@ -251,6 +272,10 @@ class App(tk.Tk):
             if not ffmpeg:
                 self.lines.put(("done", "Error: no se pudo obtener FFmpeg."))
                 return
+
+            if not has_deno():
+                self.lines.put(("log", "Deno no encontrado, descargándolo (solo la primera vez)…"))
+                self._run(["--download-deno"])
 
             output = str(Path(folder) / "{artists} - {title}.{output-ext}")
             args = [
