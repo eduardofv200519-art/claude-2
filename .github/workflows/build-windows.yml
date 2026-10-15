@@ -19,9 +19,9 @@ jobs:
       run:
         working-directory: music-downloader
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -52,6 +52,10 @@ jobs:
         run: >
           pyinstaller app.py --noconfirm --windowed
           --name DescargadorMusica
+          --icon icon.ico
+          --add-data "icon.ico;."
+          --add-data "icon.png;."
+          --collect-all sv_ttk
           --collect-all spotdl
           --collect-all ytmusicapi
           --collect-all yt_dlp
@@ -75,6 +79,11 @@ jobs:
           Start-Sleep -Seconds 15
           if ($p.HasExited) { Write-Error "La ventana se cerró con código $($p.ExitCode)"; exit 1 }
           Write-Host "GUI en ejecución (PID $($p.Id))"
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+          [System.Drawing.Graphics]::FromImage($bmp).CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+          $bmp.Save("$PWD\gui-windows.png")
           Stop-Process -Id $p.Id -Force
 
       - name: Test real download (one track)
@@ -92,7 +101,18 @@ jobs:
           $files = Get-ChildItem test_out -Filter *.mp3
           $files | Format-Table Name, Length
           Remove-Item -Recurse -Force test_out
-          if (-not $files) { Write-Error "No se descargó ningún archivo"; exit 1 }
+          if ($files) {
+            "### ✅ Descarga real: OK ($($files[0].Length) bytes)" >> $env:GITHUB_STEP_SUMMARY
+          } else {
+            $why = if (Select-String -Path dl.txt -Pattern "not a bot" -Quiet) { "YouTube bloqueó la IP del servidor de GitHub (\"not a bot\"). Es normal en la nube; en un PC de casa no suele pasar." } else { "Revisa el registro de este paso." }
+            "### ⚠️ Descarga real: falló`n$why" >> $env:GITHUB_STEP_SUMMARY
+            Write-Error "No se descargó ningún archivo"; exit 1
+          }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gui-screenshot
+          path: music-downloader/gui-windows.png
 
       - name: Build installer (Inno Setup)
         shell: pwsh

@@ -5,7 +5,21 @@ App de escritorio para Windows con interfaz gráfica, basada en
 Spotify (canción, álbum, playlist o artista) o escribes el nombre de una
 canción, eliges carpeta, formato y calidad, y pulsas **Descargar**.
 
-FFmpeg ya va incluido: el usuario no necesita instalar Python ni nada más.
+- Lista de canciones con el estado de cada una (buscando, descargando %, lista, error).
+- Barra de progreso general ("3 de 12").
+- Tema oscuro y claro (botón **Tema**).
+- Opción de crear una carpeta por álbum/playlist.
+- Recuerda tus preferencias (carpeta, formato, calidad).
+- Opciones avanzadas: archivo de cookies de YouTube y volver a descargar canciones existentes.
+- FFmpeg y Deno ya van incluidos: no hay que instalar Python ni nada más.
+
+## Si YouTube dice "confirma que no eres un robot"
+
+Pasa a veces con VPN o redes compartidas. Prueba sin VPN o espera unos minutos.
+Si sigue pasando, instala una extensión de navegador que exporte cookies en
+formato `cookies.txt` (por ejemplo "Get cookies.txt LOCALLY"), entra a
+youtube.com con tu cuenta, exporta las cookies y elige ese archivo en
+**Opciones avanzadas → Cookies**.
 
 ## Para el usuario final
 
