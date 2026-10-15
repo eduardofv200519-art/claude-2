@@ -59,6 +59,31 @@ jobs:
           Get-Content version.txt
           if ($p.ExitCode -ne 0) { exit 1 }
 
+      - name: Test GUI starts
+        shell: pwsh
+        run: |
+          $p = Start-Process dist\DescargadorMusica\DescargadorMusica.exe -PassThru
+          Start-Sleep -Seconds 15
+          if ($p.HasExited) { Write-Error "La ventana se cerró con código $($p.ExitCode)"; exit 1 }
+          Write-Host "GUI en ejecución (PID $($p.Id))"
+          Stop-Process -Id $p.Id -Force
+
+      - name: Test real download (one track)
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          New-Item -ItemType Directory -Force test_out | Out-Null
+          $out = "$PWD\test_out\{artists} - {title}.{output-ext}"
+          $exe = "dist\DescargadorMusica\DescargadorMusica.exe"
+          $ff = "$PWD\dist\DescargadorMusica\ffmpeg\ffmpeg.exe"
+          $p = Start-Process $exe -ArgumentList "--spotdl-cli","download","`"https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT`"","--output","`"$out`"","--format","mp3","--ffmpeg","`"$ff`"","--simple-tui","--log-level","INFO" -RedirectStandardOutput dl.txt -RedirectStandardError dl_err.txt -Wait -PassThru -NoNewWindow
+          Get-Content dl.txt -Tail 40
+          Get-Content dl_err.txt -Tail 40
+          $files = Get-ChildItem test_out -Filter *.mp3
+          $files | Format-Table Name, Length
+          Remove-Item -Recurse -Force test_out
+          if (-not $files) { Write-Error "No se descargó ningún archivo"; exit 1 }
+
       - name: Build installer (Inno Setup)
         shell: pwsh
         run: |
