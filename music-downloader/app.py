@@ -210,8 +210,12 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title(APP_NAME)
-        self.geometry("840x720")
-        self.minsize(640, 520)
+        w = min(840, self.winfo_screenwidth() - 40)
+        h = min(720, self.winfo_screenheight() - 110)
+        x = max(0, (self.winfo_screenwidth() - w) // 2)
+        y = max(0, (self.winfo_screenheight() - h - 60) // 2)
+        self.geometry(f"{w}x{h}+{x}+{y}")
+        self.minsize(640, 500)
 
         icon = resource("icon.ico")
         if icon and os.name == "nt":

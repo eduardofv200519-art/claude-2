@@ -105,13 +105,15 @@ jobs:
           $p = Start-Process $exe -ArgumentList "--spotdl-cli","download","`"https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT`"","--output","`"$out`"","--format","mp3","--ffmpeg","`"$ff`"","--simple-tui","--log-level","DEBUG" -RedirectStandardOutput dl.txt -RedirectStandardError dl_err.txt -Wait -PassThru -NoNewWindow
           Get-Content dl.txt -Tail 80
           Get-Content dl_err.txt -Tail 40
+          $events = @(Select-String -Path dl.txt -Pattern '@@EVT').Count
+          "Eventos de progreso recibidos: $events" >> $env:GITHUB_STEP_SUMMARY
           $files = Get-ChildItem test_out -Filter *.mp3
           $files | Format-Table Name, Length
           Remove-Item -Recurse -Force test_out
           if ($files) {
             "### ✅ Descarga real: OK ($($files[0].Length) bytes)" >> $env:GITHUB_STEP_SUMMARY
           } else {
-            $why = if (Select-String -Path dl.txt -Pattern "not a bot" -Quiet) { "YouTube bloqueó la IP del servidor de GitHub (\"not a bot\"). Es normal en la nube; en un PC de casa no suele pasar." } else { "Revisa el registro de este paso." }
+            $why = if (Select-String -Path dl.txt -Pattern "not a bot" -Quiet) { 'YouTube bloqueó la IP del servidor de GitHub ("not a bot"). Es normal en la nube; en un PC de casa no suele pasar.' } else { 'Revisa el registro de este paso.' }
             "### ⚠️ Descarga real: falló`n$why" >> $env:GITHUB_STEP_SUMMARY
             Write-Error "No se descargó ningún archivo"; exit 1
           }
