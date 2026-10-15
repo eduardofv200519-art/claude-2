@@ -38,8 +38,9 @@ STATUS_ES = {
     "Skipped": "Ya estaba",
     "Error": "Error",
 }
+BOT_MARKERS = ("not a bot", "Sign in to confirm", "YT-DLP download error")
 BOT_HINT = (
-    "YouTube pidió confirmar que no eres un robot.\n\n"
+    "YouTube no dejó descargar el audio (a veces pide confirmar que no eres un robot).\n\n"
     "Suele pasar con VPN o redes compartidas. Prueba sin VPN, espera unos minutos, "
     "o en \"Opciones avanzadas\" carga un archivo cookies.txt exportado de tu "
     "navegador con la sesión de YouTube iniciada."
@@ -245,6 +246,7 @@ class App(tk.Tk):
         self.total = 0
         self.counts = {"ok": 0, "skip": 0, "err": 0}
         self.last_error = ""
+        self.youtube_blocked = False
 
         self.query_var = tk.StringVar()
         folder = cfg.get("folder") or default_music_dir()
@@ -546,6 +548,7 @@ class App(tk.Tk):
         self.total = 0
         self.counts = {"ok": 0, "skip": 0, "err": 0}
         self.last_error = ""
+        self.youtube_blocked = False
         self.cancelled = False
         self.progress["value"] = 0
         self.count_var.set("")
@@ -654,6 +657,8 @@ class App(tk.Tk):
         if kind == "log":
             text = ev["text"]
             self._write_log(text)
+            if any(m in text for m in BOT_MARKERS):
+                self.youtube_blocked = True
             if re.match(r"\s*\w*(Error|Exception)\b.*:", text):
                 self.last_error = text.strip()
             elif self.last_error and text.startswith(" ") and len(self.last_error) < 300:
@@ -726,7 +731,7 @@ class App(tk.Tk):
         summary = ", ".join(parts) or "No se descargó nada"
         self.status_var.set(summary + ".")
 
-        bot = "not a bot" in self.last_error or "Sign in to confirm" in self.last_error
+        bot = self.youtube_blocked
         if err or not (ok or skip):
             if bot:
                 detail = BOT_HINT
