@@ -1,5 +1,5 @@
 """
-Descargador de Música - interfaz gráfica para spotDL.
+Deanp3 - interfaz gráfica para spotDL.
 
 Pega un enlace de Spotify (canción, álbum, playlist o artista) o escribe
 el nombre de una canción, elige la carpeta y pulsa "Descargar".
@@ -17,8 +17,8 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
-APP_NAME = "Descargador de Música"
-APP_VERSION = "1.1.0"
+APP_NAME = "Deanp3"
+APP_VERSION = "1.2.0"
 CLI_FLAG = "--spotdl-cli"
 EVENT_PREFIX = "@@EVT "
 FORMATS = ["mp3", "m4a", "flac", "opus", "ogg", "wav"]
@@ -157,14 +157,17 @@ def has_deno():
 
 def config_path():
     base = os.environ.get("APPDATA") or str(Path.home() / ".config")
-    return Path(base) / "DescargadorMusica" / "config.json"
+    return Path(base) / "Deanp3" / "config.json"
 
 
 def load_config():
-    try:
-        return json.loads(config_path().read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
+    # Lee también la configuración de la versión anterior ("DescargadorMusica").
+    for path in (config_path(), config_path().parent.parent / "DescargadorMusica" / "config.json"):
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+    return {}
 
 
 def save_config(data):
@@ -259,6 +262,11 @@ class App(tk.Tk):
 
         self._build_ui()
         self.after(100, self._drain_events)
+
+        # Modo de prueba automática (lo usa el build en la nube).
+        autotest = os.environ.get("DEANP3_AUTOTEST")
+        if autotest:
+            self.after(2000, lambda: (self.query_var.set(autotest), self.start_download()))
         self.protocol("WM_DELETE_WINDOW", self._on_close)
 
     # ------------------------------------------------------------ tema

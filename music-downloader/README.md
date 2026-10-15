@@ -1,4 +1,4 @@
-# Descargador de Música (interfaz para spotDL)
+# Deanp3 (interfaz para spotDL)
 
 App de escritorio para Windows con interfaz gráfica, basada en
 [spotDL](https://github.com/spotdl/spotify-downloader). Pegas un enlace de
@@ -24,11 +24,11 @@ youtube.com con tu cuenta, exporta las cookies y elige ese archivo en
 ## Para el usuario final
 
 1. Ve a la pestaña **Releases** del repositorio (o a **Actions → Build Windows installer → Artifacts**).
-2. Descarga `DescargadorMusica-Setup.exe` y ejecútalo.
-3. Abre "Descargador de Música" desde el escritorio o el menú Inicio.
+2. Descarga `Deanp3-Setup.exe` y ejecútalo.
+3. Abre "Deanp3" desde el escritorio o el menú Inicio.
 
-También hay una versión portátil (`DescargadorMusica-portable.zip`): descomprímela
-y ejecuta `DescargadorMusica.exe`.
+También hay una versión portátil (`Deanp3-portable.zip`): descomprímela
+y ejecuta `Deanp3.exe`.
 
 > Windows SmartScreen puede avisar de que la app no está firmada: pulsa
 > "Más información" → "Ejecutar de todas formas".
@@ -40,7 +40,7 @@ Windows en cada push que toca esta carpeta (o manualmente desde Actions):
 
 1. Instala `spotdl` y `pyinstaller`.
 2. Descarga FFmpeg.
-3. Empaqueta `app.py` con PyInstaller en `DescargadorMusica.exe`.
+3. Empaqueta `app.py` con PyInstaller en `Deanp3.exe`.
 4. Crea el instalador con Inno Setup (`installer.iss`).
 5. Publica el instalador y el zip portátil como artefactos y como release.
 
