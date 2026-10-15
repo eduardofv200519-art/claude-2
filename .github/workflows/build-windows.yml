@@ -153,6 +153,44 @@ jobs:
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" installer.iss
           Compress-Archive -Path dist\Deanp3\* -DestinationPath Output\Deanp3-portable.zip
 
+      - name: Test installer (install, open and download)
+        shell: pwsh
+        run: |
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          function Shot($name) {
+            $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+            $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+            [System.Drawing.Graphics]::FromImage($bmp).CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+            $jpg = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object MimeType -eq "image/jpeg"
+            $ep = New-Object System.Drawing.Imaging.EncoderParameters 1
+            $ep.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter ([System.Drawing.Imaging.Encoder]::Quality), 60L
+            $bmp.Save("$PWD\$name.jpg", $jpg, $ep)
+            $b64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$PWD\$name.jpg"))
+            for ($i = 0; $i -lt $b64.Length; $i += 4000) { Write-Host ("B64 ${name}:" + $b64.Substring($i, [Math]::Min(4000, $b64.Length - $i))) }
+          }
+          Get-Process Deanp3 -ErrorAction SilentlyContinue | Stop-Process -Force
+          $setup = Start-Process Output\Deanp3-Setup.exe -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/CURRENTUSER" -Wait -PassThru
+          "Instalador terminó con código $($setup.ExitCode)"
+          if ($setup.ExitCode -ne 0) { exit 1 }
+          $exe = Get-ChildItem "$env:LOCALAPPDATA\Programs", "$env:ProgramFiles" -Recurse -Filter Deanp3.exe -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $exe) { Write-Error "No se encontró Deanp3.exe instalado"; exit 1 }
+          "INSTALADO EN: $($exe.FullName)"
+          $before = @(Get-ChildItem "$env:USERPROFILE\Music" -Recurse -Filter *.mp3).Count
+          $env:DEANP3_AUTOTEST = "Janji - Heroes Tonight"
+          $p = Start-Process $exe.FullName -PassThru
+          $deadline = (Get-Date).AddSeconds(150)
+          do {
+            Start-Sleep -Seconds 5
+            $after = @(Get-ChildItem "$env:USERPROFILE\Music" -Recurse -Filter *.mp3).Count
+          } while ($after -le $before -and (Get-Date) -lt $deadline -and -not $p.HasExited)
+          Start-Sleep -Seconds 5
+          Shot "inst-final"
+          Get-ChildItem "$env:USERPROFILE\Music" -Recurse -Filter *.mp3 | ForEach-Object { "MP3: $($_.Name) $($_.Length)" }
+          if ($p.HasExited) { Write-Error "La app instalada se cerró sola"; exit 1 }
+          Stop-Process -Id $p.Id -Force
+          if ($after -le $before) { Write-Error "La app instalada no descargó la canción"; exit 1 }
+          "INSTALLER_TEST_OK"
+
       - uses: actions/upload-artifact@v4
         with:
           name: Deanp3-Windows
