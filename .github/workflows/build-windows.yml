@@ -38,7 +38,6 @@ jobs:
           Expand-Archive ffmpeg.zip -DestinationPath ffmpeg_tmp
           New-Item -ItemType Directory -Force ffmpeg | Out-Null
           Get-ChildItem ffmpeg_tmp -Recurse -Filter ffmpeg.exe | Select-Object -First 1 | Copy-Item -Destination ffmpeg\ffmpeg.exe
-          Get-ChildItem ffmpeg_tmp -Recurse -Filter ffprobe.exe | Select-Object -First 1 | Copy-Item -Destination ffmpeg\ffprobe.exe
 
       - name: Download Deno (needed by yt-dlp for YouTube)
         shell: pwsh
@@ -84,6 +83,14 @@ jobs:
           $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
           [System.Drawing.Graphics]::FromImage($bmp).CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
           $bmp.Save("$PWD\gui-windows.png")
+          $jpg = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object MimeType -eq "image/jpeg"
+          $ep = New-Object System.Drawing.Imaging.EncoderParameters 1
+          $ep.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter ([System.Drawing.Imaging.Encoder]::Quality), 60L
+          $bmp.Save("$PWD\gui-windows.jpg", $jpg, $ep)
+          $b64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$PWD\gui-windows.jpg"))
+          Write-Host "SCREENSHOT_B64_BEGIN"
+          for ($i = 0; $i -lt $b64.Length; $i += 4000) { Write-Host ("B64:" + $b64.Substring($i, [Math]::Min(4000, $b64.Length - $i))) }
+          Write-Host "SCREENSHOT_B64_END"
           Stop-Process -Id $p.Id -Force
 
       - name: Test real download (one track)
