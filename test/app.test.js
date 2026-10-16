@@ -35,7 +35,8 @@ const post = (path, body) =>
   fetch(base + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
 test("los datos de los casos son consistentes", () => {
-  const { CASES, TESTS } = require("../server.js");
+  const { CASES, TESTS, BOOKS } = require("../server.js");
+  const bookIds = new Set(BOOKS.map((b) => b.id));
   const testIds = new Set(TESTS.map((t) => t.id));
   const ids = new Set();
   for (const c of CASES) {
@@ -46,6 +47,8 @@ test("los datos de los casos son consistentes", () => {
     for (const t of c.keyTests) assert.ok(testIds.has(t), `${c.id}: estudio clave desconocido ${t}`);
     for (const t of Object.keys(c.labs)) assert.ok(testIds.has(t), `${c.id}: resultado de estudio desconocido ${t}`);
     for (const t of c.keyTests) assert.ok(c.labs[t], `${c.id}: estudio clave ${t} sin resultado específico`);
+    assert.ok(c.books?.length, `${c.id}: sin libros de referencia`);
+    for (const b of c.books) assert.ok(bookIds.has(b.id) && b.topic, `${c.id}: libro desconocido ${b.id}`);
   }
 });
 
@@ -78,6 +81,8 @@ test("evaluación devuelve puntaje y revela la respuesta", async () => {
   assert.equal(r.evaluation.total, 88);
   assert.equal(r.cost, 40);
   assert.match(r.answer.diagnosis, /elevación del ST/);
+  assert.ok(r.answer.books.some((b) => b.id === "braunwald" && b.citation.includes("Libby")));
+  assert.match(lastRequest.body.messages[0].content, /Braunwald/);
 });
 
 test("evaluación sin IA usa el respaldo por palabras clave", async () => {

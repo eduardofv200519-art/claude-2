@@ -9,6 +9,7 @@ Simulador de casos clínicos inspirado en [ResimGame](https://resimgame.com/): e
 - **35 estudios** de laboratorio, imagen y procedimientos, con costo y tiempo simulados. Si pides un estudio irrelevante, obtienes un resultado normal, igual que en la vida real.
 - **Evaluación con IA** según una rúbrica: diagnóstico (40), diferenciales (10), estudios (20), manejo (20) y entrevista (10). Si DeepSeek no está disponible, se usa una evaluación de respaldo por palabras clave.
 - **15 casos** de urgencias y medicina interna, cada uno basado en presentaciones clínicas típicas y documentadas, con referencia a la guía correspondiente (ESC, AHA/ASA, ADA, ATS/IDSA, ACOG, ACG, OPS, WAO…). Incluye casos relevantes para Latinoamérica, como dengue con signos de alarma e intoxicación por organofosforados.
+- **Libros de texto de referencia**: cada caso indica qué libro y qué tema consultar (Harrison, Tintinalli, Rosen, Braunwald, Sabiston, Schwartz, Williams Obstetricia/Ginecología/Endocrinología, Mandell, Adams y Victor, Murray & Nadel, Sleisenger, Goldfrank y Middleton). DeepSeek usa esas fuentes para dar la retroalimentación y recomienda lecturas específicas. Hay una página de **Bibliografía** con todas las citas.
 - El progreso se guarda en el navegador (localStorage).
 
 | Caso | Especialidad |
@@ -52,9 +53,10 @@ Los casos están en `data/cases.json` y el catálogo de estudios en `data/tests.
 - `persona`: cómo habla el paciente.
 - `physicalExam`: hallazgos por sistema.
 - `labs`: resultados específicos por estudio. Los estudios que no aparecen aquí devuelven el valor `normal` del catálogo.
-- `diagnosis`, `acceptedDiagnoses`, `differentials`, `keyTests`, `management`, `teachingPoints` y `reference`: se usan para evaluar y para mostrar la respuesta.
+- `diagnosis`, `acceptedDiagnoses`, `differentials`, `keyTests`, `management`, `teachingPoints` y `reference` (guía clínica): se usan para evaluar y para mostrar la respuesta.
+- `books`: libros de texto (`id` de `data/books.json`) y el tema que hay que consultar.
 
-`npm test` valida que todos los estudios referenciados existan en el catálogo.
+`npm test` valida que todos los estudios y libros referenciados existan en sus catálogos.
 
 ## Estructura
 
@@ -62,6 +64,7 @@ Los casos están en `data/cases.json` y el catálogo de estudios en `data/tests.
 server.js          servidor HTTP + proxy a DeepSeek (la key nunca se expone al navegador)
 data/cases.json    casos clínicos
 data/tests.json    catálogo de estudios
+data/books.json    libros de texto de referencia
 public/            frontend (HTML/CSS/JS sin frameworks)
 test/              pruebas
 ```

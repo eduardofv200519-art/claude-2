@@ -4,10 +4,21 @@
     "specialty": "Cardiología",
     "difficulty": "Intermedio",
     "setting": "Urgencias de un hospital general con sala de hemodinamia",
-    "patient": { "name": "Roberto Salinas", "age": "58 años", "sex": "Masculino" },
+    "patient": {
+      "name": "Roberto Salinas",
+      "age": "58 años",
+      "sex": "Masculino"
+    },
     "chiefComplaint": "Me aprieta el pecho desde hace una hora y estoy sudando frío.",
     "triageNote": "Llega por sus propios medios, diaforético, con la mano empuñada sobre el esternón.",
-    "vitals": { "TA": "100/65 mmHg", "FC": "52 lpm", "FR": "20 rpm", "Temp": "36.6 °C", "SpO2": "95 % aire ambiente", "Glucosa capilar": "184 mg/dL" },
+    "vitals": {
+      "TA": "100/65 mmHg",
+      "FC": "52 lpm",
+      "FR": "20 rpm",
+      "Temp": "36.6 °C",
+      "SpO2": "95 % aire ambiente",
+      "Glucosa capilar": "184 mg/dL"
+    },
     "persona": "Hombre trabajador, preocupado y algo asustado, responde corto porque le duele. Se lleva la mano al pecho.",
     "history": {
       "enfermedadActual": "Dolor opresivo retroesternal que inició hace 1 hora mientras subía cargas en su negocio. Intensidad 9/10, irradia a mandíbula y brazo izquierdo. No mejora con el reposo. Se acompaña de sudoración fría, náusea y vomitó una vez. Siente que se va a desmayar.",
@@ -38,9 +49,25 @@
       "hba1c": "HbA1c 8.9%."
     },
     "diagnosis": "Infarto agudo de miocardio con elevación del ST (IAMCEST) de cara inferior con extensión a ventrículo derecho",
-    "acceptedDiagnoses": ["IAMCEST", "infarto con elevacion del ST", "STEMI", "infarto agudo de miocardio", "IAM inferior", "sindrome coronario agudo con elevacion del ST", "infarto inferior"],
-    "differentials": ["Disección aórtica", "Tromboembolia pulmonar", "Pericarditis aguda", "SCA sin elevación del ST"],
-    "keyTests": ["ecg", "trop"],
+    "acceptedDiagnoses": [
+      "IAMCEST",
+      "infarto con elevacion del ST",
+      "STEMI",
+      "infarto agudo de miocardio",
+      "IAM inferior",
+      "sindrome coronario agudo con elevacion del ST",
+      "infarto inferior"
+    ],
+    "differentials": [
+      "Disección aórtica",
+      "Tromboembolia pulmonar",
+      "Pericarditis aguda",
+      "SCA sin elevación del ST"
+    ],
+    "keyTests": [
+      "ecg",
+      "trop"
+    ],
     "management": [
       "ECG en los primeros 10 minutos y activar código infarto",
       "Ácido acetilsalicílico 150-300 mg masticable",
@@ -55,17 +82,41 @@
       "Ante IAM inferior siempre realiza V4R: la afección del VD hace al paciente dependiente de precarga, por lo que los nitratos pueden provocar hipotensión grave.",
       "La bradicardia es frecuente por estimulación vagal (reflejo de Bezold-Jarisch) y afección del nodo AV."
     ],
-    "reference": "Byrne RA, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J 2023;44:3720-3826."
+    "reference": "Byrne RA, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J 2023;44:3720-3826.",
+    "books": [
+      {
+        "id": "harrison",
+        "topic": "Infarto agudo de miocardio con elevación del ST"
+      },
+      {
+        "id": "braunwald",
+        "topic": "Infarto de miocardio con elevación del ST: tratamiento; infarto del ventrículo derecho"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Síndromes coronarios agudos"
+      }
+    ]
   },
   {
     "id": "tep-postoperatorio",
     "specialty": "Neumología",
     "difficulty": "Intermedio",
     "setting": "Urgencias",
-    "patient": { "name": "Daniela Robles", "age": "34 años", "sex": "Femenino" },
+    "patient": {
+      "name": "Daniela Robles",
+      "age": "34 años",
+      "sex": "Femenino"
+    },
     "chiefComplaint": "De repente me empezó a faltar el aire y me duele el pecho al respirar.",
     "triageNote": "Taquipneica, habla en frases cortas. Usa férula en la rodilla derecha.",
-    "vitals": { "TA": "118/76 mmHg", "FC": "118 lpm", "FR": "26 rpm", "Temp": "37.4 °C", "SpO2": "89 % aire ambiente" },
+    "vitals": {
+      "TA": "118/76 mmHg",
+      "FC": "118 lpm",
+      "FR": "26 rpm",
+      "Temp": "37.4 °C",
+      "SpO2": "89 % aire ambiente"
+    },
     "persona": "Joven, ansiosa, se queda sin aire al hablar mucho. Coopera.",
     "history": {
       "enfermedadActual": "Hace 3 horas, estando sentada en el sillón, inició falta de aire súbita y dolor punzante en el costado derecho del tórax que empeora al respirar hondo. Palpitaciones. Tosió una vez con un poco de sangre. Desde hace 4 días la pantorrilla derecha está más hinchada y le duele, pero pensó que era por la cirugía.",
@@ -98,9 +149,27 @@
       "bhcg": "β-hCG <5 mUI/mL. Negativa."
     },
     "diagnosis": "Tromboembolia pulmonar aguda (riesgo intermedio-bajo) secundaria a trombosis venosa profunda postoperatoria",
-    "acceptedDiagnoses": ["tromboembolia pulmonar", "TEP", "embolia pulmonar", "tromboembolismo pulmonar", "TEP agudo", "embolismo pulmonar"],
-    "differentials": ["Neumonía", "Neumotórax", "Síndrome coronario agudo", "Pericarditis", "Crisis de ansiedad"],
-    "keyTests": ["angiotacp", "dimero", "ecg", "gasa"],
+    "acceptedDiagnoses": [
+      "tromboembolia pulmonar",
+      "TEP",
+      "embolia pulmonar",
+      "tromboembolismo pulmonar",
+      "TEP agudo",
+      "embolismo pulmonar"
+    ],
+    "differentials": [
+      "Neumonía",
+      "Neumotórax",
+      "Síndrome coronario agudo",
+      "Pericarditis",
+      "Crisis de ansiedad"
+    ],
+    "keyTests": [
+      "angiotacp",
+      "dimero",
+      "ecg",
+      "gasa"
+    ],
     "management": [
       "Oxígeno suplementario para SpO2 ≥ 90%",
       "Calcular probabilidad clínica (Wells alta: TVP clínica, FC >100, cirugía reciente) y confirmar con angioTAC pulmonar",
@@ -114,17 +183,42 @@
       "S1Q3T3 es poco sensible; el hallazgo ECG más frecuente en TEP es la taquicardia sinusal.",
       "La trombólisis sistémica se reserva para TEP de alto riesgo (hipotensión/choque)."
     ],
-    "reference": "Konstantinides SV, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism. Eur Heart J 2020;41:543-603."
+    "reference": "Konstantinides SV, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism. Eur Heart J 2020;41:543-603.",
+    "books": [
+      {
+        "id": "harrison",
+        "topic": "Trombosis venosa profunda y tromboembolia pulmonar"
+      },
+      {
+        "id": "murray-nadel",
+        "topic": "Tromboembolia pulmonar"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Tromboembolia venosa"
+      }
+    ]
   },
   {
     "id": "cetoacidosis",
     "specialty": "Endocrinología",
     "difficulty": "Intermedio",
     "setting": "Urgencias",
-    "patient": { "name": "Valeria Mendoza", "age": "19 años", "sex": "Femenino" },
+    "patient": {
+      "name": "Valeria Mendoza",
+      "age": "19 años",
+      "sex": "Femenino"
+    },
     "chiefComplaint": "Llevo dos días vomitando y me duele mucho la panza, tengo mucha sed.",
     "triageNote": "Somnolienta pero responde. Respiración profunda y rápida. Aliento con olor afrutado.",
-    "vitals": { "TA": "98/60 mmHg", "FC": "122 lpm", "FR": "30 rpm, profunda", "Temp": "37.2 °C", "SpO2": "99 % aire ambiente", "Glucosa capilar": "486 mg/dL" },
+    "vitals": {
+      "TA": "98/60 mmHg",
+      "FC": "122 lpm",
+      "FR": "30 rpm, profunda",
+      "Temp": "37.2 °C",
+      "SpO2": "99 % aire ambiente",
+      "Glucosa capilar": "486 mg/dL"
+    },
     "persona": "Universitaria cansada y somnolienta, responde despacio. Le da algo de vergüenza admitir que no se puso la insulina.",
     "history": {
       "enfermedadActual": "Hace 4 días empezó con diarrea y malestar 'como infección del estómago'. Como no comía, dejó de ponerse la insulina. Desde hace 2 días vómitos (8-10 al día), dolor abdominal difuso, orina mucho y tiene muchísima sed. Hoy se siente muy cansada y 'con la cabeza lenta'.",
@@ -156,9 +250,25 @@
       "bhcg": "β-hCG <5 mUI/mL. Negativa."
     },
     "diagnosis": "Cetoacidosis diabética grave precipitada por suspensión de insulina durante gastroenteritis",
-    "acceptedDiagnoses": ["cetoacidosis diabetica", "CAD", "DKA", "cetoacidosis"],
-    "differentials": ["Estado hiperglucémico hiperosmolar", "Cetoacidosis alcohólica", "Acidosis láctica", "Pancreatitis aguda", "Abdomen agudo quirúrgico"],
-    "keyTests": ["qs", "gasa", "cetonas", "ego"],
+    "acceptedDiagnoses": [
+      "cetoacidosis diabetica",
+      "CAD",
+      "DKA",
+      "cetoacidosis"
+    ],
+    "differentials": [
+      "Estado hiperglucémico hiperosmolar",
+      "Cetoacidosis alcohólica",
+      "Acidosis láctica",
+      "Pancreatitis aguda",
+      "Abdomen agudo quirúrgico"
+    ],
+    "keyTests": [
+      "qs",
+      "gasa",
+      "cetonas",
+      "ego"
+    ],
     "management": [
       "Solución salina 0.9% 1-1.5 L en la primera hora, luego ajustar según estado hídrico y sodio corregido",
       "Verificar potasio antes de insulina: si K <3.3 reponer primero",
@@ -173,17 +283,41 @@
       "El bicarbonato IV no está indicado salvo pH <7.0 en la mayoría de las guías.",
       "La causa más frecuente de CAD es la omisión de insulina o una infección."
     ],
-    "reference": "Umpierrez GE, et al. Hyperglycemic crises in adults with diabetes: a consensus report (ADA/EASD/JBDS/AACE/DTS). Diabetes Care 2024;47:1257-1275."
+    "reference": "Umpierrez GE, et al. Hyperglycemic crises in adults with diabetes: a consensus report (ADA/EASD/JBDS/AACE/DTS). Diabetes Care 2024;47:1257-1275.",
+    "books": [
+      {
+        "id": "harrison",
+        "topic": "Diabetes mellitus: complicaciones agudas (cetoacidosis diabética)"
+      },
+      {
+        "id": "williams-endo",
+        "topic": "Urgencias hiperglucémicas: cetoacidosis y estado hiperosmolar"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Emergencias diabéticas"
+      }
+    ]
   },
   {
     "id": "apendicitis",
     "specialty": "Cirugía general",
     "difficulty": "Básico",
     "setting": "Urgencias",
-    "patient": { "name": "Luis Fernando Ortega", "age": "22 años", "sex": "Masculino" },
+    "patient": {
+      "name": "Luis Fernando Ortega",
+      "age": "22 años",
+      "sex": "Masculino"
+    },
     "chiefComplaint": "Me duele la panza del lado derecho, abajo, desde ayer.",
     "triageNote": "Camina encorvado, se sujeta el abdomen derecho.",
-    "vitals": { "TA": "122/78 mmHg", "FC": "98 lpm", "FR": "18 rpm", "Temp": "38.0 °C", "SpO2": "98 % aire ambiente" },
+    "vitals": {
+      "TA": "122/78 mmHg",
+      "FC": "98 lpm",
+      "FR": "18 rpm",
+      "Temp": "38.0 °C",
+      "SpO2": "98 % aire ambiente"
+    },
     "persona": "Estudiante relajado pero adolorido; le preocupa perder clases. Le molesta moverse.",
     "history": {
       "enfermedadActual": "Hace 18 horas empezó un dolor sordo alrededor del ombligo. Unas 8 horas después el dolor se cambió a la parte baja derecha y se volvió constante y más fuerte (7/10). Le duele al caminar, al toser y con los baches del camión. No tiene hambre desde ayer. Vomitó una vez después de que empezó el dolor. Sensación de calentura.",
@@ -213,9 +347,22 @@
       "qs": "Glucosa 98, BUN 16, creatinina 1.0, Na 140, K 4.0."
     },
     "diagnosis": "Apendicitis aguda no complicada",
-    "acceptedDiagnoses": ["apendicitis", "apendicitis aguda", "apendicitis aguda no complicada"],
-    "differentials": ["Linfadenitis mesentérica", "Ileítis terminal / enfermedad de Crohn", "Litiasis ureteral derecha", "Gastroenteritis", "Torsión testicular"],
-    "keyTests": ["bh", "usabd"],
+    "acceptedDiagnoses": [
+      "apendicitis",
+      "apendicitis aguda",
+      "apendicitis aguda no complicada"
+    ],
+    "differentials": [
+      "Linfadenitis mesentérica",
+      "Ileítis terminal / enfermedad de Crohn",
+      "Litiasis ureteral derecha",
+      "Gastroenteritis",
+      "Torsión testicular"
+    ],
+    "keyTests": [
+      "bh",
+      "usabd"
+    ],
     "management": [
       "Ayuno, líquidos IV y analgesia (no retrasar la analgesia por el diagnóstico)",
       "Calcular escala de Alvarado / AIR (Alvarado ≈ 9: alta probabilidad)",
@@ -227,17 +374,42 @@
       "En adultos jóvenes con escala alta se puede ir a cirugía con ultrasonido o incluso sin imagen; la TAC es útil en duda diagnóstica.",
       "Siempre pregunta alergias antes de indicar antibióticos."
     ],
-    "reference": "Di Saverio S, et al. Diagnosis and treatment of acute appendicitis: 2020 update of the WSES Jerusalem guidelines. World J Emerg Surg 2020;15:27."
+    "reference": "Di Saverio S, et al. Diagnosis and treatment of acute appendicitis: 2020 update of the WSES Jerusalem guidelines. World J Emerg Surg 2020;15:27.",
+    "books": [
+      {
+        "id": "sabiston",
+        "topic": "El apéndice"
+      },
+      {
+        "id": "schwartz",
+        "topic": "El apéndice"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Apendicitis aguda"
+      }
+    ]
   },
   {
     "id": "meningitis",
     "specialty": "Infectología",
     "difficulty": "Avanzado",
     "setting": "Urgencias",
-    "patient": { "name": "Jorge Castañeda", "age": "45 años", "sex": "Masculino", "informant": "Patricia, su esposa" },
+    "patient": {
+      "name": "Jorge Castañeda",
+      "age": "45 años",
+      "sex": "Masculino",
+      "informant": "Patricia, su esposa"
+    },
     "chiefComplaint": "Desde ayer tiene una fiebre muy alta y un dolor de cabeza horrible; hoy está confundido.",
     "triageNote": "Paciente somnoliento, con fotofobia. Lo trae su esposa, quien responde las preguntas.",
-    "vitals": { "TA": "132/80 mmHg", "FC": "112 lpm", "FR": "22 rpm", "Temp": "39.4 °C", "SpO2": "96 % aire ambiente" },
+    "vitals": {
+      "TA": "132/80 mmHg",
+      "FC": "112 lpm",
+      "FR": "22 rpm",
+      "Temp": "39.4 °C",
+      "SpO2": "96 % aire ambiente"
+    },
     "persona": "Esposa angustiada que conoce bien al paciente. Habla rápido, pide que lo atiendan pronto.",
     "history": {
       "enfermedadActual": "Hace 1 semana tuvo dolor del oído izquierdo y le salió algo de pus; no fue al doctor. Ayer en la mañana empezó con fiebre de 39-40 °C y dolor de cabeza muy intenso, 'el peor de su vida', que no se quita con paracetamol. Le molesta la luz y el cuello 'lo tiene tieso'. Vomitó 3 veces. Desde hoy en la mañana está confundido, no sabe qué día es y se queda dormido.",
@@ -268,9 +440,27 @@
       "coag": "TP 13 s, INR 1.1, TTPa 32 s. Plaquetas adecuadas para punción lumbar."
     },
     "diagnosis": "Meningitis bacteriana aguda por Streptococcus pneumoniae secundaria a otitis media/mastoiditis",
-    "acceptedDiagnoses": ["meningitis bacteriana", "meningitis neumococica", "meningitis por neumococo", "meningitis aguda bacteriana", "meningitis por streptococcus pneumoniae", "meningitis"],
-    "differentials": ["Encefalitis viral (herpética)", "Hemorragia subaracnoidea", "Absceso cerebral", "Meningitis meningocócica", "Meningitis tuberculosa"],
-    "keyTests": ["hemocultivo", "lcr", "tacc", "bh"],
+    "acceptedDiagnoses": [
+      "meningitis bacteriana",
+      "meningitis neumococica",
+      "meningitis por neumococo",
+      "meningitis aguda bacteriana",
+      "meningitis por streptococcus pneumoniae",
+      "meningitis"
+    ],
+    "differentials": [
+      "Encefalitis viral (herpética)",
+      "Hemorragia subaracnoidea",
+      "Absceso cerebral",
+      "Meningitis meningocócica",
+      "Meningitis tuberculosa"
+    ],
+    "keyTests": [
+      "hemocultivo",
+      "lcr",
+      "tacc",
+      "bh"
+    ],
     "management": [
       "Tomar hemocultivos y NO retrasar el antibiótico (idealmente <1 h de la llegada)",
       "Dexametasona 0.15 mg/kg IV c/6 h por 4 días, iniciada antes o junto con la primera dosis de antibiótico",
@@ -285,17 +475,41 @@
       "Nunca esperes la TAC o la punción para dar el antibiótico.",
       "La dexametasona reduce mortalidad y secuelas auditivas en meningitis neumocócica."
     ],
-    "reference": "van de Beek D, et al. ESCMID guideline: diagnosis and treatment of acute bacterial meningitis. Clin Microbiol Infect 2016;22 Suppl 3:S37-62."
+    "reference": "van de Beek D, et al. ESCMID guideline: diagnosis and treatment of acute bacterial meningitis. Clin Microbiol Infect 2016;22 Suppl 3:S37-62.",
+    "books": [
+      {
+        "id": "harrison",
+        "topic": "Meningitis bacteriana aguda"
+      },
+      {
+        "id": "mandell",
+        "topic": "Meningitis aguda"
+      },
+      {
+        "id": "adams-victor",
+        "topic": "Infecciones bacterianas del sistema nervioso"
+      }
+    ]
   },
   {
     "id": "ectopico-roto",
     "specialty": "Ginecología y obstetricia",
     "difficulty": "Intermedio",
     "setting": "Urgencias",
-    "patient": { "name": "Karla Jiménez", "age": "27 años", "sex": "Femenino" },
+    "patient": {
+      "name": "Karla Jiménez",
+      "age": "27 años",
+      "sex": "Femenino"
+    },
     "chiefComplaint": "Me dio un dolor muy fuerte en la parte baja de la panza y me siento muy mareada.",
     "triageNote": "Pálida, diaforética, se desvaneció al levantarse de la silla de ruedas.",
-    "vitals": { "TA": "86/54 mmHg", "FC": "124 lpm", "FR": "22 rpm", "Temp": "36.5 °C", "SpO2": "97 % aire ambiente" },
+    "vitals": {
+      "TA": "86/54 mmHg",
+      "FC": "124 lpm",
+      "FR": "22 rpm",
+      "Temp": "36.5 °C",
+      "SpO2": "97 % aire ambiente"
+    },
     "persona": "Mujer joven asustada, débil, responde con voz baja. Pregunta si es grave.",
     "history": {
       "enfermedadActual": "Hace 2 horas, en el trabajo, inició un dolor súbito muy intenso en la parte baja derecha del abdomen, que luego se extendió a toda la panza. Ahora también le duele el hombro derecho. Ha tenido un sangrado vaginal escaso, oscuro, desde hace 3 días. Al pararse se marea y casi se desmaya.",
@@ -327,9 +541,25 @@
       "ego": "Hematuria negativa, sin datos de infección."
     },
     "diagnosis": "Embarazo ectópico tubario derecho roto con hemoperitoneo y choque hemorrágico",
-    "acceptedDiagnoses": ["embarazo ectopico roto", "embarazo ectopico", "ectopico roto", "embarazo tubario roto", "choque hemorragico por embarazo ectopico"],
-    "differentials": ["Quiste de cuerpo lúteo hemorrágico roto", "Aborto incompleto", "Torsión anexial", "Apendicitis", "Enfermedad pélvica inflamatoria"],
-    "keyTests": ["bhcg", "uspelv", "bh"],
+    "acceptedDiagnoses": [
+      "embarazo ectopico roto",
+      "embarazo ectopico",
+      "ectopico roto",
+      "embarazo tubario roto",
+      "choque hemorragico por embarazo ectopico"
+    ],
+    "differentials": [
+      "Quiste de cuerpo lúteo hemorrágico roto",
+      "Aborto incompleto",
+      "Torsión anexial",
+      "Apendicitis",
+      "Enfermedad pélvica inflamatoria"
+    ],
+    "keyTests": [
+      "bhcg",
+      "uspelv",
+      "bh"
+    ],
     "management": [
       "Dos accesos venosos de grueso calibre, reanimación con cristaloides limitados y hemoderivados",
       "Tipificar y cruzar, activar protocolo de transfusión masiva si persiste la inestabilidad",
@@ -342,17 +572,42 @@
       "β-hCG por encima de la zona discriminatoria (~1,500-3,500) sin saco intrauterino sugiere fuertemente ectópico.",
       "El dolor referido al hombro (signo de Kehr) indica irritación diafragmática por hemoperitoneo."
     ],
-    "reference": "ACOG Practice Bulletin No. 193: Tubal Ectopic Pregnancy. Obstet Gynecol 2018;131:e91-e103."
+    "reference": "ACOG Practice Bulletin No. 193: Tubal Ectopic Pregnancy. Obstet Gynecol 2018;131:e91-e103.",
+    "books": [
+      {
+        "id": "williams-obs",
+        "topic": "Embarazo ectópico"
+      },
+      {
+        "id": "williams-gyn",
+        "topic": "Embarazo ectópico"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Complicaciones del embarazo temprano: embarazo ectópico"
+      }
+    ]
   },
   {
     "id": "neumonia-grave",
     "specialty": "Medicina interna",
     "difficulty": "Intermedio",
     "setting": "Urgencias",
-    "patient": { "name": "Ernesto Villalobos", "age": "72 años", "sex": "Masculino", "informant": "Mariana, su hija" },
+    "patient": {
+      "name": "Ernesto Villalobos",
+      "age": "72 años",
+      "sex": "Masculino",
+      "informant": "Mariana, su hija"
+    },
     "chiefComplaint": "Mi papá tiene fiebre y tos desde hace tres días y hoy está muy desorientado.",
     "triageNote": "Adulto mayor taquipneico, confuso. Lo acompaña su hija.",
-    "vitals": { "TA": "104/62 mmHg", "FC": "108 lpm", "FR": "30 rpm", "Temp": "38.9 °C", "SpO2": "87 % aire ambiente" },
+    "vitals": {
+      "TA": "104/62 mmHg",
+      "FC": "108 lpm",
+      "FR": "30 rpm",
+      "Temp": "38.9 °C",
+      "SpO2": "87 % aire ambiente"
+    },
     "persona": "Hija preocupada y organizada, conoce los medicamentos de su papá. Responde con detalle cuando le preguntan.",
     "history": {
       "enfermedadActual": "Hace 3 días empezó con escalofríos, fiebre y tos con flemas de color 'oxidado'. Se queja de dolor en el costado derecho al toser o respirar. Desde ayer casi no come ni toma agua y orina poco. Hoy en la mañana no la reconocía bien y decía cosas sin sentido.",
@@ -385,9 +640,28 @@
       "pfh": "AST 30, ALT 28, bilirrubina 0.9, albúmina 3.2 g/dL."
     },
     "diagnosis": "Neumonía adquirida en la comunidad grave (CURB-65 = 4) por Streptococcus pneumoniae con insuficiencia respiratoria aguda",
-    "acceptedDiagnoses": ["neumonia adquirida en la comunidad", "NAC", "neumonia", "neumonia neumococica", "neumonia grave", "neumonia lobar"],
-    "differentials": ["Tromboembolia pulmonar", "Insuficiencia cardiaca", "Cáncer pulmonar con neumonía postobstructiva", "Tuberculosis pulmonar", "Neumonía por aspiración"],
-    "keyTests": ["rxt", "bh", "qs", "gasa", "hemocultivo"],
+    "acceptedDiagnoses": [
+      "neumonia adquirida en la comunidad",
+      "NAC",
+      "neumonia",
+      "neumonia neumococica",
+      "neumonia grave",
+      "neumonia lobar"
+    ],
+    "differentials": [
+      "Tromboembolia pulmonar",
+      "Insuficiencia cardiaca",
+      "Cáncer pulmonar con neumonía postobstructiva",
+      "Tuberculosis pulmonar",
+      "Neumonía por aspiración"
+    ],
+    "keyTests": [
+      "rxt",
+      "bh",
+      "qs",
+      "gasa",
+      "hemocultivo"
+    ],
     "management": [
       "Oxígeno suplementario con objetivo SpO2 ≥ 92%",
       "Estratificar gravedad: CURB-65 = 4 (confusión, urea, FR ≥30, edad ≥65) → hospitalización y valorar UCI con criterios ATS/IDSA",
@@ -401,17 +675,41 @@
       "Calcula siempre una escala de gravedad (CURB-65 o PSI) para decidir el sitio de atención.",
       "Los cultivos no deben retrasar el antibiótico en neumonía grave."
     ],
-    "reference": "Metlay JP, et al. Diagnosis and Treatment of Adults with Community-acquired Pneumonia. ATS/IDSA Guideline. Am J Respir Crit Care Med 2019;200:e45-e67."
+    "reference": "Metlay JP, et al. Diagnosis and Treatment of Adults with Community-acquired Pneumonia. ATS/IDSA Guideline. Am J Respir Crit Care Med 2019;200:e45-e67.",
+    "books": [
+      {
+        "id": "harrison",
+        "topic": "Neumonía"
+      },
+      {
+        "id": "mandell",
+        "topic": "Neumonía adquirida en la comunidad; Streptococcus pneumoniae"
+      },
+      {
+        "id": "murray-nadel",
+        "topic": "Neumonía bacteriana"
+      }
+    ]
   },
   {
     "id": "diseccion-aortica",
     "specialty": "Cardiología",
     "difficulty": "Avanzado",
     "setting": "Urgencias",
-    "patient": { "name": "Héctor Navarro", "age": "61 años", "sex": "Masculino" },
+    "patient": {
+      "name": "Héctor Navarro",
+      "age": "61 años",
+      "sex": "Masculino"
+    },
     "chiefComplaint": "Sentí como si algo se me rompiera en el pecho y se me fuera a la espalda.",
     "triageNote": "Inquieto, no encuentra posición. Refiere dolor máximo desde el inicio.",
-    "vitals": { "TA": "Brazo derecho 178/96 mmHg — brazo izquierdo 142/80 mmHg", "FC": "96 lpm", "FR": "22 rpm", "Temp": "36.4 °C", "SpO2": "97 % aire ambiente" },
+    "vitals": {
+      "TA": "Brazo derecho 178/96 mmHg — brazo izquierdo 142/80 mmHg",
+      "FC": "96 lpm",
+      "FR": "22 rpm",
+      "Temp": "36.4 °C",
+      "SpO2": "97 % aire ambiente"
+    },
     "persona": "Hombre corpulento y tenso, muy adolorido, describe el dolor con detalle porque nunca había sentido algo así.",
     "history": {
       "enfermedadActual": "Hace 50 minutos, cargando unas cajas, sintió un dolor súbito en el pecho, máximo desde el primer segundo, 10/10, 'como si me desgarraran', que se fue entre los omóplatos y ahora baja hacia la cintura. Sudó mucho. Por un momento sintió dormido el brazo izquierdo.",
@@ -443,9 +741,26 @@
       "coag": "TP 12 s, INR 1.0, TTPa 29 s."
     },
     "diagnosis": "Disección aórtica aguda tipo A de Stanford (DeBakey I) con insuficiencia aórtica",
-    "acceptedDiagnoses": ["diseccion aortica", "diseccion aortica tipo A", "diseccion de aorta", "diseccion aortica aguda", "stanford A", "sindrome aortico agudo"],
-    "differentials": ["Síndrome coronario agudo", "Tromboembolia pulmonar", "Rotura esofágica", "Neumotórax", "Pericarditis"],
-    "keyTests": ["angiotaca", "ecg", "rxt"],
+    "acceptedDiagnoses": [
+      "diseccion aortica",
+      "diseccion aortica tipo A",
+      "diseccion de aorta",
+      "diseccion aortica aguda",
+      "stanford A",
+      "sindrome aortico agudo"
+    ],
+    "differentials": [
+      "Síndrome coronario agudo",
+      "Tromboembolia pulmonar",
+      "Rotura esofágica",
+      "Neumotórax",
+      "Pericarditis"
+    ],
+    "keyTests": [
+      "angiotaca",
+      "ecg",
+      "rxt"
+    ],
     "management": [
       "NO antiagregar ni anticoagular ni trombolizar",
       "Analgesia con opioides IV",
@@ -459,17 +774,43 @@
       "Diferencia de TAS >20 mmHg entre brazos, déficit de pulso y soplo de insuficiencia aórtica son hallazgos clave.",
       "Dar vasodilatador antes del beta-bloqueador causa taquicardia refleja y aumenta la fuerza de cizallamiento."
     ],
-    "reference": "Isselbacher EM, et al. 2022 ACC/AHA Guideline for the Diagnosis and Management of Aortic Disease. Circulation 2022;146:e334-e482."
+    "reference": "Isselbacher EM, et al. 2022 ACC/AHA Guideline for the Diagnosis and Management of Aortic Disease. Circulation 2022;146:e334-e482.",
+    "books": [
+      {
+        "id": "braunwald",
+        "topic": "Enfermedades de la aorta: síndromes aórticos agudos"
+      },
+      {
+        "id": "harrison",
+        "topic": "Enfermedades de la aorta"
+      },
+      {
+        "id": "rosen",
+        "topic": "Disección aórtica"
+      }
+    ]
   },
   {
     "id": "evc-isquemico",
     "specialty": "Neurología",
     "difficulty": "Avanzado",
     "setting": "Urgencias — hospital con centro de ictus y neurointervencionismo",
-    "patient": { "name": "Guadalupe Herrera", "age": "68 años", "sex": "Femenino", "informant": "Andrés, su hijo" },
+    "patient": {
+      "name": "Guadalupe Herrera",
+      "age": "68 años",
+      "sex": "Femenino",
+      "informant": "Andrés, su hijo"
+    },
     "chiefComplaint": "Mi mamá de repente no podía hablar y no movía el brazo derecho.",
     "triageNote": "Llega en ambulancia 70 minutos después del inicio. La paciente no puede hablar; su hijo da la historia.",
-    "vitals": { "TA": "168/92 mmHg", "FC": "104 lpm, irregular", "FR": "18 rpm", "Temp": "36.8 °C", "SpO2": "96 % aire ambiente", "Glucosa capilar": "128 mg/dL" },
+    "vitals": {
+      "TA": "168/92 mmHg",
+      "FC": "104 lpm, irregular",
+      "FR": "18 rpm",
+      "Temp": "36.8 °C",
+      "SpO2": "96 % aire ambiente",
+      "Glucosa capilar": "128 mg/dL"
+    },
     "persona": "Hijo nervioso pero preciso con las horas porque estaba con ella. Pregunta qué se puede hacer.",
     "history": {
       "enfermedadActual": "Estaban desayunando a las 8:10 a. m. y ella estaba perfectamente. De repente se le cayó la taza, se le 'chuequeó' la cara, no podía hablar ni entender lo que le decían y no movía el brazo ni la pierna derecha. Llamaron a la ambulancia de inmediato. No convulsionó ni se golpeó la cabeza.",
@@ -500,9 +841,29 @@
       "eco": "Aurícula izquierda dilatada (46 mm). FEVI 58%. Sin trombo visible por vía transtorácica."
     },
     "diagnosis": "Evento vascular cerebral isquémico agudo por oclusión de la ACM izquierda (M1) de origen cardioembólico por fibrilación auricular",
-    "acceptedDiagnoses": ["evento vascular cerebral isquemico", "EVC isquemico", "ACV isquemico", "ictus isquemico", "infarto cerebral", "accidente cerebrovascular isquemico", "EVC", "ictus", "oclusion de arteria cerebral media"],
-    "differentials": ["Hemorragia intracerebral", "Hipoglucemia", "Crisis convulsiva con parálisis de Todd", "Tumor cerebral", "Migraña con aura"],
-    "keyTests": ["tacc", "angiotacc", "coag"],
+    "acceptedDiagnoses": [
+      "evento vascular cerebral isquemico",
+      "EVC isquemico",
+      "ACV isquemico",
+      "ictus isquemico",
+      "infarto cerebral",
+      "accidente cerebrovascular isquemico",
+      "EVC",
+      "ictus",
+      "oclusion de arteria cerebral media"
+    ],
+    "differentials": [
+      "Hemorragia intracerebral",
+      "Hipoglucemia",
+      "Crisis convulsiva con parálisis de Todd",
+      "Tumor cerebral",
+      "Migraña con aura"
+    ],
+    "keyTests": [
+      "tacc",
+      "angiotacc",
+      "coag"
+    ],
     "management": [
       "Activar código ictus; confirmar hora de última vez visto bien (08:10) y glucosa capilar",
       "TAC simple urgente para descartar hemorragia; angioTAC para buscar oclusión de gran vaso",
@@ -516,17 +877,41 @@
       "La desviación de la mirada hacia el lado de la lesión + afasia + hemiparesia sugiere oclusión proximal de la ACM dominante.",
       "La hipoglucemia puede imitar un EVC: verifica siempre la glucosa."
     ],
-    "reference": "Powers WJ, et al. Guidelines for the Early Management of Patients With Acute Ischemic Stroke: 2019 Update. Stroke 2019;50:e344-e418."
+    "reference": "Powers WJ, et al. Guidelines for the Early Management of Patients With Acute Ischemic Stroke: 2019 Update. Stroke 2019;50:e344-e418.",
+    "books": [
+      {
+        "id": "harrison",
+        "topic": "Enfermedad cerebrovascular isquémica"
+      },
+      {
+        "id": "adams-victor",
+        "topic": "Enfermedad cerebrovascular"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Evento vascular cerebral"
+      }
+    ]
   },
   {
     "id": "insuficiencia-cardiaca",
     "specialty": "Cardiología",
     "difficulty": "Básico",
     "setting": "Urgencias",
-    "patient": { "name": "Manuel Aguirre", "age": "74 años", "sex": "Masculino" },
+    "patient": {
+      "name": "Manuel Aguirre",
+      "age": "74 años",
+      "sex": "Masculino"
+    },
     "chiefComplaint": "No puedo respirar acostado y se me hincharon mucho las piernas.",
     "triageNote": "Sentado al borde de la camilla, inclinado hacia adelante, con disnea al hablar.",
-    "vitals": { "TA": "158/94 mmHg", "FC": "108 lpm", "FR": "28 rpm", "Temp": "36.7 °C", "SpO2": "86 % aire ambiente" },
+    "vitals": {
+      "TA": "158/94 mmHg",
+      "FC": "108 lpm",
+      "FR": "28 rpm",
+      "Temp": "36.7 °C",
+      "SpO2": "86 % aire ambiente"
+    },
     "persona": "Señor mayor amable, habla entrecortado. Admite con algo de culpa que comió mal y dejó la pastilla de la orina.",
     "history": {
       "enfermedadActual": "Desde hace 1 semana le falta el aire cada vez con menos esfuerzo. Ahora duerme con 3 almohadas y anoche se despertó 2 veces ahogándose y tuvo que sentarse en la ventana. Las piernas se le han hinchado y subió 4 kg. Tiene tos seca en las noches.",
@@ -560,9 +945,29 @@
       "pcr": "PCR 0.8 mg/dL, procalcitonina 0.04 ng/mL."
     },
     "diagnosis": "Insuficiencia cardiaca aguda descompensada (perfil húmedo-caliente) con FEVI reducida, desencadenada por abandono de diurético y transgresión de sodio",
-    "acceptedDiagnoses": ["insuficiencia cardiaca", "insuficiencia cardiaca aguda", "insuficiencia cardiaca descompensada", "ICA", "edema agudo pulmonar", "falla cardiaca", "IC descompensada"],
-    "differentials": ["Síndrome coronario agudo", "Neumonía", "EPOC exacerbado", "Tromboembolia pulmonar", "Síndrome nefrótico"],
-    "keyTests": ["bnp", "rxt", "ecg", "eco", "trop"],
+    "acceptedDiagnoses": [
+      "insuficiencia cardiaca",
+      "insuficiencia cardiaca aguda",
+      "insuficiencia cardiaca descompensada",
+      "ICA",
+      "edema agudo pulmonar",
+      "falla cardiaca",
+      "IC descompensada"
+    ],
+    "differentials": [
+      "Síndrome coronario agudo",
+      "Neumonía",
+      "EPOC exacerbado",
+      "Tromboembolia pulmonar",
+      "Síndrome nefrótico"
+    ],
+    "keyTests": [
+      "bnp",
+      "rxt",
+      "ecg",
+      "eco",
+      "trop"
+    ],
     "management": [
       "Posición sentada, oxígeno; ventilación mecánica no invasiva (CPAP/BiPAP) si hay distrés o acidosis respiratoria",
       "Diurético de asa IV: furosemida en dosis ≥ al equivalente de la dosis oral habitual (p. ej., 40-80 mg IV) y vigilar diuresis/natriuresis",
@@ -576,17 +981,41 @@
       "Una troponina estable discretamente elevada es común en IC; la curva dinámica orienta a SCA.",
       "Los 4 pilares en FEVI reducida: ARNI/IECA, betabloqueador, antagonista mineralocorticoide e iSGLT2."
     ],
-    "reference": "McDonagh TA, et al. 2021 ESC Guidelines for the diagnosis and treatment of acute and chronic heart failure (and 2023 focused update). Eur Heart J 2021;42:3599-3726."
+    "reference": "McDonagh TA, et al. 2021 ESC Guidelines for the diagnosis and treatment of acute and chronic heart failure (and 2023 focused update). Eur Heart J 2021;42:3599-3726.",
+    "books": [
+      {
+        "id": "braunwald",
+        "topic": "Insuficiencia cardiaca aguda"
+      },
+      {
+        "id": "harrison",
+        "topic": "Insuficiencia cardiaca: tratamiento"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Insuficiencia cardiaca aguda"
+      }
+    ]
   },
   {
     "id": "pancreatitis-biliar",
     "specialty": "Gastroenterología",
     "difficulty": "Básico",
     "setting": "Urgencias",
-    "patient": { "name": "Rosa María Treviño", "age": "45 años", "sex": "Femenino" },
+    "patient": {
+      "name": "Rosa María Treviño",
+      "age": "45 años",
+      "sex": "Femenino"
+    },
     "chiefComplaint": "Tengo un dolor horrible en la boca del estómago que me atraviesa a la espalda.",
     "triageNote": "Se encuentra en posición fetal, inclinada hacia adelante. Vomitando.",
-    "vitals": { "TA": "112/70 mmHg", "FC": "110 lpm", "FR": "22 rpm", "Temp": "37.8 °C", "SpO2": "95 % aire ambiente" },
+    "vitals": {
+      "TA": "112/70 mmHg",
+      "FC": "110 lpm",
+      "FR": "22 rpm",
+      "Temp": "37.8 °C",
+      "SpO2": "95 % aire ambiente"
+    },
     "persona": "Señora conversadora pero muy adolorida; se queja constantemente. Cuenta que ya le habían dicho que tenía 'piedras'.",
     "history": {
       "enfermedadActual": "Anoche cenó pozole y tostadas. 2 horas después empezó un dolor en la boca del estómago, muy fuerte (10/10), constante, que se va a la espalda 'como un cinturón'. Mejora un poco inclinándose hacia adelante. Ha vomitado 6 veces, primero comida y luego líquido amarillo; el vómito no le quita el dolor.",
@@ -619,9 +1048,26 @@
       "ecg": "Taquicardia sinusal 110 lpm, sin alteraciones del ST."
     },
     "diagnosis": "Pancreatitis aguda de origen biliar (leve a moderadamente grave por criterios de Atlanta)",
-    "acceptedDiagnoses": ["pancreatitis aguda", "pancreatitis biliar", "pancreatitis aguda biliar", "pancreatitis"],
-    "differentials": ["Colecistitis aguda", "Colangitis aguda", "Úlcera péptica perforada", "Isquemia mesentérica", "Infarto agudo de miocardio de cara inferior"],
-    "keyTests": ["lipasa", "pfh", "usabd", "bh", "qs"],
+    "acceptedDiagnoses": [
+      "pancreatitis aguda",
+      "pancreatitis biliar",
+      "pancreatitis aguda biliar",
+      "pancreatitis"
+    ],
+    "differentials": [
+      "Colecistitis aguda",
+      "Colangitis aguda",
+      "Úlcera péptica perforada",
+      "Isquemia mesentérica",
+      "Infarto agudo de miocardio de cara inferior"
+    ],
+    "keyTests": [
+      "lipasa",
+      "pfh",
+      "usabd",
+      "bh",
+      "qs"
+    ],
     "management": [
       "Diagnóstico con 2 de 3 criterios: dolor típico + lipasa >3 veces el límite superior (la TAC no es necesaria inicialmente)",
       "Hidratación IV moderada con Ringer lactato (bolo 10 mL/kg si hay hipovolemia, luego 1.5 mL/kg/h) con reevaluación frecuente",
@@ -636,17 +1082,41 @@
       "La gravedad se define por falla orgánica (Atlanta revisada), no por el nivel de lipasa.",
       "La TAC temprana (<72 h) no mejora el manejo y puede subestimar la necrosis."
     ],
-    "reference": "Tenner S, et al. American College of Gastroenterology Guidelines: Management of Acute Pancreatitis. Am J Gastroenterol 2024;119:419-437."
+    "reference": "Tenner S, et al. American College of Gastroenterology Guidelines: Management of Acute Pancreatitis. Am J Gastroenterol 2024;119:419-437.",
+    "books": [
+      {
+        "id": "sleisenger",
+        "topic": "Pancreatitis aguda"
+      },
+      {
+        "id": "harrison",
+        "topic": "Pancreatitis aguda y crónica"
+      },
+      {
+        "id": "sabiston",
+        "topic": "Páncreas exocrino"
+      }
+    ]
   },
   {
     "id": "dengue-alarma",
     "specialty": "Infectología",
     "difficulty": "Intermedio",
     "setting": "Urgencias de un hospital en zona endémica (sureste de México)",
-    "patient": { "name": "Fernanda Canul", "age": "24 años", "sex": "Femenino" },
+    "patient": {
+      "name": "Fernanda Canul",
+      "age": "24 años",
+      "sex": "Femenino"
+    },
     "chiefComplaint": "Ya se me quitó la fiebre pero ahora me duele mucho la panza y no paro de vomitar.",
     "triageNote": "Pálida, decaída. Se observan petequias en antebrazos.",
-    "vitals": { "TA": "108/80 mmHg", "FC": "104 lpm", "FR": "22 rpm", "Temp": "37.0 °C", "SpO2": "95 % aire ambiente" },
+    "vitals": {
+      "TA": "108/80 mmHg",
+      "FC": "104 lpm",
+      "FR": "22 rpm",
+      "Temp": "37.0 °C",
+      "SpO2": "95 % aire ambiente"
+    },
     "persona": "Joven tranquila pero cansada. Cuenta que en su colonia hay mucha gente con 'dengue'.",
     "history": {
       "enfermedadActual": "Hace 5 días empezó con fiebre alta (40 °C), dolor de cabeza detrás de los ojos, dolor de músculos y huesos 'como si la hubieran golpeado' y ronchitas rojas en el cuerpo. Desde ayer ya no tiene fiebre, pero empezó con dolor fuerte y continuo en la panza (arriba a la derecha), vómitos 5 veces hoy, y le sangran las encías al lavarse los dientes. Orina poco y se siente muy cansada y mareada al pararse.",
@@ -680,9 +1150,26 @@
       "hemocultivo": "Sin desarrollo a las 48 h."
     },
     "diagnosis": "Dengue con signos de alarma (fase crítica, infección secundaria) con fuga plasmática",
-    "acceptedDiagnoses": ["dengue con signos de alarma", "dengue", "dengue grave", "fiebre por dengue con signos de alarma", "dengue hemorragico"],
-    "differentials": ["Chikungunya", "Zika", "Leptospirosis", "Malaria", "Hepatitis viral aguda", "Sepsis bacteriana"],
-    "keyTests": ["bh", "dengue", "usabd"],
+    "acceptedDiagnoses": [
+      "dengue con signos de alarma",
+      "dengue",
+      "dengue grave",
+      "fiebre por dengue con signos de alarma",
+      "dengue hemorragico"
+    ],
+    "differentials": [
+      "Chikungunya",
+      "Zika",
+      "Leptospirosis",
+      "Malaria",
+      "Hepatitis viral aguda",
+      "Sepsis bacteriana"
+    ],
+    "keyTests": [
+      "bh",
+      "dengue",
+      "usabd"
+    ],
     "management": [
       "Hospitalización: tiene signos de alarma (dolor abdominal intenso, vómito persistente, acumulación de líquidos, sangrado de mucosas, hepatomegalia, aumento del Hto con caída de plaquetas)",
       "Cristaloides isotónicos 5-7 mL/kg/h por 1-2 h, luego reducir gradualmente según respuesta clínica y hematocrito",
@@ -696,17 +1183,42 @@
       "El aumento de hematocrito con descenso de plaquetas es el marcador de laboratorio de fuga plasmática.",
       "El NS1 se negativiza después del día 5; en ese momento la serología IgM es más útil."
     ],
-    "reference": "Organización Panamericana de la Salud. Directrices para el diagnóstico clínico y el tratamiento del dengue, el chikunguña y el zika. Washington, D.C.: OPS; 2022."
+    "reference": "Organización Panamericana de la Salud. Directrices para el diagnóstico clínico y el tratamiento del dengue, el chikunguña y el zika. Washington, D.C.: OPS; 2022.",
+    "books": [
+      {
+        "id": "harrison",
+        "topic": "Infecciones virales transmitidas por artrópodos (dengue)"
+      },
+      {
+        "id": "mandell",
+        "topic": "Flavivirus: dengue"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Infecciones zoonóticas y del viajero"
+      }
+    ]
   },
   {
     "id": "organofosforados",
     "specialty": "Toxicología",
     "difficulty": "Avanzado",
     "setting": "Urgencias de un hospital rural",
-    "patient": { "name": "Ramiro Pérez", "age": "35 años", "sex": "Masculino", "informant": "Don Julián, su compañero de trabajo" },
+    "patient": {
+      "name": "Ramiro Pérez",
+      "age": "35 años",
+      "sex": "Masculino",
+      "informant": "Don Julián, su compañero de trabajo"
+    },
     "chiefComplaint": "Estaba fumigando y se puso malo: babea, vomita y no puede respirar bien.",
     "triageNote": "Paciente con abundantes secreciones orales, ropa húmeda con olor fuerte a solvente/ajo. Llega en camioneta.",
-    "vitals": { "TA": "92/58 mmHg", "FC": "48 lpm", "FR": "28 rpm", "Temp": "36.4 °C", "SpO2": "88 % aire ambiente" },
+    "vitals": {
+      "TA": "92/58 mmHg",
+      "FC": "48 lpm",
+      "FR": "28 rpm",
+      "Temp": "36.4 °C",
+      "SpO2": "88 % aire ambiente"
+    },
     "persona": "Campesino mayor, sencillo, asustado. Sabe que usaban un 'líquido para la plaga' pero no recuerda el nombre; trae la etiqueta en una foto en el celular si se la piden.",
     "history": {
       "enfermedadActual": "Hoy en la mañana estuvieron fumigando con bomba de mochila en la parcela de jitomate durante unas 4 horas, con mucho calor. Ramiro no usaba guantes ni mascarilla y la mochila goteaba sobre su espalda. Hace 1 hora empezó a sudar muchísimo, a babear, le lloraban los ojos, dijo que veía borroso, vomitó varias veces, tuvo diarrea y se orinó. Luego empezó a tener 'brincos' en los músculos y le costaba respirar.",
@@ -738,9 +1250,28 @@
       "tox": "Panel de drogas en orina negativo. Etanol no detectable."
     },
     "diagnosis": "Intoxicación aguda por organofosforados (clorpirifos) por exposición ocupacional dérmica/inhalatoria — síndrome colinérgico",
-    "acceptedDiagnoses": ["intoxicacion por organofosforados", "intoxicacion por organofosforado", "sindrome colinergico", "intoxicacion por plaguicidas", "intoxicacion por inhibidores de colinesterasa", "intoxicacion por clorpirifos", "organofosforados", "intoxicacion por carbamatos"],
-    "differentials": ["Intoxicación por carbamatos", "Gastroenteritis grave", "Intoxicación por hongos muscarínicos", "Exposición a agentes nerviosos", "Edema pulmonar cardiogénico"],
-    "keyTests": ["colinesterasa", "gasa", "ecg"],
+    "acceptedDiagnoses": [
+      "intoxicacion por organofosforados",
+      "intoxicacion por organofosforado",
+      "sindrome colinergico",
+      "intoxicacion por plaguicidas",
+      "intoxicacion por inhibidores de colinesterasa",
+      "intoxicacion por clorpirifos",
+      "organofosforados",
+      "intoxicacion por carbamatos"
+    ],
+    "differentials": [
+      "Intoxicación por carbamatos",
+      "Gastroenteritis grave",
+      "Intoxicación por hongos muscarínicos",
+      "Exposición a agentes nerviosos",
+      "Edema pulmonar cardiogénico"
+    ],
+    "keyTests": [
+      "colinesterasa",
+      "gasa",
+      "ecg"
+    ],
     "management": [
       "Protección del personal (guantes, bata) y descontaminación: retirar toda la ropa y lavar piel y cabello con agua y jabón",
       "Vía aérea: aspiración de secreciones, oxígeno; intubación si es necesario (evitar succinilcolina)",
@@ -755,17 +1286,41 @@
       "El objetivo de la atropina es secar las secreciones bronquiales, no revertir la miosis.",
       "La exposición dérmica ocupacional es una causa frecuente en zonas agrícolas de Latinoamérica."
     ],
-    "reference": "Eddleston M, et al. Management of acute organophosphorus pesticide poisoning. Lancet 2008;371:597-607."
+    "reference": "Eddleston M, et al. Management of acute organophosphorus pesticide poisoning. Lancet 2008;371:597-607.",
+    "books": [
+      {
+        "id": "goldfrank",
+        "topic": "Insecticidas: organofosforados y carbamatos"
+      },
+      {
+        "id": "goldfrank",
+        "topic": "Antídotos: atropina y pralidoxima"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Insecticidas, herbicidas y rodenticidas"
+      }
+    ]
   },
   {
     "id": "sangrado-tubo-digestivo",
     "specialty": "Gastroenterología",
     "difficulty": "Intermedio",
     "setting": "Urgencias",
-    "patient": { "name": "Arturo Gómez", "age": "63 años", "sex": "Masculino" },
+    "patient": {
+      "name": "Arturo Gómez",
+      "age": "63 años",
+      "sex": "Masculino"
+    },
     "chiefComplaint": "Llevo dos días haciendo popó negra y hoy vomité como café molido. Me desmayé en el baño.",
     "triageNote": "Pálido, diaforético. Su esposa refiere que se desmayó en casa al levantarse.",
-    "vitals": { "TA": "94/60 mmHg (al sentarse 78/50)", "FC": "118 lpm", "FR": "20 rpm", "Temp": "36.5 °C", "SpO2": "97 % aire ambiente" },
+    "vitals": {
+      "TA": "94/60 mmHg (al sentarse 78/50)",
+      "FC": "118 lpm",
+      "FR": "20 rpm",
+      "Temp": "36.5 °C",
+      "SpO2": "97 % aire ambiente"
+    },
     "persona": "Señor serio, minimiza sus síntomas ('es una infección'). Toma pastillas para las rodillas que compra sin receta.",
     "history": {
       "enfermedadActual": "Desde hace 2 días hace evacuaciones negras, pegajosas, como chapopote y muy olorosas. Hoy en la mañana vomitó algo oscuro 'como café molido' dos veces. Al pararse del baño se mareó y se desmayó unos segundos. Desde hace un mes tiene ardor en la boca del estómago que se le quita al comer.",
@@ -797,9 +1352,29 @@
       "gasa": "pH 7.34, PaCO₂ 34, PaO₂ 90, HCO₃ 18, lactato 3.2 mmol/L."
     },
     "diagnosis": "Hemorragia de tubo digestivo alto no variceal por úlcera duodenal (Forrest IIa) asociada a AINEs y H. pylori",
-    "acceptedDiagnoses": ["hemorragia de tubo digestivo alto", "sangrado de tubo digestivo alto", "STDA", "HTDA", "ulcera duodenal sangrante", "ulcera peptica sangrante", "hemorragia digestiva alta", "ulcera peptica"],
-    "differentials": ["Varices esofágicas", "Síndrome de Mallory-Weiss", "Cáncer gástrico", "Esofagitis erosiva", "Lesión de Dieulafoy"],
-    "keyTests": ["bh", "qs", "coag", "endoscopia"],
+    "acceptedDiagnoses": [
+      "hemorragia de tubo digestivo alto",
+      "sangrado de tubo digestivo alto",
+      "STDA",
+      "HTDA",
+      "ulcera duodenal sangrante",
+      "ulcera peptica sangrante",
+      "hemorragia digestiva alta",
+      "ulcera peptica"
+    ],
+    "differentials": [
+      "Varices esofágicas",
+      "Síndrome de Mallory-Weiss",
+      "Cáncer gástrico",
+      "Esofagitis erosiva",
+      "Lesión de Dieulafoy"
+    ],
+    "keyTests": [
+      "bh",
+      "qs",
+      "coag",
+      "endoscopia"
+    ],
     "management": [
       "Dos accesos venosos periféricos de grueso calibre, reanimación con cristaloides, tipificar y cruzar",
       "Transfusión con estrategia restrictiva (umbral Hb <7 g/dL; <8 si cardiopatía)",
@@ -813,17 +1388,41 @@
       "Las lesiones Forrest Ia, Ib y IIa requieren tratamiento endoscópico.",
       "AINEs y H. pylori son las dos causas principales de enfermedad ulcerosa péptica."
     ],
-    "reference": "Laine L, et al. ACG Clinical Guideline: Upper Gastrointestinal and Ulcer Bleeding. Am J Gastroenterol 2021;116:899-917."
+    "reference": "Laine L, et al. ACG Clinical Guideline: Upper Gastrointestinal and Ulcer Bleeding. Am J Gastroenterol 2021;116:899-917.",
+    "books": [
+      {
+        "id": "sleisenger",
+        "topic": "Hemorragia gastrointestinal; enfermedad ulcerosa péptica"
+      },
+      {
+        "id": "harrison",
+        "topic": "Hemorragia gastrointestinal"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Hemorragia gastrointestinal alta"
+      }
+    ]
   },
   {
     "id": "anafilaxia",
     "specialty": "Urgencias / Alergología",
     "difficulty": "Básico",
     "setting": "Urgencias",
-    "patient": { "name": "Sofía Ramírez", "age": "30 años", "sex": "Femenino" },
+    "patient": {
+      "name": "Sofía Ramírez",
+      "age": "30 años",
+      "sex": "Femenino"
+    },
     "chiefComplaint": "Me salieron ronchas en todo el cuerpo, se me hinchó la boca y siento que me ahogo.",
     "triageNote": "Llega caminando con su pareja desde un restaurante cercano. Habla con voz ronca.",
-    "vitals": { "TA": "78/44 mmHg", "FC": "128 lpm", "FR": "28 rpm", "Temp": "36.8 °C", "SpO2": "90 % aire ambiente" },
+    "vitals": {
+      "TA": "78/44 mmHg",
+      "FC": "128 lpm",
+      "FR": "28 rpm",
+      "Temp": "36.8 °C",
+      "SpO2": "90 % aire ambiente"
+    },
     "persona": "Mujer joven muy asustada y ansiosa; habla con dificultad, voz ronca. Se rasca constantemente.",
     "history": {
       "enfermedadActual": "Hace 20 minutos estaba comiendo un coctel de camarón en un restaurante. A los 5-10 minutos empezó a sentir comezón en la boca y las manos, luego ronchas en todo el cuerpo, se le hincharon los labios, siente la garganta cerrada, le cuesta respirar y silba el pecho. Vomitó una vez y tuvo cólicos. Se siente mareada, como que se va a desmayar.",
@@ -853,8 +1452,19 @@
       "bhcg": "β-hCG <5 mUI/mL. Negativa."
     },
     "diagnosis": "Anafilaxia con choque anafiláctico por alergia alimentaria (mariscos)",
-    "acceptedDiagnoses": ["anafilaxia", "choque anafilactico", "shock anafilactico", "reaccion anafilactica"],
-    "differentials": ["Angioedema por IECA / hereditario", "Crisis asmática grave", "Reacción vasovagal", "Escombroidosis (intoxicación por histamina)", "Crisis de pánico"],
+    "acceptedDiagnoses": [
+      "anafilaxia",
+      "choque anafilactico",
+      "shock anafilactico",
+      "reaccion anafilactica"
+    ],
+    "differentials": [
+      "Angioedema por IECA / hereditario",
+      "Crisis asmática grave",
+      "Reacción vasovagal",
+      "Escombroidosis (intoxicación por histamina)",
+      "Crisis de pánico"
+    ],
     "keyTests": [],
     "management": [
       "Adrenalina IM 0.5 mg (0.01 mg/kg de solución 1 mg/mL) en la cara anterolateral del muslo, inmediatamente; repetir cada 5-15 min si no hay respuesta",
@@ -870,6 +1480,20 @@
       "El retraso en la adrenalina es el principal factor asociado a muerte por anafilaxia.",
       "La triptasa sérica tomada entre 30 min y 2 h puede apoyar el diagnóstico retrospectivamente."
     ],
-    "reference": "Cardona V, et al. World Allergy Organization Anaphylaxis Guidance 2020. World Allergy Organ J 2020;13:100472."
+    "reference": "Cardona V, et al. World Allergy Organization Anaphylaxis Guidance 2020. World Allergy Organ J 2020;13:100472.",
+    "books": [
+      {
+        "id": "middleton",
+        "topic": "Anafilaxia"
+      },
+      {
+        "id": "harrison",
+        "topic": "Anafilaxia (enfermedades alérgicas)"
+      },
+      {
+        "id": "tintinalli",
+        "topic": "Anafilaxia, reacciones alérgicas y angioedema"
+      }
+    ]
   }
 ]

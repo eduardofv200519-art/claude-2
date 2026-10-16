@@ -16,6 +16,8 @@ const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || "deepseek-chat";
 const PUBLIC_DIR = path.join(__dirname, "public");
 const CASES = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "cases.json"), "utf8"));
 const TESTS = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "tests.json"), "utf8"));
+const BOOKS = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "books.json"), "utf8"));
+const BOOKS_BY_ID = Object.fromEntries(BOOKS.map((b) => [b.id, b]));
 const TESTS_BY_ID = Object.fromEntries(TESTS.map((t) => [t.id, t]));
 const CASES_BY_ID = Object.fromEntries(CASES.map((c) => [c.id, c]));
 
@@ -59,6 +61,14 @@ function publicCase(c) {
   };
 }
 
+function citeBook(b) {
+  return `${b.authors.replace(/\.$/, "")}. ${b.title}. ${b.edition} ${b.publisher}; ${b.year}.`;
+}
+
+function caseBooks(c) {
+  return c.books.map(({ id, topic }) => ({ ...BOOKS_BY_ID[id], topic, citation: citeBook(BOOKS_BY_ID[id]) }));
+}
+
 function revealCase(c) {
   return {
     diagnosis: c.diagnosis,
@@ -67,6 +77,7 @@ function revealCase(c) {
     management: c.management,
     teachingPoints: c.teachingPoints,
     reference: c.reference,
+    books: caseBooks(c),
   };
 }
 
@@ -139,6 +150,11 @@ CASO (información completa, el estudiante no la vio toda):
 - Diferenciales relevantes: ${c.differentials.join("; ")}
 - Estudios clave: ${c.keyTests.map((id) => TESTS_BY_ID[id]?.name || id).join("; ") || "ninguno (diagnóstico clínico: penaliza retrasar el tratamiento por pedir estudios)"}
 - Manejo esperado: ${c.management.join("; ")}
+- Perlas clínicas: ${c.teachingPoints.join("; ")}
+
+FUENTES DE REFERENCIA del caso (basa tu retroalimentación en ellas y, cuando corrijas algo, indica qué libro y tema debe repasar el estudiante):
+- Guía clínica: ${c.reference}
+${caseBooks(c).map((b) => `- ${b.title} (${b.edition}), tema: ${b.topic}`).join("\n")}
 
 LO QUE HIZO EL ESTUDIANTE:
 - Preguntas en la entrevista (${transcript.length}): ${transcript.map((t) => `"${t}"`).join(" | ") || "ninguna"}
@@ -155,7 +171,7 @@ Califica con esta rúbrica (total 100):
 - entrevista (0-10): preguntas pertinentes.
 
 Devuelve EXCLUSIVAMENTE un objeto JSON con esta forma:
-{"diagnosticoCorrecto": boolean, "puntajes": {"diagnostico": n, "diferenciales": n, "estudios": n, "manejo": n, "entrevista": n}, "total": n, "fortalezas": ["..."], "areasDeMejora": ["..."], "comentario": "párrafo breve de retroalimentación"}`;
+{"diagnosticoCorrecto": boolean, "puntajes": {"diagnostico": n, "diferenciales": n, "estudios": n, "manejo": n, "entrevista": n}, "total": n, "fortalezas": ["..."], "areasDeMejora": ["..."], "comentario": "párrafo breve de retroalimentación", "lecturasRecomendadas": ["Libro — tema concreto a repasar y por qué"]}`;
 }
 
 // Evaluación de respaldo sin IA (coincidencia de palabras clave).
@@ -185,6 +201,7 @@ function offlineEvaluation(c, submission, orderedTests, transcript) {
     fortalezas: correct ? ["Diagnóstico principal correcto."] : [],
     areasDeMejora: correct ? [] : ["Revisa el diagnóstico correcto y los estudios clave abajo."],
     comentario: "Evaluación automática por palabras clave (sin IA). Configura tu API key de DeepSeek para recibir retroalimentación detallada.",
+    lecturasRecomendadas: caseBooks(c).map((b) => `${b.title} — ${b.topic}`),
     offline: true,
   };
 }
@@ -224,6 +241,8 @@ const routes = {
   "GET /api/status": () => ({ aiConfigured: Boolean(DEEPSEEK_API_KEY), model: DEEPSEEK_MODEL, cases: CASES.length }),
 
   "GET /api/cases": () => CASES.map(publicSummary),
+
+  "GET /api/books": () => BOOKS.map((b) => ({ ...b, citation: citeBook(b) })),
 
   "GET /api/tests": () => TESTS.map(({ normal, ...t }) => t),
 
@@ -308,4 +327,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { server, CASES, TESTS };
+module.exports = { server, CASES, TESTS, BOOKS };

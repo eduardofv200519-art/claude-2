@@ -120,7 +120,7 @@ function renderHome() {
     <section class="hero">
       <h1>Practica casos clínicos con pacientes virtuales</h1>
       <p>Entrevista al paciente con lenguaje natural (impulsado por DeepSeek), explóralo, solicita estudios y propón tu diagnóstico y plan.
-      Al final recibes una evaluación detallada con la respuesta correcta y la guía clínica de referencia.</p>
+      Al final recibes una evaluación detallada con la respuesta correcta, la guía clínica y los <a href="#/bibliografia">libros de texto de referencia</a> para repasar.</p>
     </section>
     <div class="stats">
       <div class="stat"><b>${state.cases.length}</b><span>casos disponibles</span></div>
@@ -473,7 +473,14 @@ function drawResults() {
         <div class="box"><h3>Manejo recomendado</h3>${list(a.management)}</div>
         <div class="box"><h3>Perlas clínicas</h3>${list(a.teachingPoints)}</div>
       </div>
-      <p class="reference">📚 Referencia: ${esc(a.reference)}</p>
+      ${ev.lecturasRecomendadas?.length ? `<div class="box" style="margin-top:14px"><h3>📖 Lecturas recomendadas para ti</h3>${list(ev.lecturasRecomendadas)}</div>` : ""}
+      <div class="box" style="margin-top:14px">
+        <h3>📚 Bibliografía del caso</h3>
+        <ul>
+          <li><b>Guía clínica:</b> ${esc(a.reference)}</li>
+          ${(a.books || []).map((b) => `<li><b>${esc(b.title)}</b> (${esc(b.edition)}) — tema: <i>${esc(b.topic)}</i><div class="small muted">${esc(b.citation)}</div></li>`).join("")}
+        </ul>
+      </div>
       <div class="row end">
         <button class="btn" id="retry">Reintentar caso</button>
         <a class="btn primary" href="#/">Otro caso</a>
@@ -489,10 +496,25 @@ function drawResults() {
 
 // ---------- router ----------
 
+async function renderBooks() {
+  const books = await api("/api/books");
+  app.innerHTML = `
+    <section class="hero">
+      <a href="#/" class="small">← Todos los casos</a>
+      <h1>Bibliografía</h1>
+      <p>Cada caso se construyó y se evalúa con base en guías clínicas actuales y estos libros de texto de referencia.
+      Al terminar un caso verás qué libro y qué tema consultar.</p>
+    </section>
+    <div class="panel"><ul class="booklist">
+      ${books.map((b) => `<li><b>${esc(b.title)}</b>, ${esc(b.edition)} <span class="muted">(${b.year})</span><div class="small muted">${esc(b.citation)}</div></li>`).join("")}
+    </ul></div>`;
+}
+
 function route() {
   const m = location.hash.match(/^#\/caso\/([\w-]+)/);
   window.scrollTo(0, 0);
   if (m) renderCase(m[1]);
+  else if (location.hash === "#/bibliografia") renderBooks();
   else renderHome();
 }
 

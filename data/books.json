@@ -1,0 +1,17 @@
+[
+  { "id": "harrison", "title": "Harrison. Principios de Medicina Interna", "edition": "21.ª ed.", "authors": "Loscalzo J, Fauci AS, Kasper DL, Hauser SL, Longo DL, Jameson JL (eds.)", "publisher": "McGraw-Hill", "year": 2022 },
+  { "id": "tintinalli", "title": "Tintinalli's Emergency Medicine: A Comprehensive Study Guide", "edition": "9th ed.", "authors": "Tintinalli JE, Ma OJ, Yealy DM, et al. (eds.)", "publisher": "McGraw-Hill", "year": 2020 },
+  { "id": "rosen", "title": "Rosen's Emergency Medicine: Concepts and Clinical Practice", "edition": "10th ed.", "authors": "Walls RM, Hockberger RS, Gausche-Hill M, et al. (eds.)", "publisher": "Elsevier", "year": 2023 },
+  { "id": "braunwald", "title": "Braunwald's Heart Disease: A Textbook of Cardiovascular Medicine", "edition": "12th ed.", "authors": "Libby P, Bonow RO, Mann DL, Tomaselli GF, Bhatt DL, Solomon SD (eds.)", "publisher": "Elsevier", "year": 2022 },
+  { "id": "sabiston", "title": "Sabiston Textbook of Surgery", "edition": "21st ed.", "authors": "Townsend CM, Beauchamp RD, Evers BM, Mattox KL (eds.)", "publisher": "Elsevier", "year": 2022 },
+  { "id": "schwartz", "title": "Schwartz. Principios de Cirugía", "edition": "11.ª ed.", "authors": "Brunicardi FC, et al. (eds.)", "publisher": "McGraw-Hill", "year": 2019 },
+  { "id": "williams-obs", "title": "Williams Obstetrics", "edition": "26th ed.", "authors": "Cunningham FG, Leveno KJ, Dashe JS, et al.", "publisher": "McGraw-Hill", "year": 2022 },
+  { "id": "williams-gyn", "title": "Williams Gynecology", "edition": "4th ed.", "authors": "Hoffman BL, Schorge JO, Halvorson LM, et al.", "publisher": "McGraw-Hill", "year": 2020 },
+  { "id": "williams-endo", "title": "Williams Textbook of Endocrinology", "edition": "14th ed.", "authors": "Melmed S, Auchus RJ, Goldfine AB, Koenig RJ, Rosen CJ (eds.)", "publisher": "Elsevier", "year": 2020 },
+  { "id": "mandell", "title": "Mandell, Douglas, and Bennett's Principles and Practice of Infectious Diseases", "edition": "9th ed.", "authors": "Bennett JE, Dolin R, Blaser MJ (eds.)", "publisher": "Elsevier", "year": 2020 },
+  { "id": "adams-victor", "title": "Adams and Victor's Principles of Neurology", "edition": "11th ed.", "authors": "Ropper AH, Samuels MA, Klein JP, Prasad S", "publisher": "McGraw-Hill", "year": 2019 },
+  { "id": "murray-nadel", "title": "Murray & Nadel's Textbook of Respiratory Medicine", "edition": "7th ed.", "authors": "Broaddus VC, Ernst JD, King TE, et al. (eds.)", "publisher": "Elsevier", "year": 2022 },
+  { "id": "sleisenger", "title": "Sleisenger and Fordtran's Gastrointestinal and Liver Disease", "edition": "11th ed.", "authors": "Feldman M, Friedman LS, Brandt LJ (eds.)", "publisher": "Elsevier", "year": 2021 },
+  { "id": "goldfrank", "title": "Goldfrank's Toxicologic Emergencies", "edition": "11th ed.", "authors": "Nelson LS, Howland MA, Lewin NA, et al. (eds.)", "publisher": "McGraw-Hill", "year": 2019 },
+  { "id": "middleton", "title": "Middleton's Allergy: Principles and Practice", "edition": "9th ed.", "authors": "Burks AW, Holgate ST, O'Hehir RE, et al. (eds.)", "publisher": "Elsevier", "year": 2020 }
+]
