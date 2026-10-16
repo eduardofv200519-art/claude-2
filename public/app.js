@@ -257,7 +257,7 @@ function renderHome() {
       list
         .map((c) => {
           const ev = progress[c.id]?.evaluation;
-          const started = progress[c.id]?.messages?.length || progress[c.id]?.ordered?.length;
+          const started = progress[c.id]?.messages?.some((m) => m.role !== "system") || progress[c.id]?.ordered?.length;
           return `<button class="case-card" data-id="${esc(c.id)}">
             <div class="tags">
               <span class="tag spec">${esc(c.specialty)}</span>
