@@ -30,13 +30,31 @@ Simulador de casos clínicos inspirado en [ResimGame](https://resimgame.com/): e
 | Hemorragia de tubo digestivo alto por úlcera | Gastroenterología |
 | Anafilaxia | Urgencias |
 
+## Usar en Windows sin instalar nada (.exe)
+
+1. Descarga `SimClinica-IA.exe` y haz doble clic. Se abre una ventana negra (el servidor) y la app en tu navegador, en http://localhost:3000.
+2. Windows puede mostrar **"Windows protegió tu PC"** porque el ejecutable no está firmado: elige **Más información → Ejecutar de todas formas**.
+3. En la app, sigue la guía **"Activa la IA gratis"**: saca una key de Gemini y pégala en ⚙ Ajustes.
+4. Para cerrar la app, cierra la ventana negra.
+
+Opcional: pon un archivo `.env` junto al `.exe` (mismo formato que `.env.example`) para dejar la key configurada.
+
+Para generar el ejecutable (desde cualquier sistema, con Node 22):
+
+```bash
+npm run build:exe                     # dist/SimClinica-IA.exe (Windows x64)
+node scripts/build-exe.js linux-x64   # dist/SimClinica-IA-linux
+```
+
+Descarga el Node.js oficial de la misma versión (verificado con SHA-256), quita su firma digital (se invalidaría al inyectar la app) e inyecta la app con [Node SEA](https://nodejs.org/api/single-executable-applications.html).
+
 ## Cómo correrlo
 
 Requiere Node.js 18 o superior. No tiene dependencias.
 
 ```bash
 cp .env.example .env      # elige AI_PROVIDER y pon tu AI_API_KEY
-npm start                 # http://localhost:3000
+npm start                 # http://localhost:3000 (solo esta computadora; HOST=0.0.0.0 para compartir en la red)
 npm run check             # prueba real: modelos, paciente virtual y evaluación
 npm test                  # pruebas automáticas (con una IA simulada)
 ```
@@ -80,6 +98,7 @@ data/tests.json    catálogo de estudios
 data/books.json    libros de texto de referencia
 public/            frontend (HTML/CSS/JS sin frameworks)
 scripts/check-ai.js  prueba real contra el proveedor de IA (npm run check)
+scripts/build-exe.js genera el ejecutable para Windows o Linux
 test/              pruebas
 ```
 

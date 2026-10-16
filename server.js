@@ -7,9 +7,29 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-loadDotEnv(path.join(__dirname, ".env"));
+// Dentro del ejecutable (.exe) la interfaz y los casos vienen empaquetados como "assets" de Node SEA,
+// y el archivo .env opcional se busca junto al ejecutable.
+const sea = (() => {
+  try {
+    const m = require("node:sea");
+    return m.isSea() ? m : null;
+  } catch {
+    return null;
+  }
+})();
+const APP_DIR = sea ? path.dirname(process.execPath) : __dirname;
+
+function readAppFile(rel) {
+  if (sea) return Buffer.from(sea.getAsset(rel));
+  return fs.readFileSync(path.join(__dirname, rel));
+}
+
+loadDotEnv(path.join(APP_DIR, ".env"));
 
 const PORT = Number(process.env.PORT) || 3000;
+// Solo esta computadora por defecto: evita el aviso del Firewall de Windows y que otros en la red usen la key.
+// HOST=0.0.0.0 la comparte en la red local (p. ej. para un salón de clases).
+const HOST = process.env.HOST || "127.0.0.1";
 
 // Proveedores con API compatible con OpenAI. `prefer` ordena qué modelo de chat elegir de GET /models,
 // porque los nombres cambian entre versiones (p. ej. DeepSeek retiró "deepseek-chat" con V4).
@@ -73,10 +93,9 @@ const AI_API_KEY = AI_KEY_IS_PLACEHOLDER ? "" : RAW_AI_API_KEY;
 const AI_MODEL = process.env.AI_MODEL || process.env.DEEPSEEK_MODEL || ""; // vacío = detectar automáticamente
 const AI_BASE_URL = (process.env.AI_BASE_URL || process.env.DEEPSEEK_BASE_URL || PROVIDERS[AI_PROVIDER].baseUrl).replace(/\/$/, "");
 
-const PUBLIC_DIR = path.join(__dirname, "public");
-const CASES = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "cases.json"), "utf8"));
-const TESTS = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "tests.json"), "utf8"));
-const BOOKS = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "books.json"), "utf8"));
+const CASES = JSON.parse(readAppFile("data/cases.json").toString("utf8"));
+const TESTS = JSON.parse(readAppFile("data/tests.json").toString("utf8"));
+const BOOKS = JSON.parse(readAppFile("data/books.json").toString("utf8"));
 const BOOKS_BY_ID = Object.fromEntries(BOOKS.map((b) => [b.id, b]));
 const TESTS_BY_ID = Object.fromEntries(TESTS.map((t) => [t.id, t]));
 const CASES_BY_ID = Object.fromEntries(CASES.map((c) => [c.id, c]));
@@ -517,13 +536,57 @@ const routes = {
   },
 };
 
+function readPublic(rel) {
+  try {
+    return readAppFile(`public/${rel}`);
+  } catch {
+    return null; // no existe (o es un directorio)
+  }
+}
+
 function serveStatic(req, res, url) {
-  let file = path.normalize(path.join(PUBLIC_DIR, decodeURIComponent(url.pathname)));
-  if (!file.startsWith(PUBLIC_DIR)) return send(res, 403, "Prohibido", "text/plain");
-  if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, "index.html");
-  if (!fs.existsSync(file)) file = path.join(PUBLIC_DIR, "index.html");
-  res.writeHead(200, { "Content-Type": MIME[path.extname(file)] || "application/octet-stream" });
-  fs.createReadStream(file).pipe(res);
+  let rel;
+  try {
+    rel = path.posix.normalize(decodeURIComponent(url.pathname)).replace(/^\/+/, "");
+  } catch {
+    return send(res, 400, "Ruta inválida", "text/plain");
+  }
+  if (rel.startsWith("..")) return send(res, 403, "Prohibido", "text/plain");
+  if (!rel || rel.endsWith("/")) rel += "index.html";
+  let body = readPublic(rel);
+  if (!body) [rel, body] = ["index.html", readPublic("index.html")]; // rutas del frontend (#/...) y 404
+  res.writeHead(200, { "Content-Type": MIME[path.extname(rel)] || "application/octet-stream" });
+  res.end(body);
+}
+
+function openBrowser(url) {
+  const { spawn } = require("child_process");
+  const [cmd, args] =
+    process.platform === "win32"
+      ? ["cmd", ["/c", "start", "", url]]
+      : process.platform === "darwin"
+        ? ["open", [url]]
+        : ["xdg-open", [url]];
+  try {
+    spawn(cmd, args, { stdio: "ignore", detached: true }).on("error", () => {}).unref();
+  } catch {
+    /* sin navegador disponible: el usuario puede abrir la URL a mano */
+  }
+}
+
+// En el .exe la ventana de consola se cierra al terminar; se espera Enter para que se pueda leer el error.
+function fatal(message) {
+  console.error(`\n✗ ${message}`);
+  let interactive = false;
+  try {
+    interactive = Boolean(sea && process.stdin.isTTY); // sin consola, abrir stdin puede lanzar EBADF
+  } catch {
+    /* sin consola: se sale directamente */
+  }
+  if (!interactive) process.exit(1);
+  console.error("\nPresiona Enter para cerrar esta ventana.");
+  process.stdin.resume();
+  process.stdin.once("data", () => process.exit(1));
 }
 
 const server = http.createServer(async (req, res) => {
@@ -540,9 +603,23 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-if (require.main === module) {
-  server.listen(PORT, () => {
-    console.log(`SimClínica IA en http://localhost:${PORT}`);
+if (require.main === module || sea) {
+  const url = `http://localhost:${PORT}`;
+  server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      // Probablemente la app ya está abierta en otra ventana: se abre el navegador igual.
+      if (sea) openBrowser(url);
+      fatal(`El puerto ${PORT} ya está en uso. ¿Ya tienes SimClínica IA abierta? Prueba en ${url}`);
+    } else {
+      fatal(`No se pudo iniciar el servidor: ${err.message}`);
+    }
+  });
+  server.listen(PORT, HOST, () => {
+    console.log(`SimClínica IA en ${url}`);
+    if (sea) {
+      console.log("Se abrirá en tu navegador. Para cerrar la app, cierra esta ventana.");
+      if (process.env.SIMCLINICA_NO_BROWSER !== "1") openBrowser(url);
+    }
     console.log(
       AI_API_KEY
         ? `IA: ${PROVIDERS[AI_PROVIDER].label} (modelo: ${AI_MODEL || "detección automática"}). Verifica con: npm run check`

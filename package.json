@@ -8,7 +8,8 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "node --test test/*.test.js",
-    "check": "node scripts/check-ai.js"
+    "check": "node scripts/check-ai.js",
+    "build:exe": "node scripts/build-exe.js win-x64"
   },
   "engines": { "node": ">=18" }
 }
