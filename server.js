@@ -59,7 +59,12 @@ const PROVIDERS = {
 };
 
 // Configuración del servidor. Las variables DEEPSEEK_* se siguen aceptando por compatibilidad.
-const AI_PROVIDER = PROVIDERS[process.env.AI_PROVIDER] ? process.env.AI_PROVIDER : "deepseek";
+// Sin configuración se usa Gemini (tiene plan gratuito); quien ya usaba DEEPSEEK_API_KEY sigue con DeepSeek.
+const AI_PROVIDER = PROVIDERS[process.env.AI_PROVIDER]
+  ? process.env.AI_PROVIDER
+  : process.env.DEEPSEEK_API_KEY
+    ? "deepseek"
+    : "gemini";
 // Texto de ejemplo de .env.example que un usuario nuevo puede dejar sin cambiar.
 const isPlaceholderKey = (k) => /pega-?aqui|tu-?key|your[-_]?key|^sk-\.{3}$/i.test(k || "");
 const RAW_AI_API_KEY = process.env.AI_API_KEY || process.env.DEEPSEEK_API_KEY || "";
