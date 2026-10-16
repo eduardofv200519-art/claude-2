@@ -39,6 +39,16 @@ cp .env.example .env      # y pon tu DEEPSEEK_API_KEY
 npm start                 # http://localhost:3000
 ```
 
+Comprueba que la IA funciona con tu key (lista los modelos, hace hablar al paciente virtual y pide una evaluación):
+
+```bash
+npm run check
+```
+
+También puedes usar el botón **Probar conexión** en ⚙ Ajustes.
+
+**Modelo:** DeepSeek cambia los nombres de sus modelos entre versiones (con V4 se retiraron `deepseek-chat` y `deepseek-reasoner`). Por eso la app detecta el modelo vigente con `GET /models` y, si el modelo deja de existir, lo vuelve a detectar y reintenta. Si quieres fijar uno, usa `DEEPSEEK_MODEL` en `.env`.
+
 Consigue la API key en <https://platform.deepseek.com/api_keys>. Si no configuras una key en el servidor, cada usuario puede escribir la suya en **⚙ Ajustes**: se guarda en su navegador y se reenvía a DeepSeek por medio del servidor.
 
 ```bash

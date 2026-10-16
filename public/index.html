@@ -32,7 +32,11 @@
         <input id="api-key" type="password" placeholder="sk-..." autocomplete="off" />
       </label>
       <p class="muted small">Obtén una en <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">platform.deepseek.com</a>.</p>
-      <div class="row end">
+      <div class="row" style="margin-top:8px">
+        <button type="button" id="test-connection" class="btn">Probar conexión</button>
+        <span id="test-result" class="small"></span>
+      </div>
+      <div class="row end" style="margin-top:16px">
         <button value="cancel" class="btn ghost">Cancelar</button>
         <button id="save-settings" value="ok" class="btn primary">Guardar</button>
       </div>

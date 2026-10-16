@@ -244,3 +244,5 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
 .booklist { margin: 0; padding-left: 20px; }
 .booklist li { margin: 8px 0; }
 @media (max-width: 600px) { .topbar-right .btn.ghost[href] { display: none; } }
+.text-ok { color: var(--ok); font-weight: 600; }
+.text-bad { color: var(--danger); font-weight: 600; }

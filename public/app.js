@@ -101,6 +101,21 @@ document.getElementById("btn-settings").onclick = () => {
   document.getElementById("api-key").value = apiKey();
   dialog.showModal();
 };
+document.getElementById("test-connection").onclick = async () => {
+  const out = document.getElementById("test-result");
+  const typed = document.getElementById("api-key").value.trim();
+  out.className = "small muted";
+  out.innerHTML = `<span class="spinner"></span> Probando…`;
+  try {
+    const res = await fetch("/api/check", { method: "POST", headers: typed ? { "X-DeepSeek-Key": typed } : {} });
+    const r = await res.json();
+    out.className = `small ${r.ok ? "text-ok" : "text-bad"}`;
+    out.textContent = r.ok ? `✓ Funciona — modelo ${r.model}, respondió en ${(r.ms / 1000).toFixed(1)} s` : `✗ ${r.error}`;
+  } catch (e) {
+    out.className = "small text-bad";
+    out.textContent = `✗ ${e.message}`;
+  }
+};
 document.getElementById("save-settings").onclick = () => {
   storage(KEY_STORAGE, document.getElementById("api-key").value.trim());
   renderAiStatus();
@@ -275,7 +290,7 @@ function drawChat() {
     } catch (e) {
       p.messages.pop();
       p.clock -= 1;
-      p.messages.push({ role: "system", content: `${e.message} Configura tu API key en ⚙ Ajustes.` });
+      p.messages.push({ role: "system", content: /key/i.test(e.message) ? `${e.message} Configúrala en ⚙ Ajustes.` : e.message });
     }
     persist();
     input.disabled = false;

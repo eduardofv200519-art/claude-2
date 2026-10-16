@@ -11,7 +11,7 @@ loadDotEnv(path.join(__dirname, ".env"));
 const PORT = Number(process.env.PORT) || 3000;
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || "";
 const DEEPSEEK_BASE_URL = (process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com").replace(/\/$/, "");
-const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || "deepseek-chat";
+const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || ""; // vacío = detectar automáticamente
 
 const PUBLIC_DIR = path.join(__dirname, "public");
 const CASES = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "cases.json"), "utf8"));
@@ -90,6 +90,72 @@ function testResult(c, testId) {
 
 // ---------- DeepSeek ----------
 
+// DeepSeek renombra sus modelos con cada versión (p. ej. "deepseek-chat" se retiró con V4), así que
+// si no se fija DEEPSEEK_MODEL se detecta el modelo disponible consultando GET /models.
+const MODEL_PREFERENCE = ["deepseek-flash", "deepseek-v4-flash", "deepseek-chat"];
+const modelCache = new Map();
+
+function friendlyError(status, detail) {
+  const reasons = {
+    401: "La API key de DeepSeek no es válida. Revísala en Ajustes o en tu archivo .env.",
+    402: "Tu cuenta de DeepSeek no tiene saldo suficiente. Recarga en platform.deepseek.com.",
+    429: "DeepSeek está limitando las solicitudes. Espera unos segundos e intenta de nuevo.",
+  };
+  const err = new Error(reasons[status] || `DeepSeek respondió ${status}: ${String(detail).slice(0, 300)}`);
+  err.status = status === 401 || status === 402 || status === 429 ? status : 502;
+  return err;
+}
+
+async function deepseekFetch(pathname, key, init = {}) {
+  try {
+    return await fetch(`${DEEPSEEK_BASE_URL}${pathname}`, {
+      ...init,
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+      signal: AbortSignal.timeout(90_000),
+    });
+  } catch (e) {
+    const err = new Error(`No se pudo conectar con DeepSeek (${e.cause?.code || e.name}).`);
+    err.status = 502;
+    throw err;
+  }
+}
+
+async function listModels(key) {
+  const res = await deepseekFetch("/models", key);
+  if (!res.ok) throw friendlyError(res.status, await res.text());
+  const data = await res.json();
+  return (data.data || []).map((m) => m.id);
+}
+
+function pickModel(ids) {
+  return (
+    MODEL_PREFERENCE.find((m) => ids.includes(m)) ||
+    ids.find((m) => !/reason|think|pro|vision|coder/i.test(m)) ||
+    ids[0]
+  );
+}
+
+async function modelFor(key, { refresh = false } = {}) {
+  if (DEEPSEEK_MODEL && !refresh) return DEEPSEEK_MODEL;
+  if (!refresh && modelCache.has(key)) return modelCache.get(key);
+  let model;
+  try {
+    model = pickModel(await listModels(key));
+  } catch (e) {
+    if (e.status === 401 || e.status === 402) throw e;
+  }
+  model = model || MODEL_PREFERENCE[0];
+  modelCache.set(key, model);
+  return model;
+}
+
+function parseJsonReply(text) {
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start === -1 || end <= start) throw new Error("La IA no devolvió JSON.");
+  return JSON.parse(text.slice(start, end + 1));
+}
+
 async function deepseek(messages, { apiKey, json = false, temperature = 0.7, maxTokens = 600 } = {}) {
   const key = apiKey || DEEPSEEK_API_KEY;
   if (!key) {
@@ -97,25 +163,29 @@ async function deepseek(messages, { apiKey, json = false, temperature = 0.7, max
     err.status = 503;
     throw err;
   }
-  const res = await fetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
-    body: JSON.stringify({
-      model: DEEPSEEK_MODEL,
-      messages,
-      temperature,
-      max_tokens: maxTokens,
-      ...(json ? { response_format: { type: "json_object" } } : {}),
-    }),
-  });
-  if (!res.ok) {
+  const call = async (model) =>
+    deepseekFetch("/chat/completions", key, {
+      method: "POST",
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature,
+        max_tokens: maxTokens,
+        ...(json ? { response_format: { type: "json_object" } } : {}),
+      }),
+    });
+
+  let res = await call(await modelFor(key));
+  if (!res.ok && [400, 404, 422].includes(res.status)) {
     const text = await res.text();
-    const err = new Error(`DeepSeek respondió ${res.status}: ${text.slice(0, 300)}`);
-    err.status = res.status === 401 ? 401 : 502;
-    throw err;
+    // Modelo inexistente o retirado: redetectar y reintentar una vez.
+    if (!/model/i.test(text)) throw friendlyError(res.status, text);
+    res = await call(await modelFor(key, { refresh: true }));
   }
+  if (!res.ok) throw friendlyError(res.status, await res.text());
   const data = await res.json();
-  return data.choices?.[0]?.message?.content?.trim() || "";
+  const content = data.choices?.[0]?.message?.content || "";
+  return content.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
 }
 
 function patientSystemPrompt(c) {
@@ -238,7 +308,27 @@ function getCase(id) {
 }
 
 const routes = {
-  "GET /api/status": () => ({ aiConfigured: Boolean(DEEPSEEK_API_KEY), model: DEEPSEEK_MODEL, cases: CASES.length }),
+  "GET /api/status": () => ({
+    aiConfigured: Boolean(DEEPSEEK_API_KEY),
+    model: DEEPSEEK_MODEL || modelCache.get(DEEPSEEK_API_KEY) || "automático",
+    cases: CASES.length,
+  }),
+
+  // Prueba real de conexión: lista modelos y hace una llamada mínima.
+  "POST /api/check": async (req) => {
+    const key = req.headers["x-deepseek-key"] || DEEPSEEK_API_KEY;
+    const started = Date.now();
+    try {
+      const reply = await deepseek([{ role: "user", content: "Responde únicamente con la palabra: listo" }], {
+        apiKey: key,
+        temperature: 0,
+        maxTokens: 10,
+      });
+      return { ok: true, model: await modelFor(key), reply, ms: Date.now() - started };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  },
 
   "GET /api/cases": () => CASES.map(publicSummary),
 
@@ -287,10 +377,10 @@ const routes = {
         [{ role: "user", content: evaluationPrompt(c, submission, tests, transcript) }],
         { apiKey: req.headers["x-deepseek-key"], json: true, temperature: 0.2, maxTokens: 900 }
       );
-      evaluation = JSON.parse(raw.replace(/^```(?:json)?|```$/g, ""));
+      evaluation = parseJsonReply(raw);
     } catch (err) {
       evaluation = offlineEvaluation(c, submission, tests, transcript);
-      if (err.status !== 503) evaluation.comentario = `No se pudo usar la IA (${err.message}). ${evaluation.comentario}`;
+      if (err.status !== 503) evaluation.comentario = `No se pudo usar la IA: ${err.message} ${evaluation.comentario}`;
     }
     const cost = tests.reduce((s, t) => s + TESTS_BY_ID[t].cost, 0);
     return { evaluation, cost, answer: revealCase(c) };
@@ -323,8 +413,12 @@ const server = http.createServer(async (req, res) => {
 if (require.main === module) {
   server.listen(PORT, () => {
     console.log(`SimClínica IA en http://localhost:${PORT}`);
-    console.log(DEEPSEEK_API_KEY ? `DeepSeek configurado (${DEEPSEEK_MODEL}).` : "Sin DEEPSEEK_API_KEY: el paciente virtual requerirá que ingreses tu key en Ajustes.");
+    console.log(
+      DEEPSEEK_API_KEY
+        ? `DeepSeek configurado (modelo: ${DEEPSEEK_MODEL || "detección automática"}). Verifica con: npm run check`
+        : "Sin DEEPSEEK_API_KEY: el paciente virtual requerirá que ingreses tu key en Ajustes."
+    );
   });
 }
 
-module.exports = { server, CASES, TESTS, BOOKS };
+module.exports = { server, CASES, TESTS, BOOKS, modelCache, deepseek, modelFor, listModels, parseJsonReply, patientSystemPrompt, evaluationPrompt };

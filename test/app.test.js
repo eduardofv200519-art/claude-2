@@ -2,18 +2,28 @@ const { test, before, after } = require("node:test");
 const assert = require("node:assert");
 const http = require("http");
 
-// DeepSeek simulado: responde como paciente, o con JSON de evaluación si se pide json_object.
+// DeepSeek simulado con el comportamiento posterior a V4: "deepseek-chat" ya no existe,
+// GET /models lista los modelos vigentes y la evaluación llega envuelta en ```json.
+const AVAILABLE = ["deepseek-v4-pro", "deepseek-flash"];
 let lastRequest;
+const chatModels = [];
 const mock = http.createServer((req, res) => {
   let raw = "";
   req.on("data", (c) => (raw += c));
   req.on("end", () => {
+    const reply = (status, body) => {
+      res.writeHead(status, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(body));
+    };
+    if (req.headers.authorization === "Bearer sin-saldo") return reply(402, { error: { message: "Insufficient Balance" } });
+    if (req.url === "/models") return reply(200, { object: "list", data: AVAILABLE.map((id) => ({ id, object: "model" })) });
     lastRequest = { headers: req.headers, body: JSON.parse(raw) };
+    chatModels.push(lastRequest.body.model);
+    if (!AVAILABLE.includes(lastRequest.body.model)) return reply(400, { error: { message: "Model Not Exist" } });
     const content = lastRequest.body.response_format
-      ? JSON.stringify({ diagnosticoCorrecto: true, puntajes: { diagnostico: 40, diferenciales: 8, estudios: 18, manejo: 15, entrevista: 7 }, total: 88, fortalezas: ["a"], areasDeMejora: ["b"], comentario: "ok" })
+      ? "```json\n" + JSON.stringify({ diagnosticoCorrecto: true, puntajes: { diagnostico: 40, diferenciales: 8, estudios: 18, manejo: 15, entrevista: 7 }, total: 88, fortalezas: ["a"], areasDeMejora: ["b"], comentario: "ok" }) + "\n```"
       : "Me duele mucho el pecho, doctor.";
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ choices: [{ message: { content } }] }));
+    reply(200, { choices: [{ message: { content } }] });
   });
 });
 
@@ -83,6 +93,28 @@ test("evaluación devuelve puntaje y revela la respuesta", async () => {
   assert.match(r.answer.diagnosis, /elevación del ST/);
   assert.ok(r.answer.books.some((b) => b.id === "braunwald" && b.citation.includes("Libby")));
   assert.match(lastRequest.body.messages[0].content, /Braunwald/);
+});
+
+test("detecta el modelo vigente y reintenta si el guardado fue retirado", async () => {
+  const { modelCache } = require("../server.js");
+  modelCache.set("test-key", "deepseek-chat"); // nombre retirado
+  chatModels.length = 0;
+  const r = await (await post("/api/chat", { caseId: "iam-inferior", messages: [{ role: "user", content: "hola" }] })).json();
+  assert.equal(r.reply, "Me duele mucho el pecho, doctor.");
+  assert.deepEqual(chatModels, ["deepseek-chat", "deepseek-flash"]);
+  const check = await (await post("/api/check", {})).json();
+  assert.equal(check.ok, true);
+  assert.equal(check.model, "deepseek-flash");
+});
+
+test("errores de DeepSeek llegan con mensaje claro", async () => {
+  const res = await fetch(base + "/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-DeepSeek-Key": "sin-saldo" },
+    body: JSON.stringify({ caseId: "iam-inferior", messages: [{ role: "user", content: "hola" }] }),
+  });
+  assert.equal(res.status, 402);
+  assert.match((await res.json()).error, /saldo/);
 });
 
 test("evaluación sin IA usa el respaldo por palabras clave", async () => {
