@@ -1,15 +1,15 @@
 # SimClínica IA
 
-Simulador de casos clínicos inspirado en [ResimGame](https://resimgame.com/): entrevistas a un **paciente virtual que responde con IA (DeepSeek)**, lo exploras, pides estudios y propones tu diagnóstico y plan. Al final recibes una evaluación con puntaje, retroalimentación y la respuesta del caso con su guía clínica de referencia.
+Simulador de casos clínicos inspirado en [ResimGame](https://resimgame.com/): entrevistas a un **paciente virtual que responde con IA (DeepSeek, Gemini, Groq, OpenRouter, Cerebras o Mistral)**, lo exploras, pides estudios y propones tu diagnóstico y plan. Al final recibes una evaluación con puntaje, retroalimentación y la respuesta del caso con su guía clínica de referencia.
 
 ## Características
 
 - **Interrogatorio en lenguaje natural**: el paciente (o su familiar, cuando el paciente no puede hablar) responde en personaje y solo revela lo que preguntas.
 - **Exploración física** por sistemas.
 - **35 estudios** de laboratorio, imagen y procedimientos, con costo y tiempo simulados. Si pides un estudio irrelevante, obtienes un resultado normal, igual que en la vida real.
-- **Evaluación con IA** según una rúbrica: diagnóstico (40), diferenciales (10), estudios (20), manejo (20) y entrevista (10). Si DeepSeek no está disponible, se usa una evaluación de respaldo por palabras clave.
+- **Evaluación con IA** según una rúbrica: diagnóstico (40), diferenciales (10), estudios (20), manejo (20) y entrevista (10). Si la IA no está disponible, se usa una evaluación de respaldo por palabras clave.
 - **15 casos** de urgencias y medicina interna, cada uno basado en presentaciones clínicas típicas y documentadas, con referencia a la guía correspondiente (ESC, AHA/ASA, ADA, ATS/IDSA, ACOG, ACG, OPS, WAO…). Incluye casos relevantes para Latinoamérica, como dengue con signos de alarma e intoxicación por organofosforados.
-- **Libros de texto de referencia**: cada caso indica qué libro y qué tema consultar (Harrison, Tintinalli, Rosen, Braunwald, Sabiston, Schwartz, Williams Obstetricia/Ginecología/Endocrinología, Mandell, Adams y Victor, Murray & Nadel, Sleisenger, Goldfrank y Middleton). DeepSeek usa esas fuentes para dar la retroalimentación y recomienda lecturas específicas. Hay una página de **Bibliografía** con todas las citas.
+- **Libros de texto de referencia**: cada caso indica qué libro y qué tema consultar (Harrison, Tintinalli, Rosen, Braunwald, Sabiston, Schwartz, Williams Obstetricia/Ginecología/Endocrinología, Mandell, Adams y Victor, Murray & Nadel, Sleisenger, Goldfrank y Middleton). La IA usa esas fuentes para dar la retroalimentación y recomienda lecturas específicas. Hay una página de **Bibliografía** con todas las citas.
 - El progreso se guarda en el navegador (localStorage).
 
 | Caso | Especialidad |
@@ -35,34 +35,28 @@ Simulador de casos clínicos inspirado en [ResimGame](https://resimgame.com/): e
 Requiere Node.js 18 o superior. No tiene dependencias.
 
 ```bash
-cp .env.example .env      # y pon tu DEEPSEEK_API_KEY
+cp .env.example .env      # elige AI_PROVIDER y pon tu AI_API_KEY
 npm start                 # http://localhost:3000
+npm run check             # prueba real: modelos, paciente virtual y evaluación
+npm test                  # pruebas automáticas (con una IA simulada)
 ```
 
-Comprueba que la IA funciona con tu key (lista los modelos, hace hablar al paciente virtual y pide una evaluación):
+También puedes elegir proveedor y key desde **⚙ Ajustes** en la app (se guardan en tu navegador) y usar **Probar conexión**.
 
-```bash
-npm run check
-```
+### Proveedores de IA
 
-También puedes usar el botón **Probar conexión** en ⚙ Ajustes.
+Todos usan el formato compatible con OpenAI. La app detecta sola el modelo de chat adecuado con `GET /models`, descarta los modelos de audio, imagen o embeddings y, si un modelo se retira, lo vuelve a detectar. Si el proveedor no soporta el modo JSON, la evaluación se reintenta sin él.
 
-**Modelo:** DeepSeek cambia los nombres de sus modelos entre versiones (con V4 se retiraron `deepseek-chat` y `deepseek-reasoner`). Por eso la app detecta el modelo vigente con `GET /models` y, si el modelo deja de existir, lo vuelve a detectar y reintenta. Si quieres fijar uno, usa `DEEPSEEK_MODEL` en `.env`.
+| `AI_PROVIDER` | ¿Gratis? | Dónde sacar la key | Notas |
+|---|---|---|---|
+| `gemini` | Sí, modelos Flash | aistudio.google.com/apikey | Recomendado para empezar gratis. En el plan gratuito Google puede usar tus prompts para mejorar sus productos. |
+| `groq` | Sí | console.groq.com/keys | Muy rápido. Límite diario de tokens (≈100-200 mil según modelo). |
+| `openrouter` | Sí, modelos `:free` | openrouter.ai/keys | ≈50 solicitudes/día gratis (1,000 si compras 10 USD de créditos). La app prefiere los `:free`. |
+| `cerebras` | Verificar | cloud.cerebras.ai | Las fuentes no coinciden sobre si hoy hay plan gratuito permanente. |
+| `mistral` | Sí, plan "Experiment" | console.mistral.ai/api-keys | Límites visibles solo en su consola. |
+| `deepseek` | No (muy barato) | platform.deepseek.com/api_keys | "Probar conexión" muestra el saldo. |
 
-### Proveedores compatibles
-
-La app usa el formato compatible con OpenAI (`POST /chat/completions`, `GET /models`), así que funciona con la API oficial o con intermediarios que ofrecen modelos DeepSeek:
-
-| Proveedor | `DEEPSEEK_BASE_URL` | Notas |
-|---|---|---|
-| DeepSeek oficial | `https://api.deepseek.com` (por defecto) | Key en platform.deepseek.com. Pago por uso. "Probar conexión" muestra el saldo (`/user/balance`). |
-| OpenRouter | `https://openrouter.ai/api/v1` | Key de openrouter.ai. La app elige un modelo `deepseek/...` automáticamente, o fíjalo con `DEEPSEEK_MODEL`. Las variantes `:free`, cuando existen, tienen límites diarios. |
-
-Consigue la API key en <https://platform.deepseek.com/api_keys>. Si no configuras una key en el servidor, cada usuario puede escribir la suya en **⚙ Ajustes**: se guarda en su navegador y se reenvía a DeepSeek por medio del servidor.
-
-```bash
-npm test                  # pruebas con un DeepSeek simulado
-```
+Los planes gratuitos cambian seguido: revisa los límites en la consola de cada proveedor.
 
 ## Agregar casos
 
@@ -80,11 +74,12 @@ Los casos están en `data/cases.json` y el catálogo de estudios en `data/tests.
 ## Estructura
 
 ```
-server.js          servidor HTTP + proxy a DeepSeek (la key nunca se expone al navegador)
+server.js          servidor HTTP + proxy al proveedor de IA (la key nunca se expone al navegador)
 data/cases.json    casos clínicos
 data/tests.json    catálogo de estudios
 data/books.json    libros de texto de referencia
 public/            frontend (HTML/CSS/JS sin frameworks)
+scripts/check-ai.js  prueba real contra el proveedor de IA (npm run check)
 test/              pruebas
 ```
 

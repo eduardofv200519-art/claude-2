@@ -1,7 +1,8 @@
 "use strict";
 
 const app = document.getElementById("app");
-const KEY_STORAGE = "simclinica.deepseekKey";
+const AI_STORAGE = "simclinica.ai";
+const LEGACY_KEY_STORAGE = "simclinica.deepseekKey";
 const PROGRESS_STORAGE = "simclinica.progress.v1";
 
 const EXAM_LABELS = {
@@ -45,13 +46,25 @@ function storage(key, value) {
   }
 }
 
-function apiKey() {
-  return storage(KEY_STORAGE) || "";
+// Proveedor y key elegidos por el usuario en Ajustes (vacío = usar los del servidor).
+function userAi() {
+  return storage(AI_STORAGE) || { provider: "", key: storage(LEGACY_KEY_STORAGE) || "" };
+}
+
+function aiHeaders({ provider, key } = userAi()) {
+  const h = {};
+  if (provider) h["X-AI-Provider"] = provider;
+  if (key) h["X-AI-Key"] = key;
+  return h;
+}
+
+function activeProvider() {
+  const id = userAi().provider || state.status?.provider;
+  return state.status?.providers?.find((p) => p.id === id) || { id, label: "IA" };
 }
 
 async function api(path, body) {
-  const headers = { "Content-Type": "application/json" };
-  if (apiKey()) headers["X-DeepSeek-Key"] = apiKey();
+  const headers = { "Content-Type": "application/json", ...aiHeaders() };
   const res = await fetch(path, body ? { method: "POST", headers, body: JSON.stringify(body) } : { headers });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
@@ -93,7 +106,7 @@ function elapsed(p) {
 
 // ---------- estado de la IA ----------
 
-// El indicador solo dice "activo" después de una respuesta real de DeepSeek; tener una key no basta.
+// El indicador solo dice "activo" después de una respuesta real de la IA; tener una key no basta.
 function setAiHealth(health) {
   state.aiHealth = health;
   renderAiStatus();
@@ -101,45 +114,70 @@ function setAiHealth(health) {
 
 function renderAiStatus() {
   const el = document.getElementById("ai-status");
-  const configured = state.status?.aiConfigured || apiKey();
+  const { key } = userAi();
+  const prov = activeProvider();
+  const configured = key || (prov.id === state.status?.provider && state.status?.aiConfigured);
+  const name = prov.label;
   const [cls, text, title] = !configured
-    ? ["warn", "DeepSeek sin configurar", "Agrega tu API key en Ajustes para hablar con el paciente"]
+    ? ["warn", "IA sin configurar", "Elige un proveedor y agrega tu API key en Ajustes para hablar con el paciente"]
     : state.aiHealth === "ok"
-      ? ["ok", "DeepSeek activo", "DeepSeek respondió correctamente"]
+      ? ["ok", `${name} activo`, `${name} respondió correctamente`]
       : state.aiHealth === "fail"
-        ? ["bad", "DeepSeek sin conexión", "La última llamada a DeepSeek falló. Usa Probar conexión en Ajustes."]
-        : ["", "DeepSeek configurado", "Aún no se ha verificado la conexión. Usa Probar conexión en Ajustes."];
+        ? ["bad", `${name} sin conexión`, `La última llamada a ${name} falló. Usa Probar conexión en Ajustes.`]
+        : ["", `${name} configurado`, "Aún no se ha verificado la conexión. Usa Probar conexión en Ajustes."];
   el.className = `pill ${cls}`;
   el.textContent = text;
   el.title = title;
 }
 
 const dialog = document.getElementById("settings");
+const providerSelect = document.getElementById("ai-provider");
+
+function updateKeysLink() {
+  const p = state.status.providers.find((x) => x.id === (providerSelect.value || state.status.provider));
+  const link = document.getElementById("keys-link");
+  link.href = p.keysUrl;
+  link.textContent = p.keysUrl.replace(/^https:\/\//, "");
+  document.getElementById("test-result").textContent = "";
+}
+
 document.getElementById("btn-settings").onclick = () => {
-  document.getElementById("api-key").value = apiKey();
+  const { provider, key } = userAi();
+  const serverLabel = state.status.providers.find((p) => p.id === state.status.provider).label;
+  providerSelect.innerHTML =
+    `<option value="">Del servidor (${esc(serverLabel)}${state.status.aiConfigured ? ", con key" : ", sin key"})</option>` +
+    state.status.providers.map((p) => `<option value="${p.id}">${esc(p.label)}${p.free ? " — tiene plan gratuito" : p.free === null ? " — plan gratuito por confirmar" : " — de pago"}</option>`).join("");
+  providerSelect.value = provider;
+  document.getElementById("api-key").value = key;
+  updateKeysLink();
   dialog.showModal();
 };
+providerSelect.onchange = updateKeysLink;
 document.getElementById("test-connection").onclick = async () => {
   const out = document.getElementById("test-result");
-  const typed = document.getElementById("api-key").value.trim();
+  const typed = { provider: providerSelect.value, key: document.getElementById("api-key").value.trim() };
   out.className = "small muted";
   out.innerHTML = `<span class="spinner"></span> Probando…`;
   try {
-    const res = await fetch("/api/check", { method: "POST", headers: typed ? { "X-DeepSeek-Key": typed } : {} });
+    const res = await fetch("/api/check", { method: "POST", headers: aiHeaders(typed) });
     const r = await res.json();
     out.className = `small ${r.ok ? "text-ok" : "text-bad"}`;
     const balance = r.balance ? ` · saldo ${r.balance.total} ${r.balance.currency}` : "";
-    out.textContent = r.ok ? `✓ Funciona — modelo ${r.model}, respondió en ${(r.ms / 1000).toFixed(1)} s${balance}` : `✗ ${r.error}`;
-    if (!typed || typed === apiKey()) setAiHealth(r.ok ? "ok" : "fail");
+    out.textContent = r.ok
+      ? `✓ Funciona — ${r.provider}, modelo ${r.model}, respondió en ${(r.ms / 1000).toFixed(1)} s${balance}`
+      : `✗ ${r.error}`;
+    const saved = userAi();
+    if (typed.provider === saved.provider && typed.key === saved.key) setAiHealth(r.ok ? "ok" : "fail");
   } catch (e) {
     out.className = "small text-bad";
     out.textContent = `✗ ${e.message}`;
   }
 };
 document.getElementById("save-settings").onclick = () => {
-  const key = document.getElementById("api-key").value.trim();
-  if (key !== apiKey()) state.aiHealth = null;
-  storage(KEY_STORAGE, key);
+  const next = { provider: providerSelect.value, key: document.getElementById("api-key").value.trim() };
+  const prev = userAi();
+  if (next.provider !== prev.provider || next.key !== prev.key) state.aiHealth = null;
+  storage(AI_STORAGE, next);
   renderAiStatus();
 };
 
@@ -156,7 +194,7 @@ function renderHome() {
   app.innerHTML = `
     <section class="hero">
       <h1>Practica casos clínicos con pacientes virtuales</h1>
-      <p>Entrevista al paciente con lenguaje natural (impulsado por DeepSeek), explóralo, solicita estudios y propón tu diagnóstico y plan.
+      <p>Entrevista al paciente con lenguaje natural (impulsado por IA: DeepSeek, Gemini, Groq y otros), explóralo, solicita estudios y propón tu diagnóstico y plan.
       Al final recibes una evaluación detallada con la respuesta correcta, la guía clínica y los <a href="#/bibliografia">libros de texto de referencia</a> para repasar.</p>
     </section>
     <div class="stats">
@@ -453,7 +491,7 @@ function drawDiagnosis() {
     const submission = Object.fromEntries(new FormData(form));
     const btn = document.getElementById("dx-submit");
     btn.disabled = true;
-    document.getElementById("dx-status").innerHTML = `<span class="spinner"></span> Evaluando con DeepSeek…`;
+    document.getElementById("dx-status").innerHTML = `<span class="spinner"></span> Evaluando con ${esc(activeProvider().label)}…`;
     try {
       const res = await api("/api/evaluate", {
         caseId: state.view.c.id,
@@ -463,7 +501,7 @@ function drawDiagnosis() {
       });
       p.submission = submission;
       p.evaluation = { ...res.evaluation, total: clampScore(res.evaluation.total) };
-      if (state.status?.aiConfigured || apiKey()) setAiHealth(res.evaluation.offline ? "fail" : "ok");
+      if (state.status?.aiConfigured || userAi().key) setAiHealth(res.evaluation.offline ? "fail" : "ok");
       p.answer = res.answer;
       p.cost = res.cost;
       persist();

@@ -1,5 +1,6 @@
-// SimClínica IA — simulador de casos clínicos con pacientes virtuales impulsados por DeepSeek.
-// Servidor sin dependencias (Node >= 18): sirve el frontend y hace de proxy hacia la API de DeepSeek
+// SimClínica IA — simulador de casos clínicos con pacientes virtuales impulsados por IA.
+// Servidor sin dependencias (Node >= 18): sirve el frontend y hace de proxy hacia el proveedor de IA
+// (DeepSeek, Gemini, Groq, OpenRouter, Cerebras o Mistral, todos con API compatible con OpenAI)
 // para que la API key nunca llegue al navegador (salvo que el usuario la configure él mismo).
 
 const http = require("http");
@@ -9,9 +10,59 @@ const path = require("path");
 loadDotEnv(path.join(__dirname, ".env"));
 
 const PORT = Number(process.env.PORT) || 3000;
-const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || "";
-const DEEPSEEK_BASE_URL = (process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com").replace(/\/$/, "");
-const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || ""; // vacío = detectar automáticamente
+
+// Proveedores con API compatible con OpenAI. `prefer` ordena qué modelo de chat elegir de GET /models,
+// porque los nombres cambian entre versiones (p. ej. DeepSeek retiró "deepseek-chat" con V4).
+const PROVIDERS = {
+  deepseek: {
+    label: "DeepSeek",
+    baseUrl: "https://api.deepseek.com",
+    keysUrl: "https://platform.deepseek.com/api_keys",
+    free: false,
+    prefer: [/^deepseek-flash$/, /^deepseek-v4-flash$/, /^deepseek-chat$/],
+  },
+  gemini: {
+    label: "Google Gemini",
+    baseUrl: "https://generativelanguage.googleapis.com/v1beta/openai",
+    keysUrl: "https://aistudio.google.com/apikey",
+    free: true,
+    prefer: [/^gemini-[\d.]+-flash$/, /^gemini-[\d.]+-flash-lite$/, /^gemini-.*flash/],
+  },
+  groq: {
+    label: "Groq",
+    baseUrl: "https://api.groq.com/openai/v1",
+    keysUrl: "https://console.groq.com/keys",
+    free: true,
+    prefer: [/llama-3\.3-70b/, /gpt-oss-120b/, /llama/, /qwen/],
+  },
+  openrouter: {
+    label: "OpenRouter",
+    baseUrl: "https://openrouter.ai/api/v1",
+    keysUrl: "https://openrouter.ai/keys",
+    free: true,
+    prefer: [/^deepseek\/.*:free$/, /^(meta-llama|google|qwen|mistralai)\/.*:free$/, /:free$/, /^deepseek\//],
+  },
+  cerebras: {
+    label: "Cerebras",
+    baseUrl: "https://api.cerebras.ai/v1",
+    keysUrl: "https://cloud.cerebras.ai",
+    free: null, // las fuentes no coinciden sobre si hay plan gratuito permanente
+    prefer: [/gpt-oss-120b/, /llama/, /qwen/],
+  },
+  mistral: {
+    label: "Mistral",
+    baseUrl: "https://api.mistral.ai/v1",
+    keysUrl: "https://console.mistral.ai/api-keys",
+    free: true,
+    prefer: [/^mistral-small-latest$/, /^mistral-medium-latest$/, /^mistral-large-latest$/],
+  },
+};
+
+// Configuración del servidor. Las variables DEEPSEEK_* se siguen aceptando por compatibilidad.
+const AI_PROVIDER = PROVIDERS[process.env.AI_PROVIDER] ? process.env.AI_PROVIDER : "deepseek";
+const AI_API_KEY = process.env.AI_API_KEY || process.env.DEEPSEEK_API_KEY || "";
+const AI_MODEL = process.env.AI_MODEL || process.env.DEEPSEEK_MODEL || ""; // vacío = detectar automáticamente
+const AI_BASE_URL = (process.env.AI_BASE_URL || process.env.DEEPSEEK_BASE_URL || PROVIDERS[AI_PROVIDER].baseUrl).replace(/\/$/, "");
 
 const PUBLIC_DIR = path.join(__dirname, "public");
 const CASES = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "cases.json"), "utf8"));
@@ -88,61 +139,81 @@ function testResult(c, testId) {
   return { id: test.id, name: test.name, category: test.category, cost: test.cost, minutes: test.minutes, result };
 }
 
-// ---------- DeepSeek ----------
+// ---------- Proveedor de IA ----------
 
-// DeepSeek renombra sus modelos con cada versión (p. ej. "deepseek-chat" se retiró con V4), así que
-// si no se fija DEEPSEEK_MODEL se detecta el modelo disponible consultando GET /models.
-const MODEL_PREFERENCE = ["deepseek-flash", "deepseek-v4-flash", "deepseek-chat"];
 const modelCache = new Map();
 
-function friendlyError(status, detail) {
-  const reasons = {
-    401: "La API key de DeepSeek no es válida. Revísala en Ajustes o en tu archivo .env.",
-    402: "Tu cuenta de DeepSeek no tiene saldo suficiente. Recarga en platform.deepseek.com.",
-    429: "DeepSeek está limitando las solicitudes. Espera unos segundos e intenta de nuevo.",
+// Modelos que aparecen en GET /models pero no sirven para chat.
+const NON_CHAT = /embed|whisper|tts|audio|speech|transcri|guard|moderation|image|vision|ocr|rerank|realtime|live|veo|imagen|aqa|distil/i;
+
+// Resuelve proveedor, key, URL y modelo para una petición. El navegador puede elegir proveedor y mandar
+// su propia key, pero solo entre los proveedores conocidos (no se aceptan URLs arbitrarias).
+function aiConfig(req) {
+  const asked = req?.headers?.["x-ai-provider"];
+  if (asked && !PROVIDERS[asked]) throw Object.assign(new Error("Proveedor de IA desconocido."), { status: 400 });
+  const provider = asked || AI_PROVIDER;
+  const userKey = req?.headers?.["x-ai-key"] || req?.headers?.["x-deepseek-key"];
+  const own = provider === AI_PROVIDER;
+  return {
+    provider,
+    label: PROVIDERS[provider].label,
+    key: userKey || (own ? AI_API_KEY : ""),
+    baseUrl: own ? AI_BASE_URL : PROVIDERS[provider].baseUrl,
+    model: own ? AI_MODEL : "",
   };
-  const err = new Error(reasons[status] || `DeepSeek respondió ${status}: ${String(detail).slice(0, 300)}`);
-  err.status = status === 401 || status === 402 || status === 429 ? status : 502;
+}
+
+function friendlyError(cfg, status, detail) {
+  // Google responde 400 (no 401) cuando la key es inválida.
+  if ([400, 403].includes(status) && /api[ _-]?key/i.test(detail) && /invalid|not valid|valid api key/i.test(detail)) status = 401;
+  const reasons = {
+    401: `La API key de ${cfg.label} no es válida. Revísala en Ajustes o en tu archivo .env.`,
+    402: `Tu cuenta de ${cfg.label} no tiene saldo o créditos suficientes.`,
+    403: `${cfg.label} rechazó la key (sin permiso o región no disponible).`,
+    429: `${cfg.label} está limitando las solicitudes (límite del plan). Espera un momento e intenta de nuevo.`,
+  };
+  const err = new Error(reasons[status] || `${cfg.label} respondió ${status}: ${String(detail).slice(0, 300)}`);
+  err.status = reasons[status] ? status : 502;
   return err;
 }
 
-async function deepseekFetch(pathname, key, init = {}) {
+async function aiFetch(cfg, pathname, init = {}) {
   try {
-    return await fetch(`${DEEPSEEK_BASE_URL}${pathname}`, {
+    return await fetch(`${cfg.baseUrl}${pathname}`, {
       ...init,
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${cfg.key}` },
       signal: AbortSignal.timeout(90_000),
     });
   } catch (e) {
-    const err = new Error(`No se pudo conectar con DeepSeek (${e.cause?.code || e.name}).`);
+    const err = new Error(`No se pudo conectar con ${cfg.label} (${e.cause?.code || e.name}).`);
     err.status = 502;
+    err.network = true;
     throw err;
   }
 }
 
-async function listModels(key) {
-  const res = await deepseekFetch("/models", key);
-  if (!res.ok) throw friendlyError(res.status, await res.text());
+async function listModels(cfg) {
+  const res = await aiFetch(cfg, "/models");
+  if (!res.ok) throw friendlyError(cfg, res.status, await res.text());
   const data = await res.json();
-  return (data.data || []).map((m) => m.id);
+  return (data.data || []).map((m) => m.id.replace(/^models\//, ""));
 }
 
-// Acepta IDs con prefijo de proveedor (p. ej. "deepseek/deepseek-v4-flash" en OpenRouter).
-function pickModel(ids) {
-  const bare = (id) => id.split("/").pop();
-  const deepseekIds = ids.filter((id) => /deepseek/i.test(id));
-  const pool = deepseekIds.length ? deepseekIds : ids;
-  return (
-    MODEL_PREFERENCE.map((m) => pool.find((id) => bare(id) === m)).find(Boolean) ||
-    pool.find((id) => !/reason|think|pro|vision|coder|r1|:free/i.test(bare(id))) ||
-    pool[0]
-  );
+function pickModel(ids, provider = "deepseek") {
+  const chat = ids.filter((id) => !NON_CHAT.test(id));
+  const last = (id) => id.split("/").pop();
+  for (const re of PROVIDERS[provider].prefer) {
+    const hit = chat.find((id) => re.test(id) || re.test(last(id)));
+    if (hit) return hit;
+  }
+  return chat.find((id) => !/reason|think|r1|coder|pro/i.test(last(id))) || chat[0] || ids[0];
 }
 
-// Saldo de la cuenta (endpoint propio de DeepSeek; otros proveedores no lo tienen).
-async function getBalance(key) {
+// Saldo de la cuenta: endpoint propio de DeepSeek; los demás proveedores no lo tienen.
+async function getBalance(cfg) {
+  if (cfg.provider !== "deepseek") return null;
   try {
-    const res = await deepseekFetch("/user/balance", key);
+    const res = await aiFetch(cfg, "/user/balance");
     if (!res.ok) return null;
     const data = await res.json();
     const b = data.balance_infos?.[0];
@@ -152,17 +223,23 @@ async function getBalance(key) {
   }
 }
 
-async function modelFor(key, { refresh = false } = {}) {
-  if (DEEPSEEK_MODEL && !refresh) return DEEPSEEK_MODEL;
-  if (!refresh && modelCache.has(key)) return modelCache.get(key);
+async function modelFor(cfg, { refresh = false } = {}) {
+  if (cfg.model && !refresh) return cfg.model;
+  const cacheKey = `${cfg.provider}|${cfg.baseUrl}|${cfg.key}`;
+  if (!refresh && modelCache.has(cacheKey)) return modelCache.get(cacheKey);
   let model;
   try {
-    model = pickModel(await listModels(key));
+    model = pickModel(await listModels(cfg), cfg.provider);
   } catch (e) {
-    if (e.status === 401 || e.status === 402) throw e;
+    // Solo se tolera que el proveedor no liste modelos; errores de key, saldo, límite o red se informan tal cual.
+    if (e.network || [401, 402, 403, 429].includes(e.status)) throw e;
   }
-  model = model || MODEL_PREFERENCE[0];
-  modelCache.set(key, model);
+  if (!model) {
+    const err = new Error(`No se pudo obtener la lista de modelos de ${cfg.label}. Fija uno con AI_MODEL.`);
+    err.status = 502;
+    throw err;
+  }
+  modelCache.set(cacheKey, model);
   return model;
 }
 
@@ -173,42 +250,49 @@ function parseJsonReply(text) {
   return JSON.parse(text.slice(start, end + 1));
 }
 
-async function deepseek(messages, { apiKey, json = false, temperature = 0.7, maxTokens = 600 } = {}) {
-  const key = apiKey || DEEPSEEK_API_KEY;
-  if (!key) {
-    const err = new Error("No hay API key de DeepSeek configurada.");
+// Los modelos con razonamiento (gpt-oss, Gemini Flash, R1) gastan tokens antes de responder,
+// por eso los límites de max_tokens son holgados.
+async function chatComplete(cfg, messages, { json = false, temperature = 0.7, maxTokens = 1200 } = {}) {
+  if (!cfg.key) {
+    const err = new Error(`No hay API key de ${cfg.label} configurada.`);
     err.status = 503;
     throw err;
   }
+  let useJsonMode = json;
   const call = async (model) =>
-    deepseekFetch("/chat/completions", key, {
+    aiFetch(cfg, "/chat/completions", {
       method: "POST",
       body: JSON.stringify({
         model,
         messages,
         temperature,
         max_tokens: maxTokens,
-        ...(json ? { response_format: { type: "json_object" } } : {}),
+        ...(useJsonMode ? { response_format: { type: "json_object" } } : {}),
       }),
     });
 
   const complete = async () => {
-    let res = await call(await modelFor(key));
-    if (!res.ok && [400, 404, 422].includes(res.status)) {
+    let model = await modelFor(cfg);
+    let res = await call(model);
+    for (let retry = 0; !res.ok && [400, 404, 422].includes(res.status) && retry < 2; retry++) {
       const text = await res.text();
-      // Modelo inexistente o retirado: redetectar y reintentar una vez.
-      if (!/model/i.test(text)) throw friendlyError(res.status, text);
-      res = await call(await modelFor(key, { refresh: true }));
+      if (useJsonMode && /response_format|json/i.test(text)) {
+        useJsonMode = false; // el proveedor no soporta modo JSON: el prompt ya pide JSON explícitamente
+      } else if (/model/i.test(text)) {
+        model = await modelFor(cfg, { refresh: true }); // modelo retirado o inexistente
+      } else {
+        throw friendlyError(cfg, res.status, text);
+      }
+      res = await call(model);
     }
-    if (!res.ok) throw friendlyError(res.status, await res.text());
+    if (!res.ok) throw friendlyError(cfg, res.status, await res.text());
     const data = await res.json();
     const content = data.choices?.[0]?.message?.content || "";
     return content.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
   };
 
-  const content = await complete();
-  // La documentación de DeepSeek advierte que el modo JSON a veces devuelve contenido vacío.
-  return content || (json ? complete() : content);
+  // Algunos proveedores (DeepSeek en modo JSON, entre otros) a veces devuelven contenido vacío.
+  return (await complete()) || complete();
 }
 
 function patientSystemPrompt(c) {
@@ -293,7 +377,7 @@ function offlineEvaluation(c, submission, orderedTests, transcript) {
     total: Object.values(puntajes).reduce((a, b) => a + b, 0),
     fortalezas: correct ? ["Diagnóstico principal correcto."] : [],
     areasDeMejora: correct ? [] : ["Revisa el diagnóstico correcto y los estudios clave abajo."],
-    comentario: "Evaluación automática por palabras clave (sin IA). Configura tu API key de DeepSeek para recibir retroalimentación detallada.",
+    comentario: "Evaluación automática por palabras clave (sin IA). Configura una API key de IA (en .env o en Ajustes) para recibir retroalimentación detallada.",
     lecturasRecomendadas: caseBooks(c).map((b) => `${b.title} — ${b.topic}`),
     offline: true,
   };
@@ -332,22 +416,30 @@ function getCase(id) {
 
 const routes = {
   "GET /api/status": () => ({
-    aiConfigured: Boolean(DEEPSEEK_API_KEY),
-    model: DEEPSEEK_MODEL || modelCache.get(DEEPSEEK_API_KEY) || "automático",
+    aiConfigured: Boolean(AI_API_KEY),
+    provider: AI_PROVIDER,
+    model: AI_MODEL || "automático",
+    providers: Object.entries(PROVIDERS).map(([id, p]) => ({ id, label: p.label, keysUrl: p.keysUrl, free: p.free })),
     cases: CASES.length,
   }),
 
   // Prueba real de conexión: lista modelos y hace una llamada mínima.
   "POST /api/check": async (req) => {
-    const key = req.headers["x-deepseek-key"] || DEEPSEEK_API_KEY;
     const started = Date.now();
     try {
-      const reply = await deepseek([{ role: "user", content: "Responde únicamente con la palabra: listo" }], {
-        apiKey: key,
+      const cfg = aiConfig(req);
+      const reply = await chatComplete(cfg, [{ role: "user", content: "Responde únicamente con la palabra: listo" }], {
         temperature: 0,
-        maxTokens: 10,
+        maxTokens: 300,
       });
-      return { ok: true, model: await modelFor(key), reply, ms: Date.now() - started, balance: await getBalance(key) };
+      return {
+        ok: true,
+        provider: cfg.label,
+        model: await modelFor(cfg),
+        reply,
+        ms: Date.now() - started,
+        balance: await getBalance(cfg),
+      };
     } catch (e) {
       return { ok: false, error: e.message };
     }
@@ -383,9 +475,7 @@ const routes = {
       .filter((m) => (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
       .slice(-30)
       .map((m) => ({ role: m.role, content: m.content.slice(0, 2000) }));
-    const reply = await deepseek([{ role: "system", content: patientSystemPrompt(c) }, ...history], {
-      apiKey: req.headers["x-deepseek-key"],
-    });
+    const reply = await chatComplete(aiConfig(req), [{ role: "system", content: patientSystemPrompt(c) }, ...history]);
     return { reply };
   },
 
@@ -396,9 +486,10 @@ const routes = {
     const transcript = questions.filter((q) => typeof q === "string").slice(0, 60).map((q) => q.slice(0, 300));
     let evaluation;
     try {
-      const raw = await deepseek(
+      const raw = await chatComplete(
+        aiConfig(req),
         [{ role: "user", content: evaluationPrompt(c, submission, tests, transcript) }],
-        { apiKey: req.headers["x-deepseek-key"], json: true, temperature: 0.2, maxTokens: 900 }
+        { json: true, temperature: 0.2, maxTokens: 3000 }
       );
       evaluation = parseJsonReply(raw);
     } catch (err) {
@@ -437,11 +528,11 @@ if (require.main === module) {
   server.listen(PORT, () => {
     console.log(`SimClínica IA en http://localhost:${PORT}`);
     console.log(
-      DEEPSEEK_API_KEY
-        ? `DeepSeek configurado (modelo: ${DEEPSEEK_MODEL || "detección automática"}). Verifica con: npm run check`
-        : "Sin DEEPSEEK_API_KEY: el paciente virtual requerirá que ingreses tu key en Ajustes."
+      AI_API_KEY
+        ? `IA: ${PROVIDERS[AI_PROVIDER].label} (modelo: ${AI_MODEL || "detección automática"}). Verifica con: npm run check`
+        : "Sin API key de IA: configura AI_API_KEY en .env o escribe tu key en Ajustes."
     );
   });
 }
 
-module.exports = { server, CASES, TESTS, BOOKS, modelCache, deepseek, modelFor, listModels, pickModel, getBalance, parseJsonReply, patientSystemPrompt, evaluationPrompt };
+module.exports = { server, CASES, TESTS, BOOKS, PROVIDERS, modelCache, aiConfig, chatComplete, modelFor, listModels, pickModel, getBalance, parseJsonReply, patientSystemPrompt, evaluationPrompt };

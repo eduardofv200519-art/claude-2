@@ -16,6 +16,10 @@ const mock = http.createServer((req, res) => {
       res.writeHead(status, { "Content-Type": "application/json" });
       res.end(JSON.stringify(body));
     };
+    if (req.headers.authorization === "Bearer sin-json" && raw.includes("response_format"))
+      return reply(400, { error: { message: "This response_format type is unavailable now" } });
+    if (req.headers.authorization === "Bearer gemini-mala")
+      return reply(400, { error: { code: 400, message: "Please pass a valid API key", status: "INVALID_ARGUMENT" } });
     if (req.headers.authorization === "Bearer sin-saldo") return reply(402, { error: { message: "Insufficient Balance" } });
     if (req.url === "/user/balance") return reply(200, { is_available: true, balance_infos: [{ currency: "USD", total_balance: "4.20" }] });
     if (req.url === "/models") return reply(200, { object: "list", data: AVAILABLE.map((id) => ({ id, object: "model" })) });
@@ -103,8 +107,9 @@ test("evaluación devuelve puntaje y revela la respuesta", async () => {
 });
 
 test("detecta el modelo vigente y reintenta si el guardado fue retirado", async () => {
-  const { modelCache } = require("../server.js");
-  modelCache.set("test-key", "deepseek-chat"); // nombre retirado
+  const { modelCache, aiConfig } = require("../server.js");
+  const cfg = aiConfig();
+  modelCache.set(`${cfg.provider}|${cfg.baseUrl}|${cfg.key}`, "deepseek-chat"); // nombre retirado
   chatModels.length = 0;
   const r = await (await post("/api/chat", { caseId: "iam-inferior", messages: [{ role: "user", content: "hola" }] })).json();
   assert.equal(r.reply, "Me duele mucho el pecho, doctor.");
@@ -115,11 +120,47 @@ test("detecta el modelo vigente y reintenta si el guardado fue retirado", async 
   assert.deepEqual(check.balance, { available: true, currency: "USD", total: "4.20" });
 });
 
-test("elige modelo también con IDs de otros proveedores (OpenRouter)", () => {
+test("elige un modelo de chat adecuado en cada proveedor", () => {
   const { pickModel } = require("../server.js");
-  assert.equal(pickModel(["openai/gpt-x", "deepseek/deepseek-r1:free", "deepseek/deepseek-v4-pro", "deepseek/deepseek-flash"]), "deepseek/deepseek-flash");
-  assert.equal(pickModel(["openai/gpt-x", "deepseek/deepseek-r1", "deepseek/deepseek-v4-pro", "deepseek/deepseek-chat-v5"]), "deepseek/deepseek-chat-v5");
-  assert.equal(pickModel(["deepseek-chat", "deepseek-reasoner"]), "deepseek-chat");
+  assert.equal(pickModel(["deepseek-chat", "deepseek-reasoner"], "deepseek"), "deepseek-chat");
+  assert.equal(pickModel(["deepseek-v4-pro", "deepseek-flash"], "deepseek"), "deepseek-flash");
+  // Groq lista también modelos de audio y de moderación que no sirven para chat.
+  assert.equal(
+    pickModel(["whisper-large-v3", "distil-whisper-large-v3-en", "meta-llama/llama-guard-4-12b", "openai/gpt-oss-120b", "llama-3.3-70b-versatile"], "groq"),
+    "llama-3.3-70b-versatile"
+  );
+  assert.equal(
+    pickModel(["embedding-001", "gemini-2.5-flash-preview-tts", "gemini-2.5-pro", "gemini-2.5-flash-lite", "gemini-2.5-flash", "imagen-4.0"], "gemini"),
+    "gemini-2.5-flash"
+  );
+  // En OpenRouter se prefieren las variantes gratuitas (:free), empezando por DeepSeek.
+  assert.equal(
+    pickModel(["openai/gpt-x", "deepseek/deepseek-v4-pro", "meta-llama/llama-4:free", "deepseek/deepseek-r1:free"], "openrouter"),
+    "deepseek/deepseek-r1:free"
+  );
+  assert.equal(pickModel(["mistral-embed", "codestral-latest", "mistral-small-latest", "mistral-large-latest"], "mistral"), "mistral-small-latest");
+  assert.equal(pickModel(["llama3.1-8b", "gpt-oss-120b", "qwen-3-32b"], "cerebras"), "gpt-oss-120b");
+});
+
+test("si el proveedor no soporta modo JSON, reintenta sin él", async () => {
+  const { chatComplete } = require("../server.js");
+  const cfg = { provider: "deepseek", label: "Prueba", key: "sin-json", baseUrl: process.env.DEEPSEEK_BASE_URL, model: "deepseek-flash" };
+  const reply = await chatComplete(cfg, [{ role: "user", content: "Devuelve json" }], { json: true });
+  assert.equal(reply, "Me duele mucho el pecho, doctor.");
+  assert.equal(lastRequest.body.response_format, undefined);
+});
+
+test("el navegador solo puede elegir proveedores conocidos", async () => {
+  const send = (headers) =>
+    fetch(base + "/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...headers },
+      body: JSON.stringify({ caseId: "iam-inferior", messages: [{ role: "user", content: "hola" }] }),
+    });
+  assert.equal((await send({ "X-AI-Provider": "http://evil.example" })).status, 400);
+  const groq = await send({ "X-AI-Provider": "groq" }); // otro proveedor sin key: no usa la key del servidor
+  assert.equal(groq.status, 503);
+  assert.match((await groq.json()).error, /Groq/);
 });
 
 test("errores de DeepSeek llegan con mensaje claro", async () => {
@@ -130,6 +171,13 @@ test("errores de DeepSeek llegan con mensaje claro", async () => {
   });
   assert.equal(res.status, 402);
   assert.match((await res.json()).error, /saldo/);
+  const google = await fetch(base + "/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-AI-Key": "gemini-mala" },
+    body: JSON.stringify({ caseId: "iam-inferior", messages: [{ role: "user", content: "hola" }] }),
+  });
+  assert.equal(google.status, 401); // Google responde 400 para keys inválidas
+  assert.match((await google.json()).error, /no es válida/);
 });
 
 test("evaluación sin IA usa el respaldo por palabras clave", async () => {

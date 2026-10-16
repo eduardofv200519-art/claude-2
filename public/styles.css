@@ -104,7 +104,7 @@ input, textarea, select {
 }
 input:focus, textarea:focus, select:focus { outline: 2px solid var(--primary); outline-offset: -1px; border-color: transparent; }
 label { display: block; font-weight: 600; font-size: 0.9rem; margin: 12px 0 4px; }
-label > input, label > textarea { margin-top: 4px; font-weight: 400; }
+label > input, label > textarea, label > select { margin-top: 4px; font-weight: 400; }
 
 /* Home */
 .hero { margin-bottom: 20px; }
