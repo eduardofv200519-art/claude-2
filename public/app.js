@@ -81,8 +81,13 @@ function fmtMinutes(m) {
   return `${h} h ${m % 60 ? (m % 60) + " min" : ""}`.trim();
 }
 
+// Estudios de más de 6 h (cultivos) no detienen la atención: no avanzan el reloj del caso.
+const DEFERRED_MINUTES = 360;
+
 function elapsed(p) {
-  const pending = Object.values(p.results).map((r) => r.readyAt);
+  const pending = Object.values(p.results)
+    .filter((r) => r.minutes <= DEFERRED_MINUTES)
+    .map((r) => r.readyAt);
   return Math.max(p.clock, ...pending, 0);
 }
 
@@ -386,7 +391,7 @@ function drawTests() {
           )
           .join("")}
       </div>
-      <div class="panel">
+      <div class="panel results-panel">
         <h2 style="font-size:1.05rem">Resultados</h2>
         ${
           p.ordered.length
@@ -394,7 +399,11 @@ function drawTests() {
                 .reverse()
                 .map((id) => {
                   const r = p.results[id];
-                  return `<div class="result"><h4>${esc(r.name)}</h4><div class="meta">Disponible al minuto ${r.readyAt} de la simulación</div><p>${esc(r.result)}</p></div>`;
+                  return `<div class="result"><h4>${esc(r.name)}</h4><div class="meta">${
+                    r.minutes > DEFERRED_MINUTES
+                      ? `Resultado diferido (${fmtMinutes(r.minutes)}): se muestra por fines didácticos; no esperes este resultado para tratar`
+                      : `Disponible al minuto ${r.readyAt} de la simulación`
+                  }</div><p>${esc(r.result)}</p></div>`;
                 })
                 .join("")
             : `<div class="empty small">Aún no has solicitado estudios.</div>`
