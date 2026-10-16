@@ -81,6 +81,7 @@ h1, h2, h3 { line-height: 1.2; margin: 0 0 0.5em; }
 }
 .pill.ok { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
 .pill.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.pill.bad { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
 
 main { flex: 1; width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px 16px 40px; }
 .footer { text-align: center; font-size: 0.8rem; color: var(--muted); padding: 16px; border-top: 1px solid var(--border); }
@@ -237,6 +238,11 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
   .topbar { padding: 10px 16px; }
   .brand { font-size: 1rem; }
   #btn-settings { padding: 6px 10px; }
+  .hide-sm { display: none; }
+  .brand { white-space: nowrap; }
+  .topbar { gap: 8px; }
+  .topbar-right { gap: 6px; min-width: 0; }
+  .pill { font-size: 0.7rem; padding: 3px 8px; }
   .msg { max-width: 90%; }
   .filters select, .filters input { min-width: 0; width: 100%; }
 }

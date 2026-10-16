@@ -88,12 +88,25 @@ function elapsed(p) {
 
 // ---------- estado de la IA ----------
 
+// El indicador solo dice "activo" después de una respuesta real de DeepSeek; tener una key no basta.
+function setAiHealth(health) {
+  state.aiHealth = health;
+  renderAiStatus();
+}
+
 function renderAiStatus() {
   const el = document.getElementById("ai-status");
-  const ready = state.status?.aiConfigured || apiKey();
-  el.className = `pill ${ready ? "ok" : "warn"}`;
-  el.textContent = ready ? `DeepSeek activo` : "DeepSeek sin configurar";
-  el.title = ready ? `Modelo: ${state.status?.model}` : "Agrega tu API key en Ajustes para hablar con el paciente";
+  const configured = state.status?.aiConfigured || apiKey();
+  const [cls, text, title] = !configured
+    ? ["warn", "DeepSeek sin configurar", "Agrega tu API key en Ajustes para hablar con el paciente"]
+    : state.aiHealth === "ok"
+      ? ["ok", "DeepSeek activo", "DeepSeek respondió correctamente"]
+      : state.aiHealth === "fail"
+        ? ["bad", "DeepSeek sin conexión", "La última llamada a DeepSeek falló. Usa Probar conexión en Ajustes."]
+        : ["", "DeepSeek configurado", "Aún no se ha verificado la conexión. Usa Probar conexión en Ajustes."];
+  el.className = `pill ${cls}`;
+  el.textContent = text;
+  el.title = title;
 }
 
 const dialog = document.getElementById("settings");
@@ -111,13 +124,16 @@ document.getElementById("test-connection").onclick = async () => {
     const r = await res.json();
     out.className = `small ${r.ok ? "text-ok" : "text-bad"}`;
     out.textContent = r.ok ? `✓ Funciona — modelo ${r.model}, respondió en ${(r.ms / 1000).toFixed(1)} s` : `✗ ${r.error}`;
+    if (!typed || typed === apiKey()) setAiHealth(r.ok ? "ok" : "fail");
   } catch (e) {
     out.className = "small text-bad";
     out.textContent = `✗ ${e.message}`;
   }
 };
 document.getElementById("save-settings").onclick = () => {
-  storage(KEY_STORAGE, document.getElementById("api-key").value.trim());
+  const key = document.getElementById("api-key").value.trim();
+  if (key !== apiKey()) state.aiHealth = null;
+  storage(KEY_STORAGE, key);
   renderAiStatus();
 };
 
@@ -287,10 +303,12 @@ function drawChat() {
         messages: p.messages.filter((m) => m.role !== "system"),
       });
       p.messages.push({ role: "assistant", content: reply });
+      setAiHealth("ok");
     } catch (e) {
       p.messages.pop();
       p.clock -= 1;
       p.messages.push({ role: "system", content: /key/i.test(e.message) ? `${e.message} Configúrala en ⚙ Ajustes.` : e.message });
+      setAiHealth("fail");
     }
     persist();
     input.disabled = false;
@@ -434,6 +452,7 @@ function drawDiagnosis() {
       });
       p.submission = submission;
       p.evaluation = { ...res.evaluation, total: clampScore(res.evaluation.total) };
+      if (state.status?.aiConfigured || apiKey()) setAiHealth(res.evaluation.offline ? "fail" : "ok");
       p.answer = res.answer;
       p.cost = res.cost;
       persist();
