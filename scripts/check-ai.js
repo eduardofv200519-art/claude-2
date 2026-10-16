@@ -1,7 +1,7 @@
 // Verifica contra la API real del proveedor configurado que el paciente virtual y la evaluación funcionan.
 // Uso: npm run check   (lee AI_PROVIDER / AI_API_KEY de .env o del entorno; acepta DEEPSEEK_API_KEY)
 
-const { CASES, aiConfig, chatComplete, modelFor, listModels, getBalance, parseJsonReply, patientSystemPrompt, evaluationPrompt } = require("../server.js");
+const { CASES, PROVIDERS, isPlaceholderKey, aiConfig, chatComplete, modelFor, listModels, getBalance, parseJsonReply, patientSystemPrompt, evaluationPrompt } = require("../server.js");
 
 const ok = (msg) => console.log(`  ✓ ${msg}`);
 const fail = (msg) => {
@@ -13,7 +13,12 @@ const fail = (msg) => {
   const cfg = aiConfig();
   console.log(`Proveedor: ${cfg.label} (${cfg.baseUrl})\n`);
   if (!cfg.key) {
-    fail("No hay API key. Copia .env.example a .env y pon AI_PROVIDER y AI_API_KEY.");
+    const keysUrl = PROVIDERS[cfg.provider].keysUrl;
+    fail(
+      isPlaceholderKey(process.env.AI_API_KEY || process.env.DEEPSEEK_API_KEY)
+        ? `Todavía no pusiste tu key: en .env, AI_API_KEY tiene el texto de ejemplo. Sácala en ${keysUrl} y pégala ahí.`
+        : `No hay API key. Copia .env.example a .env, elige AI_PROVIDER y pon tu AI_API_KEY (sácala en ${keysUrl}).`
+    );
     return;
   }
   const c = CASES.find((x) => x.id === "iam-inferior");

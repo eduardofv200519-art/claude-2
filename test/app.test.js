@@ -180,6 +180,12 @@ test("errores de DeepSeek llegan con mensaje claro", async () => {
   assert.match((await google.json()).error, /no es válida/);
 });
 
+test("la key de ejemplo de .env.example no cuenta como key", () => {
+  const { isPlaceholderKey } = require("../server.js");
+  for (const k of ["pega-aqui-tu-key", "sk-tu-key-aqui", "YOUR_KEY", "sk-..."]) assert.ok(isPlaceholderKey(k), k);
+  for (const k of ["AIzaSyA1b2C3", "sk-4f9e2c", "gsk_abc123"]) assert.ok(!isPlaceholderKey(k), k);
+});
+
 test("evaluación sin IA usa el respaldo por palabras clave", async () => {
   const saved = process.env.DEEPSEEK_BASE_URL;
   mock.close();

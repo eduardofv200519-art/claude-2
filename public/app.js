@@ -58,6 +58,34 @@ function aiHeaders({ provider, key } = userAi()) {
   return h;
 }
 
+function aiConfigured() {
+  return Boolean(userAi().key || (activeProvider().id === state.status?.provider && state.status?.aiConfigured));
+}
+
+// Guía para quien acaba de instalar la app y todavía no tiene key de IA.
+function setupCard() {
+  if (aiConfigured()) return "";
+  const gemini = state.status.providers.find((p) => p.id === "gemini");
+  const placeholder = state.status.keyIsPlaceholder
+    ? `<p class="small"><b>Tu archivo .env todavía tiene la key de ejemplo</b> (<code>pega-aqui-tu-key</code>).</p>`
+    : "";
+  return `<div class="setup">
+    <h2>Activa la IA gratis (2 minutos)</h2>
+    ${placeholder}
+    <p class="small">El paciente virtual necesita una key de IA. Puedes explorar, pedir estudios y diagnosticar sin ella, pero no conversar.</p>
+    <ol class="small">
+      <li>Entra a <a href="${gemini.keysUrl}" target="_blank" rel="noopener">${gemini.keysUrl.replace("https://", "")}</a> con tu cuenta de Google y crea una API key (es gratis).</li>
+      <li>Abre <b>⚙ Ajustes</b>, elige <b>Google Gemini</b> y pega la key.</li>
+      <li>Pulsa <b>Probar conexión</b> y luego <b>Guardar</b>.</li>
+    </ol>
+    <button class="btn primary" data-open-settings>Abrir Ajustes</button>
+  </div>`;
+}
+
+function bindSetupButtons(root = document) {
+  root.querySelectorAll("[data-open-settings]").forEach((b) => (b.onclick = () => openSettings(userAi().provider || "gemini")));
+}
+
 function activeProvider() {
   const id = userAi().provider || state.status?.provider;
   return state.status?.providers?.find((p) => p.id === id) || { id, label: "IA" };
@@ -114,10 +142,8 @@ function setAiHealth(health) {
 
 function renderAiStatus() {
   const el = document.getElementById("ai-status");
-  const { key } = userAi();
-  const prov = activeProvider();
-  const configured = key || (prov.id === state.status?.provider && state.status?.aiConfigured);
-  const name = prov.label;
+  const configured = aiConfigured();
+  const name = activeProvider().label;
   const [cls, text, title] = !configured
     ? ["warn", "IA sin configurar", "Elige un proveedor y agrega tu API key en Ajustes para hablar con el paciente"]
     : state.aiHealth === "ok"
@@ -141,17 +167,18 @@ function updateKeysLink() {
   document.getElementById("test-result").textContent = "";
 }
 
-document.getElementById("btn-settings").onclick = () => {
+function openSettings(preselect) {
   const { provider, key } = userAi();
   const serverLabel = state.status.providers.find((p) => p.id === state.status.provider).label;
   providerSelect.innerHTML =
     `<option value="">Del servidor (${esc(serverLabel)}${state.status.aiConfigured ? ", con key" : ", sin key"})</option>` +
     state.status.providers.map((p) => `<option value="${p.id}">${esc(p.label)}${p.free ? " — tiene plan gratuito" : p.free === null ? " — plan gratuito por confirmar" : " — de pago"}</option>`).join("");
-  providerSelect.value = provider;
+  providerSelect.value = preselect ?? provider;
   document.getElementById("api-key").value = key;
   updateKeysLink();
   dialog.showModal();
-};
+}
+document.getElementById("btn-settings").onclick = () => openSettings();
 providerSelect.onchange = updateKeysLink;
 document.getElementById("test-connection").onclick = async () => {
   const out = document.getElementById("test-result");
@@ -179,6 +206,7 @@ document.getElementById("save-settings").onclick = () => {
   if (next.provider !== prev.provider || next.key !== prev.key) state.aiHealth = null;
   storage(AI_STORAGE, next);
   renderAiStatus();
+  route(); // quita la guía de inicio si ya hay key
 };
 
 // ---------- inicio ----------
@@ -197,6 +225,7 @@ function renderHome() {
       <p>Entrevista al paciente con lenguaje natural (impulsado por IA: DeepSeek, Gemini, Groq y otros), explóralo, solicita estudios y propón tu diagnóstico y plan.
       Al final recibes una evaluación detallada con la respuesta correcta, la guía clínica y los <a href="#/bibliografia">libros de texto de referencia</a> para repasar.</p>
     </section>
+    ${setupCard()}
     <div class="stats">
       <div class="stat"><b>${state.cases.length}</b><span>casos disponibles</span></div>
       <div class="stat"><b>${done.length}</b><span>casos completados</span></div>
@@ -240,6 +269,7 @@ function renderHome() {
   };
   ["f-search", "f-spec", "f-diff"].forEach((id) => document.getElementById(id).addEventListener("input", draw));
   draw();
+  bindSetupButtons(app);
 }
 
 // ---------- caso ----------
@@ -328,7 +358,9 @@ function drawChat() {
       p.messages
         .map((m) => `<div class="msg ${m.role}"><span class="who">${m.role === "user" ? "Tú" : m.role === "assistant" ? esc(speaker) : "Aviso"}</span>${esc(m.content)}</div>`)
         .join("") +
-      (typing ? `<div class="typing"><span class="spinner"></span> ${esc(speaker)} está respondiendo…</div>` : "");
+      (typing ? `<div class="typing"><span class="spinner"></span> ${esc(speaker)} está respondiendo…</div>` : "") +
+      (p.evaluation ? "" : setupCard());
+    bindSetupButtons(list);
     list.scrollTop = list.scrollHeight;
   };
   draw();
@@ -352,7 +384,7 @@ function drawChat() {
     } catch (e) {
       p.messages.pop();
       p.clock -= 1;
-      p.messages.push({ role: "system", content: /key/i.test(e.message) ? `${e.message} Configúrala en ⚙ Ajustes.` : e.message });
+      p.messages.push({ role: "system", content: e.message });
       setAiHealth("fail");
     }
     persist();

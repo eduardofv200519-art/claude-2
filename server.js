@@ -60,7 +60,11 @@ const PROVIDERS = {
 
 // Configuración del servidor. Las variables DEEPSEEK_* se siguen aceptando por compatibilidad.
 const AI_PROVIDER = PROVIDERS[process.env.AI_PROVIDER] ? process.env.AI_PROVIDER : "deepseek";
-const AI_API_KEY = process.env.AI_API_KEY || process.env.DEEPSEEK_API_KEY || "";
+// Texto de ejemplo de .env.example que un usuario nuevo puede dejar sin cambiar.
+const isPlaceholderKey = (k) => /pega-?aqui|tu-?key|your[-_]?key|^sk-\.{3}$/i.test(k || "");
+const RAW_AI_API_KEY = process.env.AI_API_KEY || process.env.DEEPSEEK_API_KEY || "";
+const AI_KEY_IS_PLACEHOLDER = isPlaceholderKey(RAW_AI_API_KEY);
+const AI_API_KEY = AI_KEY_IS_PLACEHOLDER ? "" : RAW_AI_API_KEY;
 const AI_MODEL = process.env.AI_MODEL || process.env.DEEPSEEK_MODEL || ""; // vacío = detectar automáticamente
 const AI_BASE_URL = (process.env.AI_BASE_URL || process.env.DEEPSEEK_BASE_URL || PROVIDERS[AI_PROVIDER].baseUrl).replace(/\/$/, "");
 
@@ -152,7 +156,8 @@ function aiConfig(req) {
   const asked = req?.headers?.["x-ai-provider"];
   if (asked && !PROVIDERS[asked]) throw Object.assign(new Error("Proveedor de IA desconocido."), { status: 400 });
   const provider = asked || AI_PROVIDER;
-  const userKey = req?.headers?.["x-ai-key"] || req?.headers?.["x-deepseek-key"];
+  const sentKey = req?.headers?.["x-ai-key"] || req?.headers?.["x-deepseek-key"];
+  const userKey = isPlaceholderKey(sentKey) ? "" : sentKey;
   const own = provider === AI_PROVIDER;
   return {
     provider,
@@ -254,7 +259,11 @@ function parseJsonReply(text) {
 // por eso los límites de max_tokens son holgados.
 async function chatComplete(cfg, messages, { json = false, temperature = 0.7, maxTokens = 1200 } = {}) {
   if (!cfg.key) {
-    const err = new Error(`No hay API key de ${cfg.label} configurada.`);
+    const err = new Error(
+      cfg.provider === AI_PROVIDER && AI_KEY_IS_PLACEHOLDER
+        ? `Tu archivo .env todavía tiene la key de ejemplo. Pega tu key real de ${cfg.label} en AI_API_KEY o en ⚙ Ajustes.`
+        : `No hay API key de ${cfg.label} configurada. Agrégala en ⚙ Ajustes.`
+    );
     err.status = 503;
     throw err;
   }
@@ -417,6 +426,7 @@ function getCase(id) {
 const routes = {
   "GET /api/status": () => ({
     aiConfigured: Boolean(AI_API_KEY),
+    keyIsPlaceholder: AI_KEY_IS_PLACEHOLDER,
     provider: AI_PROVIDER,
     model: AI_MODEL || "automático",
     providers: Object.entries(PROVIDERS).map(([id, p]) => ({ id, label: p.label, keysUrl: p.keysUrl, free: p.free })),
@@ -494,7 +504,8 @@ const routes = {
       evaluation = parseJsonReply(raw);
     } catch (err) {
       evaluation = offlineEvaluation(c, submission, tests, transcript);
-      if (err.status !== 503) evaluation.comentario = `No se pudo usar la IA: ${err.message} ${evaluation.comentario}`;
+      if (err.status !== 503)
+        evaluation.comentario = `No se pudo usar la IA (${err.message}) Se calificó con la evaluación automática por palabras clave.`;
     }
     const cost = tests.reduce((s, t) => s + TESTS_BY_ID[t].cost, 0);
     return { evaluation, cost, answer: revealCase(c) };
@@ -530,9 +541,11 @@ if (require.main === module) {
     console.log(
       AI_API_KEY
         ? `IA: ${PROVIDERS[AI_PROVIDER].label} (modelo: ${AI_MODEL || "detección automática"}). Verifica con: npm run check`
-        : "Sin API key de IA: configura AI_API_KEY en .env o escribe tu key en Ajustes."
+        : AI_KEY_IS_PLACEHOLDER
+          ? `⚠ Tu .env todavía tiene la key de ejemplo. Saca una key gratis en ${PROVIDERS[AI_PROVIDER].keysUrl}, pégala en AI_API_KEY y reinicia (o pégala en ⚙ Ajustes).`
+          : "Sin API key de IA: configura AI_API_KEY en .env o escribe tu key en ⚙ Ajustes."
     );
   });
 }
 
-module.exports = { server, CASES, TESTS, BOOKS, PROVIDERS, modelCache, aiConfig, chatComplete, modelFor, listModels, pickModel, getBalance, parseJsonReply, patientSystemPrompt, evaluationPrompt };
+module.exports = { server, CASES, TESTS, BOOKS, PROVIDERS, isPlaceholderKey, modelCache, aiConfig, chatComplete, modelFor, listModels, pickModel, getBalance, parseJsonReply, patientSystemPrompt, evaluationPrompt };

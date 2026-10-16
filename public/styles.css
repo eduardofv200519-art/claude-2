@@ -258,3 +258,10 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
 @media (max-width: 600px) { .topbar-right .btn.ghost[href] { display: none; } }
 .text-ok { color: var(--ok); font-weight: 600; }
 .text-bad { color: var(--danger); font-weight: 600; }
+
+/* Guía de inicio cuando no hay key de IA */
+.setup { background: var(--primary-soft); border: 1px solid var(--primary); border-radius: var(--radius); padding: 16px 18px; margin: 4px 0 16px; }
+.setup h2 { font-size: 1.05rem; color: var(--primary); }
+.setup ol { margin: 6px 0 12px; padding-left: 20px; }
+.setup li { margin: 3px 0; }
+.setup p { margin: 4px 0; }
