@@ -1,7 +1,7 @@
 // Verifica contra la API real de DeepSeek que el paciente virtual y la evaluación funcionan.
 // Uso: npm run check   (lee DEEPSEEK_API_KEY de .env o del entorno)
 
-const { CASES, deepseek, modelFor, listModels, parseJsonReply, patientSystemPrompt, evaluationPrompt } = require("../server.js");
+const { CASES, deepseek, modelFor, listModels, getBalance, parseJsonReply, patientSystemPrompt, evaluationPrompt } = require("../server.js");
 
 const ok = (msg) => console.log(`  ✓ ${msg}`);
 const fail = (msg) => {
@@ -20,8 +20,11 @@ const fail = (msg) => {
   console.log("1. Modelos disponibles");
   try {
     const ids = await listModels(key);
-    ok(ids.join(", "));
+    const shown = ids.filter((id) => /deepseek/i.test(id));
+    ok(`${ids.length} modelos; DeepSeek: ${(shown.length ? shown : ids).slice(0, 12).join(", ")}`);
     ok(`Modelo que usará la app: ${await modelFor(key)}`);
+    const balance = await getBalance(key);
+    if (balance) (balance.available ? ok : fail)(`Saldo: ${balance.total} ${balance.currency}${balance.available ? "" : " (insuficiente)"}`);
   } catch (e) {
     return fail(e.message);
   }

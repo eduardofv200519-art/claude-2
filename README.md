@@ -49,6 +49,15 @@ También puedes usar el botón **Probar conexión** en ⚙ Ajustes.
 
 **Modelo:** DeepSeek cambia los nombres de sus modelos entre versiones (con V4 se retiraron `deepseek-chat` y `deepseek-reasoner`). Por eso la app detecta el modelo vigente con `GET /models` y, si el modelo deja de existir, lo vuelve a detectar y reintenta. Si quieres fijar uno, usa `DEEPSEEK_MODEL` en `.env`.
 
+### Proveedores compatibles
+
+La app usa el formato compatible con OpenAI (`POST /chat/completions`, `GET /models`), así que funciona con la API oficial o con intermediarios que ofrecen modelos DeepSeek:
+
+| Proveedor | `DEEPSEEK_BASE_URL` | Notas |
+|---|---|---|
+| DeepSeek oficial | `https://api.deepseek.com` (por defecto) | Key en platform.deepseek.com. Pago por uso. "Probar conexión" muestra el saldo (`/user/balance`). |
+| OpenRouter | `https://openrouter.ai/api/v1` | Key de openrouter.ai. La app elige un modelo `deepseek/...` automáticamente, o fíjalo con `DEEPSEEK_MODEL`. Las variantes `:free`, cuando existen, tienen límites diarios. |
+
 Consigue la API key en <https://platform.deepseek.com/api_keys>. Si no configuras una key en el servidor, cada usuario puede escribir la suya en **⚙ Ajustes**: se guarda en su navegador y se reenvía a DeepSeek por medio del servidor.
 
 ```bash

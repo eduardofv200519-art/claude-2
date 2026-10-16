@@ -6,6 +6,7 @@ const http = require("http");
 // GET /models lista los modelos vigentes y la evaluación llega envuelta en ```json.
 const AVAILABLE = ["deepseek-v4-pro", "deepseek-flash"];
 let lastRequest;
+let emptyServed = false;
 const chatModels = [];
 const mock = http.createServer((req, res) => {
   let raw = "";
@@ -16,10 +17,16 @@ const mock = http.createServer((req, res) => {
       res.end(JSON.stringify(body));
     };
     if (req.headers.authorization === "Bearer sin-saldo") return reply(402, { error: { message: "Insufficient Balance" } });
+    if (req.url === "/user/balance") return reply(200, { is_available: true, balance_infos: [{ currency: "USD", total_balance: "4.20" }] });
     if (req.url === "/models") return reply(200, { object: "list", data: AVAILABLE.map((id) => ({ id, object: "model" })) });
     lastRequest = { headers: req.headers, body: JSON.parse(raw) };
     chatModels.push(lastRequest.body.model);
     if (!AVAILABLE.includes(lastRequest.body.model)) return reply(400, { error: { message: "Model Not Exist" } });
+    // El modo JSON a veces devuelve contenido vacío: simula eso en la primera llamada de evaluación.
+    if (lastRequest.body.response_format && !emptyServed) {
+      emptyServed = true;
+      return reply(200, { choices: [{ message: { content: "" } }] });
+    }
     const content = lastRequest.body.response_format
       ? "```json\n" + JSON.stringify({ diagnosticoCorrecto: true, puntajes: { diagnostico: 40, diferenciales: 8, estudios: 18, manejo: 15, entrevista: 7 }, total: 88, fortalezas: ["a"], areasDeMejora: ["b"], comentario: "ok" }) + "\n```"
       : "Me duele mucho el pecho, doctor.";
@@ -105,6 +112,14 @@ test("detecta el modelo vigente y reintenta si el guardado fue retirado", async 
   const check = await (await post("/api/check", {})).json();
   assert.equal(check.ok, true);
   assert.equal(check.model, "deepseek-flash");
+  assert.deepEqual(check.balance, { available: true, currency: "USD", total: "4.20" });
+});
+
+test("elige modelo también con IDs de otros proveedores (OpenRouter)", () => {
+  const { pickModel } = require("../server.js");
+  assert.equal(pickModel(["openai/gpt-x", "deepseek/deepseek-r1:free", "deepseek/deepseek-v4-pro", "deepseek/deepseek-flash"]), "deepseek/deepseek-flash");
+  assert.equal(pickModel(["openai/gpt-x", "deepseek/deepseek-r1", "deepseek/deepseek-v4-pro", "deepseek/deepseek-chat-v5"]), "deepseek/deepseek-chat-v5");
+  assert.equal(pickModel(["deepseek-chat", "deepseek-reasoner"]), "deepseek-chat");
 });
 
 test("errores de DeepSeek llegan con mensaje claro", async () => {

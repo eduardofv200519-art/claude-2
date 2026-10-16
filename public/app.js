@@ -123,7 +123,8 @@ document.getElementById("test-connection").onclick = async () => {
     const res = await fetch("/api/check", { method: "POST", headers: typed ? { "X-DeepSeek-Key": typed } : {} });
     const r = await res.json();
     out.className = `small ${r.ok ? "text-ok" : "text-bad"}`;
-    out.textContent = r.ok ? `✓ Funciona — modelo ${r.model}, respondió en ${(r.ms / 1000).toFixed(1)} s` : `✗ ${r.error}`;
+    const balance = r.balance ? ` · saldo ${r.balance.total} ${r.balance.currency}` : "";
+    out.textContent = r.ok ? `✓ Funciona — modelo ${r.model}, respondió en ${(r.ms / 1000).toFixed(1)} s${balance}` : `✗ ${r.error}`;
     if (!typed || typed === apiKey()) setAiHealth(r.ok ? "ok" : "fail");
   } catch (e) {
     out.className = "small text-bad";

@@ -127,12 +127,29 @@ async function listModels(key) {
   return (data.data || []).map((m) => m.id);
 }
 
+// Acepta IDs con prefijo de proveedor (p. ej. "deepseek/deepseek-v4-flash" en OpenRouter).
 function pickModel(ids) {
+  const bare = (id) => id.split("/").pop();
+  const deepseekIds = ids.filter((id) => /deepseek/i.test(id));
+  const pool = deepseekIds.length ? deepseekIds : ids;
   return (
-    MODEL_PREFERENCE.find((m) => ids.includes(m)) ||
-    ids.find((m) => !/reason|think|pro|vision|coder/i.test(m)) ||
-    ids[0]
+    MODEL_PREFERENCE.map((m) => pool.find((id) => bare(id) === m)).find(Boolean) ||
+    pool.find((id) => !/reason|think|pro|vision|coder|r1|:free/i.test(bare(id))) ||
+    pool[0]
   );
+}
+
+// Saldo de la cuenta (endpoint propio de DeepSeek; otros proveedores no lo tienen).
+async function getBalance(key) {
+  try {
+    const res = await deepseekFetch("/user/balance", key);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const b = data.balance_infos?.[0];
+    return b ? { available: data.is_available, currency: b.currency, total: b.total_balance } : null;
+  } catch {
+    return null;
+  }
 }
 
 async function modelFor(key, { refresh = false } = {}) {
@@ -175,17 +192,23 @@ async function deepseek(messages, { apiKey, json = false, temperature = 0.7, max
       }),
     });
 
-  let res = await call(await modelFor(key));
-  if (!res.ok && [400, 404, 422].includes(res.status)) {
-    const text = await res.text();
-    // Modelo inexistente o retirado: redetectar y reintentar una vez.
-    if (!/model/i.test(text)) throw friendlyError(res.status, text);
-    res = await call(await modelFor(key, { refresh: true }));
-  }
-  if (!res.ok) throw friendlyError(res.status, await res.text());
-  const data = await res.json();
-  const content = data.choices?.[0]?.message?.content || "";
-  return content.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+  const complete = async () => {
+    let res = await call(await modelFor(key));
+    if (!res.ok && [400, 404, 422].includes(res.status)) {
+      const text = await res.text();
+      // Modelo inexistente o retirado: redetectar y reintentar una vez.
+      if (!/model/i.test(text)) throw friendlyError(res.status, text);
+      res = await call(await modelFor(key, { refresh: true }));
+    }
+    if (!res.ok) throw friendlyError(res.status, await res.text());
+    const data = await res.json();
+    const content = data.choices?.[0]?.message?.content || "";
+    return content.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+  };
+
+  const content = await complete();
+  // La documentación de DeepSeek advierte que el modo JSON a veces devuelve contenido vacío.
+  return content || (json ? complete() : content);
 }
 
 function patientSystemPrompt(c) {
@@ -324,7 +347,7 @@ const routes = {
         temperature: 0,
         maxTokens: 10,
       });
-      return { ok: true, model: await modelFor(key), reply, ms: Date.now() - started };
+      return { ok: true, model: await modelFor(key), reply, ms: Date.now() - started, balance: await getBalance(key) };
     } catch (e) {
       return { ok: false, error: e.message };
     }
@@ -421,4 +444,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { server, CASES, TESTS, BOOKS, modelCache, deepseek, modelFor, listModels, parseJsonReply, patientSystemPrompt, evaluationPrompt };
+module.exports = { server, CASES, TESTS, BOOKS, modelCache, deepseek, modelFor, listModels, pickModel, getBalance, parseJsonReply, patientSystemPrompt, evaluationPrompt };
