@@ -193,8 +193,10 @@ document.getElementById("test-connection").onclick = async () => {
     out.textContent = r.ok
       ? `✓ Funciona — ${r.provider}, modelo ${r.model}, respondió en ${(r.ms / 1000).toFixed(1)} s${balance}`
       : `✗ ${r.error}`;
+    // Se recuerda el resultado para que, al guardar estos mismos ajustes, el indicador lo refleje.
+    state.lastTest = { ...typed, health: r.ok ? "ok" : "fail" };
     const saved = userAi();
-    if (typed.provider === saved.provider && typed.key === saved.key) setAiHealth(r.ok ? "ok" : "fail");
+    if (typed.provider === saved.provider && typed.key === saved.key) setAiHealth(state.lastTest.health);
   } catch (e) {
     out.className = "small text-bad";
     out.textContent = `✗ ${e.message}`;
@@ -203,7 +205,10 @@ document.getElementById("test-connection").onclick = async () => {
 document.getElementById("save-settings").onclick = () => {
   const next = { provider: providerSelect.value, key: document.getElementById("api-key").value.trim() };
   const prev = userAi();
-  if (next.provider !== prev.provider || next.key !== prev.key) state.aiHealth = null;
+  if (next.provider !== prev.provider || next.key !== prev.key) {
+    const t = state.lastTest;
+    state.aiHealth = t && t.provider === next.provider && t.key === next.key ? t.health : null;
+  }
   storage(AI_STORAGE, next);
   renderAiStatus();
   route(); // quita la guía de inicio si ya hay key
