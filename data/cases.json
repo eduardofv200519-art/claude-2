@@ -1,0 +1,875 @@
+[
+  {
+    "id": "iam-inferior",
+    "specialty": "Cardiología",
+    "difficulty": "Intermedio",
+    "setting": "Urgencias de un hospital general con sala de hemodinamia",
+    "patient": { "name": "Roberto Salinas", "age": "58 años", "sex": "Masculino" },
+    "chiefComplaint": "Me aprieta el pecho desde hace una hora y estoy sudando frío.",
+    "triageNote": "Llega por sus propios medios, diaforético, con la mano empuñada sobre el esternón.",
+    "vitals": { "TA": "100/65 mmHg", "FC": "52 lpm", "FR": "20 rpm", "Temp": "36.6 °C", "SpO2": "95 % aire ambiente", "Glucosa capilar": "184 mg/dL" },
+    "persona": "Hombre trabajador, preocupado y algo asustado, responde corto porque le duele. Se lleva la mano al pecho.",
+    "history": {
+      "enfermedadActual": "Dolor opresivo retroesternal que inició hace 1 hora mientras subía cargas en su negocio. Intensidad 9/10, irradia a mandíbula y brazo izquierdo. No mejora con el reposo. Se acompaña de sudoración fría, náusea y vomitó una vez. Siente que se va a desmayar.",
+      "antecedentes": "Diabetes tipo 2 hace 10 años (metformina, no muy apegado), hipertensión hace 6 años (losartán, a veces lo olvida). Colesterol alto 'pero no tomo nada'.",
+      "medicamentos": "Metformina 850 mg c/12 h, losartán 50 mg/día. No toma sildenafil ni otros.",
+      "alergias": "Ninguna.",
+      "habitos": "Fuma 1 cajetilla diaria desde hace 35 años. Alcohol los fines de semana. Sedentario.",
+      "familiares": "Su papá murió de un infarto a los 60 años.",
+      "revisionSistemas": "Sin fiebre, sin tos, sin dolor de espalda tipo desgarro, sin cirugías recientes ni viajes largos. Nunca le había dolido así."
+    },
+    "physicalExam": {
+      "general": "Diaforético, pálido, ansioso. Alerta y orientado.",
+      "cabeza": "Ingurgitación yugular leve a 45°. Sin soplos carotídeos.",
+      "cardio": "Ruidos cardiacos rítmicos, bradicárdicos, sin soplos ni frote. Pulsos simétricos en las 4 extremidades.",
+      "resp": "Murmullo vesicular conservado, sin estertores.",
+      "abdomen": "Blando, no doloroso, sin visceromegalias.",
+      "neuro": "Sin déficit focal.",
+      "piel": "Fría y húmeda, llenado capilar 3 s. Sin edema."
+    },
+    "labs": {
+      "ecg": "Ritmo sinusal, FC 52 lpm. Elevación del ST de 3 mm en DII, DIII y aVF (DIII > DII), depresión recíproca del ST en DI y aVL. En derivaciones derechas: elevación del ST de 1 mm en V4R.",
+      "trop": "Troponina I-hs 180 ng/L (ref <26). Positiva.",
+      "bh": "Hb 15.1 g/dL, leucocitos 11,200/µL, plaquetas 240,000/µL.",
+      "qs": "Glucosa 186 mg/dL, BUN 18, creatinina 1.0 mg/dL, Na 138, K 4.3, Cl 102, HCO₃ 22.",
+      "rxt": "Silueta cardiaca normal, campos pulmonares sin congestión, mediastino normal.",
+      "eco": "Hipocinesia de la pared inferior e inferoseptal. FEVI 48%. VD con hipocinesia de la pared libre. Sin derrame ni insuficiencias valvulares significativas.",
+      "dimero": "Dímero D 380 ng/mL FEU. Negativo.",
+      "hba1c": "HbA1c 8.9%."
+    },
+    "diagnosis": "Infarto agudo de miocardio con elevación del ST (IAMCEST) de cara inferior con extensión a ventrículo derecho",
+    "acceptedDiagnoses": ["IAMCEST", "infarto con elevacion del ST", "STEMI", "infarto agudo de miocardio", "IAM inferior", "sindrome coronario agudo con elevacion del ST", "infarto inferior"],
+    "differentials": ["Disección aórtica", "Tromboembolia pulmonar", "Pericarditis aguda", "SCA sin elevación del ST"],
+    "keyTests": ["ecg", "trop"],
+    "management": [
+      "ECG en los primeros 10 minutos y activar código infarto",
+      "Ácido acetilsalicílico 150-300 mg masticable",
+      "Inhibidor P2Y12 (ticagrelor 180 mg o clopidogrel 600 mg)",
+      "Anticoagulación con heparina no fraccionada durante el intervencionismo",
+      "Angioplastia primaria (ICP) con objetivo puerta-balón <90 min; fibrinólisis en <30 min si la ICP no es posible en 120 min",
+      "Tomar derivaciones derechas; evitar nitratos y morfina por afección de ventrículo derecho e hipotensión; cristaloides si hay hipotensión",
+      "Monitorización continua por riesgo de bradiarritmias y bloqueo AV"
+    ],
+    "teachingPoints": [
+      "DIII > DII con depresión recíproca en DI/aVL sugiere oclusión de la coronaria derecha.",
+      "Ante IAM inferior siempre realiza V4R: la afección del VD hace al paciente dependiente de precarga, por lo que los nitratos pueden provocar hipotensión grave.",
+      "La bradicardia es frecuente por estimulación vagal (reflejo de Bezold-Jarisch) y afección del nodo AV."
+    ],
+    "reference": "Byrne RA, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J 2023;44:3720-3826."
+  },
+  {
+    "id": "tep-postoperatorio",
+    "specialty": "Neumología",
+    "difficulty": "Intermedio",
+    "setting": "Urgencias",
+    "patient": { "name": "Daniela Robles", "age": "34 años", "sex": "Femenino" },
+    "chiefComplaint": "De repente me empezó a faltar el aire y me duele el pecho al respirar.",
+    "triageNote": "Taquipneica, habla en frases cortas. Usa férula en la rodilla derecha.",
+    "vitals": { "TA": "118/76 mmHg", "FC": "118 lpm", "FR": "26 rpm", "Temp": "37.4 °C", "SpO2": "89 % aire ambiente" },
+    "persona": "Joven, ansiosa, se queda sin aire al hablar mucho. Coopera.",
+    "history": {
+      "enfermedadActual": "Hace 3 horas, estando sentada en el sillón, inició falta de aire súbita y dolor punzante en el costado derecho del tórax que empeora al respirar hondo. Palpitaciones. Tosió una vez con un poco de sangre. Desde hace 4 días la pantorrilla derecha está más hinchada y le duele, pero pensó que era por la cirugía.",
+      "antecedentes": "Hace 10 días le reconstruyeron el ligamento cruzado anterior de la rodilla derecha. Desde entonces casi no camina. No le dieron anticoagulante al alta (o no lo recuerda).",
+      "medicamentos": "Anticonceptivos orales combinados desde hace 5 años. Paracetamol y tramadol para el dolor de rodilla.",
+      "alergias": "Ninguna.",
+      "habitos": "No fuma. Alcohol social. Viajó en avión hace 2 meses.",
+      "familiares": "Su mamá tuvo 'un coágulo en la pierna' después de un parto.",
+      "revisionSistemas": "Sin fiebre previa, sin tos crónica, sin dolor tipo opresivo. Sin antecedente de asma."
+    },
+    "physicalExam": {
+      "general": "Angustiada, taquipneica, sin cianosis central.",
+      "cabeza": "Ingurgitación yugular ausente.",
+      "cardio": "Taquicardia rítmica, segundo ruido pulmonar ligeramente reforzado. Sin soplos.",
+      "resp": "Murmullo vesicular conservado bilateral. Sin estertores ni sibilancias. Dolor a la inspiración profunda en hemitórax derecho.",
+      "abdomen": "Blando, no doloroso.",
+      "neuro": "Sin déficit.",
+      "piel": "Pantorrilla derecha 3 cm más gruesa que la izquierda, con edema con fóvea, dolor a la palpación del trayecto venoso profundo y signo de Homans positivo. Herida quirúrgica limpia."
+    },
+    "labs": {
+      "ecg": "Taquicardia sinusal 118 lpm. Patrón S1Q3T3. Ondas T invertidas en V1-V3. Sin elevación del ST.",
+      "dimero": "Dímero D 3,800 ng/mL FEU (ref <500). Elevado.",
+      "gasa": "pH 7.48, PaCO₂ 30 mmHg, PaO₂ 58 mmHg, HCO₃ 22, lactato 1.4. Alcalosis respiratoria con hipoxemia. Gradiente A-a aumentado.",
+      "trop": "Troponina I-hs 18 ng/L. Negativa.",
+      "bnp": "NT-proBNP 220 pg/mL. Discretamente elevado.",
+      "rxt": "Sin consolidaciones. Leve elevación del hemidiafragma derecho. Silueta cardiaca normal.",
+      "angiotacp": "Defectos de llenado en la arteria lobar inferior derecha y en ramas segmentarias del lóbulo medio. Relación VD/VI 0.9. Pequeño infarto pulmonar periférico basal derecho.",
+      "eco": "VD de tamaño normal, sin hipocinesia. FEVI 65%. PSAP estimada 38 mmHg.",
+      "bh": "Hb 12.8, leucocitos 10,400, plaquetas 310,000.",
+      "bhcg": "β-hCG <5 mUI/mL. Negativa."
+    },
+    "diagnosis": "Tromboembolia pulmonar aguda (riesgo intermedio-bajo) secundaria a trombosis venosa profunda postoperatoria",
+    "acceptedDiagnoses": ["tromboembolia pulmonar", "TEP", "embolia pulmonar", "tromboembolismo pulmonar", "TEP agudo", "embolismo pulmonar"],
+    "differentials": ["Neumonía", "Neumotórax", "Síndrome coronario agudo", "Pericarditis", "Crisis de ansiedad"],
+    "keyTests": ["angiotacp", "dimero", "ecg", "gasa"],
+    "management": [
+      "Oxígeno suplementario para SpO2 ≥ 90%",
+      "Calcular probabilidad clínica (Wells alta: TVP clínica, FC >100, cirugía reciente) y confirmar con angioTAC pulmonar",
+      "Anticoagulación inmediata: heparina de bajo peso molecular (enoxaparina 1 mg/kg c/12 h) o anticoagulante oral directo (rivaroxabán/apixabán)",
+      "Estratificar riesgo con sPESI, troponina y función del VD; no está indicada la trombólisis en paciente hemodinámicamente estable",
+      "Suspender anticonceptivos con estrógenos",
+      "Anticoagulación por al menos 3 meses (evento provocado por factor transitorio mayor)"
+    ],
+    "teachingPoints": [
+      "Con probabilidad clínica alta no se necesita el dímero D: ve directo a la angioTAC.",
+      "S1Q3T3 es poco sensible; el hallazgo ECG más frecuente en TEP es la taquicardia sinusal.",
+      "La trombólisis sistémica se reserva para TEP de alto riesgo (hipotensión/choque)."
+    ],
+    "reference": "Konstantinides SV, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism. Eur Heart J 2020;41:543-603."
+  },
+  {
+    "id": "cetoacidosis",
+    "specialty": "Endocrinología",
+    "difficulty": "Intermedio",
+    "setting": "Urgencias",
+    "patient": { "name": "Valeria Mendoza", "age": "19 años", "sex": "Femenino" },
+    "chiefComplaint": "Llevo dos días vomitando y me duele mucho la panza, tengo mucha sed.",
+    "triageNote": "Somnolienta pero responde. Respiración profunda y rápida. Aliento con olor afrutado.",
+    "vitals": { "TA": "98/60 mmHg", "FC": "122 lpm", "FR": "30 rpm, profunda", "Temp": "37.2 °C", "SpO2": "99 % aire ambiente", "Glucosa capilar": "486 mg/dL" },
+    "persona": "Universitaria cansada y somnolienta, responde despacio. Le da algo de vergüenza admitir que no se puso la insulina.",
+    "history": {
+      "enfermedadActual": "Hace 4 días empezó con diarrea y malestar 'como infección del estómago'. Como no comía, dejó de ponerse la insulina. Desde hace 2 días vómitos (8-10 al día), dolor abdominal difuso, orina mucho y tiene muchísima sed. Hoy se siente muy cansada y 'con la cabeza lenta'.",
+      "antecedentes": "Diabetes tipo 1 desde los 11 años. Un internamiento por lo mismo a los 15 años.",
+      "medicamentos": "Insulina glargina 22 U en la noche y lispro antes de comidas (no se la ha aplicado en 3 días).",
+      "alergias": "Ninguna.",
+      "habitos": "No fuma, no consume drogas. Alcohol ocasional, no en esta semana.",
+      "familiares": "Abuela con diabetes tipo 2.",
+      "revisionSistemas": "Bajó como 3 kg este mes. Sin disuria. Última menstruación hace 2 semanas, normal. Sin tos ni fiebre alta."
+    },
+    "physicalExam": {
+      "general": "Somnolienta, responde a la voz, Glasgow 14. Respiración de Kussmaul. Aliento cetónico.",
+      "cabeza": "Mucosa oral muy seca, ojos hundidos.",
+      "cardio": "Taquicardia rítmica, sin soplos.",
+      "resp": "Campos pulmonares limpios. Respiraciones profundas.",
+      "abdomen": "Dolor difuso a la palpación sin rebote ni rigidez. Peristalsis disminuida.",
+      "neuro": "Somnolienta, sin déficit focal.",
+      "piel": "Piel seca, llenado capilar 3 s, signo del pliegue positivo."
+    },
+    "labs": {
+      "qs": "Glucosa 486 mg/dL, BUN 32 mg/dL, creatinina 1.4 mg/dL, Na 131 mEq/L, K 5.6 mEq/L, Cl 96 mEq/L, HCO₃ 8 mEq/L. Brecha aniónica 27.",
+      "gasa": "pH 7.08, PaCO₂ 22 mmHg, PaO₂ 104 mmHg, HCO₃ 7 mEq/L, lactato 2.1 mmol/L. Acidosis metabólica de brecha aniónica elevada con compensación respiratoria.",
+      "cetonas": "β-hidroxibutirato 6.2 mmol/L (ref <0.6). Osmolaridad sérica efectiva 299 mOsm/kg.",
+      "ego": "Glucosa ++++, cetonas +++, densidad 1.030. Sin nitritos ni leucocitos.",
+      "bh": "Hb 15.4 g/dL, Hto 47%, leucocitos 15,800/µL (neutrófilos 82%), plaquetas 320,000.",
+      "hba1c": "HbA1c 10.8%.",
+      "ecg": "Taquicardia sinusal 122 lpm. Ondas T discretamente picudas. Sin otras alteraciones.",
+      "lipasa": "Lipasa 85 U/L (ligeramente elevada, inespecífica en CAD).",
+      "bhcg": "β-hCG <5 mUI/mL. Negativa."
+    },
+    "diagnosis": "Cetoacidosis diabética grave precipitada por suspensión de insulina durante gastroenteritis",
+    "acceptedDiagnoses": ["cetoacidosis diabetica", "CAD", "DKA", "cetoacidosis"],
+    "differentials": ["Estado hiperglucémico hiperosmolar", "Cetoacidosis alcohólica", "Acidosis láctica", "Pancreatitis aguda", "Abdomen agudo quirúrgico"],
+    "keyTests": ["qs", "gasa", "cetonas", "ego"],
+    "management": [
+      "Solución salina 0.9% 1-1.5 L en la primera hora, luego ajustar según estado hídrico y sodio corregido",
+      "Verificar potasio antes de insulina: si K <3.3 reponer primero",
+      "Insulina regular IV en infusión 0.1 U/kg/h",
+      "Agregar potasio a las soluciones cuando K <5.0-5.3 mEq/L, objetivo 4-5",
+      "Agregar dextrosa al 5% cuando glucosa <250 mg/dL sin suspender la insulina hasta resolver la cetosis",
+      "Monitorizar glucosa cada hora y electrolitos/gasometría cada 2-4 h; buscar desencadenante",
+      "Transición a insulina subcutánea con solapamiento de 1-2 h al resolver (pH >7.3, HCO₃ ≥15-18, brecha aniónica normal)"
+    ],
+    "teachingPoints": [
+      "El K sérico normal o alto no refleja el déficit corporal total; la insulina lo desplaza al interior de la célula.",
+      "El bicarbonato IV no está indicado salvo pH <7.0 en la mayoría de las guías.",
+      "La causa más frecuente de CAD es la omisión de insulina o una infección."
+    ],
+    "reference": "Umpierrez GE, et al. Hyperglycemic crises in adults with diabetes: a consensus report (ADA/EASD/JBDS/AACE/DTS). Diabetes Care 2024;47:1257-1275."
+  },
+  {
+    "id": "apendicitis",
+    "specialty": "Cirugía general",
+    "difficulty": "Básico",
+    "setting": "Urgencias",
+    "patient": { "name": "Luis Fernando Ortega", "age": "22 años", "sex": "Masculino" },
+    "chiefComplaint": "Me duele la panza del lado derecho, abajo, desde ayer.",
+    "triageNote": "Camina encorvado, se sujeta el abdomen derecho.",
+    "vitals": { "TA": "122/78 mmHg", "FC": "98 lpm", "FR": "18 rpm", "Temp": "38.0 °C", "SpO2": "98 % aire ambiente" },
+    "persona": "Estudiante relajado pero adolorido; le preocupa perder clases. Le molesta moverse.",
+    "history": {
+      "enfermedadActual": "Hace 18 horas empezó un dolor sordo alrededor del ombligo. Unas 8 horas después el dolor se cambió a la parte baja derecha y se volvió constante y más fuerte (7/10). Le duele al caminar, al toser y con los baches del camión. No tiene hambre desde ayer. Vomitó una vez después de que empezó el dolor. Sensación de calentura.",
+      "antecedentes": "Sano. Sin cirugías.",
+      "medicamentos": "Tomó un paracetamol anoche.",
+      "alergias": "Penicilina: le dio ronchas de niño.",
+      "habitos": "No fuma, alcohol ocasional.",
+      "familiares": "Sin relevancia.",
+      "revisionSistemas": "Sin diarrea, última evacuación ayer normal. Sin ardor al orinar ni sangre en la orina. Sin dolor testicular."
+    },
+    "physicalExam": {
+      "general": "Adolorido, prefiere estar quieto con la cadera derecha flexionada.",
+      "cabeza": "Mucosas discretamente secas.",
+      "cardio": "Ruidos rítmicos, sin soplos.",
+      "resp": "Murmullo vesicular normal.",
+      "abdomen": "Dolor a la palpación en punto de McBurney con defensa muscular localizada. Rebote (Blumberg) positivo en fosa iliaca derecha. Rovsing positivo, psoas positivo, obturador positivo. Peristalsis disminuida.",
+      "genitourinario": "Testículos sin alteraciones. Puño-percusión renal negativa.",
+      "neuro": "Sin alteraciones.",
+      "piel": "Sin alteraciones."
+    },
+    "labs": {
+      "bh": "Hb 15.0, leucocitos 14,600/µL con neutrófilos 84% (desviación a la izquierda), plaquetas 260,000.",
+      "pcr": "PCR 6.8 mg/dL. Procalcitonina 0.2 ng/mL.",
+      "ego": "Densidad 1.025, 3-5 leucocitos/campo, sin nitritos, sin eritrocitos.",
+      "usabd": "Estructura tubular aperistáltica no compresible en fosa iliaca derecha de 10 mm de diámetro, con hiperecogenicidad de la grasa periapendicular. Sin líquido libre.",
+      "tacabd": "Apéndice de 11 mm con engrosamiento y realce de la pared, apendicolito en su base y trabeculación de la grasa periapendicular. Sin aire libre ni absceso.",
+      "qs": "Glucosa 98, BUN 16, creatinina 1.0, Na 140, K 4.0."
+    },
+    "diagnosis": "Apendicitis aguda no complicada",
+    "acceptedDiagnoses": ["apendicitis", "apendicitis aguda", "apendicitis aguda no complicada"],
+    "differentials": ["Linfadenitis mesentérica", "Ileítis terminal / enfermedad de Crohn", "Litiasis ureteral derecha", "Gastroenteritis", "Torsión testicular"],
+    "keyTests": ["bh", "usabd"],
+    "management": [
+      "Ayuno, líquidos IV y analgesia (no retrasar la analgesia por el diagnóstico)",
+      "Calcular escala de Alvarado / AIR (Alvarado ≈ 9: alta probabilidad)",
+      "Antibiótico profiláctico preoperatorio; por alergia a penicilina usar alternativa (p. ej., ciprofloxacino o aminoglucósido + metronidazol)",
+      "Valoración por cirugía y apendicectomía, de preferencia laparoscópica"
+    ],
+    "teachingPoints": [
+      "La migración del dolor periumbilical a FID es el síntoma más útil de la historia.",
+      "En adultos jóvenes con escala alta se puede ir a cirugía con ultrasonido o incluso sin imagen; la TAC es útil en duda diagnóstica.",
+      "Siempre pregunta alergias antes de indicar antibióticos."
+    ],
+    "reference": "Di Saverio S, et al. Diagnosis and treatment of acute appendicitis: 2020 update of the WSES Jerusalem guidelines. World J Emerg Surg 2020;15:27."
+  },
+  {
+    "id": "meningitis",
+    "specialty": "Infectología",
+    "difficulty": "Avanzado",
+    "setting": "Urgencias",
+    "patient": { "name": "Jorge Castañeda", "age": "45 años", "sex": "Masculino", "informant": "Patricia, su esposa" },
+    "chiefComplaint": "Desde ayer tiene una fiebre muy alta y un dolor de cabeza horrible; hoy está confundido.",
+    "triageNote": "Paciente somnoliento, con fotofobia. Lo trae su esposa, quien responde las preguntas.",
+    "vitals": { "TA": "132/80 mmHg", "FC": "112 lpm", "FR": "22 rpm", "Temp": "39.4 °C", "SpO2": "96 % aire ambiente" },
+    "persona": "Esposa angustiada que conoce bien al paciente. Habla rápido, pide que lo atiendan pronto.",
+    "history": {
+      "enfermedadActual": "Hace 1 semana tuvo dolor del oído izquierdo y le salió algo de pus; no fue al doctor. Ayer en la mañana empezó con fiebre de 39-40 °C y dolor de cabeza muy intenso, 'el peor de su vida', que no se quita con paracetamol. Le molesta la luz y el cuello 'lo tiene tieso'. Vomitó 3 veces. Desde hoy en la mañana está confundido, no sabe qué día es y se queda dormido.",
+      "antecedentes": "Sano. No diabético, sin VIH conocido. No le han quitado el bazo. Cirugía de hernia inguinal hace años.",
+      "medicamentos": "Ninguno. Paracetamol desde ayer.",
+      "alergias": "Ninguna conocida.",
+      "habitos": "Contador. No fuma. Alcohol social.",
+      "familiares": "Sin relevancia.",
+      "revisionSistemas": "Sin convulsiones. Sin manchas en la piel. Sin traumatismos. Nadie más en casa está enfermo. Sin viajes."
+    },
+    "physicalExam": {
+      "general": "Somnoliento, desorientado en tiempo, Glasgow 13 (O3 V4 M6). Fotofobia.",
+      "cabeza": "Rigidez de nuca franca. Otoscopia izquierda: membrana timpánica perforada con otorrea purulenta. Fondo de ojo sin papiledema.",
+      "cardio": "Taquicardia rítmica, sin soplos.",
+      "resp": "Campos pulmonares limpios.",
+      "abdomen": "Sin alteraciones.",
+      "neuro": "Signos de Kernig y Brudzinski positivos. Pupilas isocóricas reactivas. Sin déficit motor focal ni alteración de pares craneales.",
+      "piel": "Sin petequias ni púrpura."
+    },
+    "labs": {
+      "bh": "Hb 14.6, leucocitos 21,000/µL con neutrófilos 90% y 6% bandas, plaquetas 190,000.",
+      "qs": "Glucosa 110 mg/dL, BUN 20, creatinina 1.1, Na 134, K 3.9.",
+      "pcr": "PCR 28 mg/dL. Procalcitonina 6.4 ng/mL.",
+      "lcr": "LCR turbio. Presión de apertura 32 cmH₂O. Leucocitos 2,400/µL (92% polimorfonucleares). Proteínas 280 mg/dL. Glucosa 22 mg/dL (relación LCR/sérica 0.2). Gram: diplococos grampositivos lanceolados. Cultivo: Streptococcus pneumoniae sensible a ceftriaxona.",
+      "hemocultivo": "Streptococcus pneumoniae en 2 de 2 sets.",
+      "tacc": "Sin lesiones ocupantes de espacio, sin hidrocefalia ni edema. Ocupación de celdillas mastoideas izquierdas.",
+      "gasa": "pH 7.38, PaCO₂ 35, PaO₂ 84, HCO₃ 21, lactato 2.2 mmol/L.",
+      "coag": "TP 13 s, INR 1.1, TTPa 32 s. Plaquetas adecuadas para punción lumbar."
+    },
+    "diagnosis": "Meningitis bacteriana aguda por Streptococcus pneumoniae secundaria a otitis media/mastoiditis",
+    "acceptedDiagnoses": ["meningitis bacteriana", "meningitis neumococica", "meningitis por neumococo", "meningitis aguda bacteriana", "meningitis por streptococcus pneumoniae", "meningitis"],
+    "differentials": ["Encefalitis viral (herpética)", "Hemorragia subaracnoidea", "Absceso cerebral", "Meningitis meningocócica", "Meningitis tuberculosa"],
+    "keyTests": ["hemocultivo", "lcr", "tacc", "bh"],
+    "management": [
+      "Tomar hemocultivos y NO retrasar el antibiótico (idealmente <1 h de la llegada)",
+      "Dexametasona 0.15 mg/kg IV c/6 h por 4 días, iniciada antes o junto con la primera dosis de antibiótico",
+      "Ceftriaxona 2 g IV c/12 h más vancomicina empírica (agregar ampicilina si >50 años o inmunosupresión)",
+      "TAC de cráneo antes de la punción lumbar por alteración del estado de conciencia, sin retrasar el antibiótico",
+      "Punción lumbar tras TAC sin contraindicaciones",
+      "Valoración por otorrinolaringología para el foco ótico/mastoideo",
+      "Monitorización neurológica y manejo de complicaciones (convulsiones, hipertensión intracraneal, hiponatremia)"
+    ],
+    "teachingPoints": [
+      "La tríada clásica (fiebre, rigidez de nuca, alteración mental) está presente en menos de la mitad; casi todos tienen al menos 2 de 4 (incluida cefalea).",
+      "Nunca esperes la TAC o la punción para dar el antibiótico.",
+      "La dexametasona reduce mortalidad y secuelas auditivas en meningitis neumocócica."
+    ],
+    "reference": "van de Beek D, et al. ESCMID guideline: diagnosis and treatment of acute bacterial meningitis. Clin Microbiol Infect 2016;22 Suppl 3:S37-62."
+  },
+  {
+    "id": "ectopico-roto",
+    "specialty": "Ginecología y obstetricia",
+    "difficulty": "Intermedio",
+    "setting": "Urgencias",
+    "patient": { "name": "Karla Jiménez", "age": "27 años", "sex": "Femenino" },
+    "chiefComplaint": "Me dio un dolor muy fuerte en la parte baja de la panza y me siento muy mareada.",
+    "triageNote": "Pálida, diaforética, se desvaneció al levantarse de la silla de ruedas.",
+    "vitals": { "TA": "86/54 mmHg", "FC": "124 lpm", "FR": "22 rpm", "Temp": "36.5 °C", "SpO2": "97 % aire ambiente" },
+    "persona": "Mujer joven asustada, débil, responde con voz baja. Pregunta si es grave.",
+    "history": {
+      "enfermedadActual": "Hace 2 horas, en el trabajo, inició un dolor súbito muy intenso en la parte baja derecha del abdomen, que luego se extendió a toda la panza. Ahora también le duele el hombro derecho. Ha tenido un sangrado vaginal escaso, oscuro, desde hace 3 días. Al pararse se marea y casi se desmaya.",
+      "antecedentes": "Última menstruación hace 7 semanas (normalmente regular cada 28 días). Hace 2 años tuvo una infección pélvica tratada con antibióticos. G1 P1 (parto hace 4 años).",
+      "medicamentos": "Ninguno. No usa anticonceptivos actualmente.",
+      "alergias": "Ninguna.",
+      "habitos": "Fuma 5 cigarros al día.",
+      "familiares": "Sin relevancia.",
+      "revisionSistemas": "Algo de náusea. Sin fiebre. Sin ardor al orinar. Sin diarrea. Grupo sanguíneo: no lo sabe."
+    },
+    "physicalExam": {
+      "general": "Pálida, diaforética, ansiosa. Alerta.",
+      "cabeza": "Conjuntivas pálidas.",
+      "cardio": "Taquicardia rítmica, pulsos periféricos débiles.",
+      "resp": "Murmullo vesicular normal.",
+      "abdomen": "Distensión leve, dolor difuso de predominio en hipogastrio y fosa iliaca derecha, rebote positivo generalizado, matidez en flancos.",
+      "ginecologico": "Especuloscopia: sangrado escaso oscuro proveniente del orificio cervical, cérvix cerrado. Tacto: dolor intenso a la movilización cervical, masa anexial derecha dolorosa, fondo de saco posterior abombado y doloroso ('grito de Douglas').",
+      "neuro": "Sin déficit.",
+      "piel": "Fría y húmeda, llenado capilar 4 s."
+    },
+    "labs": {
+      "bhcg": "β-hCG cuantitativa 3,850 mUI/mL. Positiva.",
+      "bh": "Hb 9.1 g/dL, Hto 27%, leucocitos 12,100, plaquetas 220,000.",
+      "uspelv": "Útero sin saco gestacional intrauterino (endometrio 9 mm). Masa anexial derecha heterogénea de 3.5 cm separada del ovario ('signo del anillo'). Abundante líquido libre ecogénico (hemoperitoneo) en fondo de saco que se extiende a la gotiera.",
+      "fast": "Líquido libre en espacio hepatorrenal (Morrison) y pelvis.",
+      "coag": "TP 12.5 s, INR 1.0, TTPa 31 s, fibrinógeno 240 mg/dL.",
+      "qs": "Glucosa 110, BUN 15, creatinina 0.8, Na 138, K 3.9.",
+      "gasa": "pH 7.31, PaCO₂ 31, PaO₂ 95, HCO₃ 16, lactato 4.1 mmol/L. Acidosis metabólica con hiperlactatemia.",
+      "ego": "Hematuria negativa, sin datos de infección."
+    },
+    "diagnosis": "Embarazo ectópico tubario derecho roto con hemoperitoneo y choque hemorrágico",
+    "acceptedDiagnoses": ["embarazo ectopico roto", "embarazo ectopico", "ectopico roto", "embarazo tubario roto", "choque hemorragico por embarazo ectopico"],
+    "differentials": ["Quiste de cuerpo lúteo hemorrágico roto", "Aborto incompleto", "Torsión anexial", "Apendicitis", "Enfermedad pélvica inflamatoria"],
+    "keyTests": ["bhcg", "uspelv", "bh"],
+    "management": [
+      "Dos accesos venosos de grueso calibre, reanimación con cristaloides limitados y hemoderivados",
+      "Tipificar y cruzar, activar protocolo de transfusión masiva si persiste la inestabilidad",
+      "Cirugía urgente (laparoscopia o laparotomía según estabilidad) con salpingectomía",
+      "Inmunoglobulina anti-D si la paciente es Rh negativa",
+      "El metotrexato está contraindicado (inestabilidad hemodinámica / ruptura)"
+    ],
+    "teachingPoints": [
+      "Toda mujer en edad reproductiva con dolor abdominal o síncope necesita prueba de embarazo.",
+      "β-hCG por encima de la zona discriminatoria (~1,500-3,500) sin saco intrauterino sugiere fuertemente ectópico.",
+      "El dolor referido al hombro (signo de Kehr) indica irritación diafragmática por hemoperitoneo."
+    ],
+    "reference": "ACOG Practice Bulletin No. 193: Tubal Ectopic Pregnancy. Obstet Gynecol 2018;131:e91-e103."
+  },
+  {
+    "id": "neumonia-grave",
+    "specialty": "Medicina interna",
+    "difficulty": "Intermedio",
+    "setting": "Urgencias",
+    "patient": { "name": "Ernesto Villalobos", "age": "72 años", "sex": "Masculino", "informant": "Mariana, su hija" },
+    "chiefComplaint": "Mi papá tiene fiebre y tos desde hace tres días y hoy está muy desorientado.",
+    "triageNote": "Adulto mayor taquipneico, confuso. Lo acompaña su hija.",
+    "vitals": { "TA": "104/62 mmHg", "FC": "108 lpm", "FR": "30 rpm", "Temp": "38.9 °C", "SpO2": "87 % aire ambiente" },
+    "persona": "Hija preocupada y organizada, conoce los medicamentos de su papá. Responde con detalle cuando le preguntan.",
+    "history": {
+      "enfermedadActual": "Hace 3 días empezó con escalofríos, fiebre y tos con flemas de color 'oxidado'. Se queja de dolor en el costado derecho al toser o respirar. Desde ayer casi no come ni toma agua y orina poco. Hoy en la mañana no la reconocía bien y decía cosas sin sentido.",
+      "antecedentes": "Hipertensión. Fumó 40 años, lo dejó hace 5 años. No le han diagnosticado EPOC. No ha estado hospitalizado ni tomado antibióticos en los últimos 3 meses.",
+      "medicamentos": "Enalapril 10 mg c/12 h.",
+      "alergias": "Ninguna.",
+      "habitos": "Vive con su hija. Independiente para sus actividades hasta hace 3 días. No le pusieron vacuna de neumococo; sí la de influenza el año pasado.",
+      "familiares": "Sin relevancia.",
+      "revisionSistemas": "Sin vómitos ni diarrea. Sin dolor de pecho opresivo. Sin hinchazón de piernas."
+    },
+    "physicalExam": {
+      "general": "Confuso, desorientado en tiempo y lugar. Taquipneico con uso de músculos accesorios.",
+      "cabeza": "Mucosas secas.",
+      "cardio": "Taquicardia rítmica sin soplos.",
+      "resp": "Hemitórax derecho: matidez a la percusión en base, aumento de vibraciones vocales, estertores crepitantes, soplo tubario y egofonía. Hemitórax izquierdo limpio.",
+      "abdomen": "Sin alteraciones.",
+      "neuro": "Confuso, sin signos meníngeos ni déficit focal.",
+      "piel": "Llenado capilar 3 s, sin edema."
+    },
+    "labs": {
+      "rxt": "Consolidación lobar en lóbulo inferior derecho con broncograma aéreo. Sin derrame pleural significativo. Silueta cardiaca normal.",
+      "bh": "Hb 13.8, leucocitos 18,200/µL (neutrófilos 88%, bandas 8%), plaquetas 160,000.",
+      "qs": "Glucosa 132, BUN 28 mg/dL (urea 60 mg/dL), creatinina 1.3, Na 133, K 4.2, HCO₃ 21.",
+      "pcr": "PCR 22 mg/dL. Procalcitonina 4.8 ng/mL.",
+      "gasa": "pH 7.44, PaCO₂ 33, PaO₂ 56 mmHg, HCO₃ 22, lactato 2.4 mmol/L.",
+      "hemocultivo": "Streptococcus pneumoniae en 1 de 2 sets, sensible a penicilina y ceftriaxona.",
+      "ego": "Densidad 1.030, sin datos de infección. Antígeno urinario de neumococo positivo.",
+      "ecg": "Taquicardia sinusal 108 lpm, sin alteraciones agudas del ST.",
+      "trop": "Troponina I-hs 22 ng/L. Negativa.",
+      "pfh": "AST 30, ALT 28, bilirrubina 0.9, albúmina 3.2 g/dL."
+    },
+    "diagnosis": "Neumonía adquirida en la comunidad grave (CURB-65 = 4) por Streptococcus pneumoniae con insuficiencia respiratoria aguda",
+    "acceptedDiagnoses": ["neumonia adquirida en la comunidad", "NAC", "neumonia", "neumonia neumococica", "neumonia grave", "neumonia lobar"],
+    "differentials": ["Tromboembolia pulmonar", "Insuficiencia cardiaca", "Cáncer pulmonar con neumonía postobstructiva", "Tuberculosis pulmonar", "Neumonía por aspiración"],
+    "keyTests": ["rxt", "bh", "qs", "gasa", "hemocultivo"],
+    "management": [
+      "Oxígeno suplementario con objetivo SpO2 ≥ 92%",
+      "Estratificar gravedad: CURB-65 = 4 (confusión, urea, FR ≥30, edad ≥65) → hospitalización y valorar UCI con criterios ATS/IDSA",
+      "Hemocultivos y cultivo de esputo antes del antibiótico, sin retrasarlo",
+      "Antibiótico empírico IV: ceftriaxona + azitromicina (o fluoroquinolona respiratoria)",
+      "Líquidos IV con vigilancia, suspender temporalmente el enalapril por hipotensión relativa y lesión renal",
+      "Vacunación antineumocócica al alta"
+    ],
+    "teachingPoints": [
+      "En el adulto mayor la confusión puede ser la manifestación principal de la neumonía.",
+      "Calcula siempre una escala de gravedad (CURB-65 o PSI) para decidir el sitio de atención.",
+      "Los cultivos no deben retrasar el antibiótico en neumonía grave."
+    ],
+    "reference": "Metlay JP, et al. Diagnosis and Treatment of Adults with Community-acquired Pneumonia. ATS/IDSA Guideline. Am J Respir Crit Care Med 2019;200:e45-e67."
+  },
+  {
+    "id": "diseccion-aortica",
+    "specialty": "Cardiología",
+    "difficulty": "Avanzado",
+    "setting": "Urgencias",
+    "patient": { "name": "Héctor Navarro", "age": "61 años", "sex": "Masculino" },
+    "chiefComplaint": "Sentí como si algo se me rompiera en el pecho y se me fuera a la espalda.",
+    "triageNote": "Inquieto, no encuentra posición. Refiere dolor máximo desde el inicio.",
+    "vitals": { "TA": "Brazo derecho 178/96 mmHg — brazo izquierdo 142/80 mmHg", "FC": "96 lpm", "FR": "22 rpm", "Temp": "36.4 °C", "SpO2": "97 % aire ambiente" },
+    "persona": "Hombre corpulento y tenso, muy adolorido, describe el dolor con detalle porque nunca había sentido algo así.",
+    "history": {
+      "enfermedadActual": "Hace 50 minutos, cargando unas cajas, sintió un dolor súbito en el pecho, máximo desde el primer segundo, 10/10, 'como si me desgarraran', que se fue entre los omóplatos y ahora baja hacia la cintura. Sudó mucho. Por un momento sintió dormido el brazo izquierdo.",
+      "antecedentes": "Hipertensión desde hace 15 años, mal controlada: deja la medicina cuando se siente bien. Nunca le han dicho que tenga un problema en la aorta o en las válvulas.",
+      "medicamentos": "Amlodipino 5 mg (irregular).",
+      "alergias": "Ninguna.",
+      "habitos": "Fumador de 20 cigarros diarios. Consumo de cocaína negado.",
+      "familiares": "Hermano con 'aneurisma' operado.",
+      "revisionSistemas": "Sin fiebre, sin tos. No ha tenido dolor de pecho con el ejercicio antes. Sin desmayos."
+    },
+    "physicalExam": {
+      "general": "Inquieto, diaforético, en dolor intenso.",
+      "cabeza": "Sin ingurgitación yugular.",
+      "cardio": "Ruidos rítmicos. Soplo diastólico decreciente en foco aórtico (borde esternal izquierdo) grado II/IV. Pulso radial y braquial izquierdos disminuidos respecto al derecho.",
+      "resp": "Campos pulmonares limpios.",
+      "abdomen": "Blando, sin masas pulsátiles, discreta molestia epigástrica.",
+      "neuro": "Sin déficit focal al momento.",
+      "piel": "Diaforesis. Pulsos femorales presentes, simétricos."
+    },
+    "labs": {
+      "ecg": "Ritmo sinusal 96 lpm. Criterios de hipertrofia ventricular izquierda con alteraciones secundarias de la repolarización. Sin elevación del ST.",
+      "rxt": "Ensanchamiento mediastinal (9 cm), botón aórtico de contorno irregular. Campos pulmonares limpios.",
+      "trop": "Troponina I-hs 30 ng/L (discretamente elevada).",
+      "dimero": "Dímero D 4,200 ng/mL FEU. Elevado.",
+      "angiotaca": "Colgajo intimal que se extiende desde la raíz aórtica, aorta ascendente, arco y aorta descendente hasta las arterias iliacas (Stanford A / DeBakey I). Afectación del origen de la subclavia izquierda. Sin derrame pericárdico.",
+      "eco": "Raíz aórtica dilatada (48 mm) con colgajo intimal visible. Insuficiencia aórtica moderada. FEVI 60%. Sin derrame pericárdico.",
+      "bh": "Hb 14.2, leucocitos 12,000, plaquetas 210,000.",
+      "qs": "Glucosa 140, BUN 18, creatinina 1.1, Na 139, K 3.9.",
+      "coag": "TP 12 s, INR 1.0, TTPa 29 s."
+    },
+    "diagnosis": "Disección aórtica aguda tipo A de Stanford (DeBakey I) con insuficiencia aórtica",
+    "acceptedDiagnoses": ["diseccion aortica", "diseccion aortica tipo A", "diseccion de aorta", "diseccion aortica aguda", "stanford A", "sindrome aortico agudo"],
+    "differentials": ["Síndrome coronario agudo", "Tromboembolia pulmonar", "Rotura esofágica", "Neumotórax", "Pericarditis"],
+    "keyTests": ["angiotaca", "ecg", "rxt"],
+    "management": [
+      "NO antiagregar ni anticoagular ni trombolizar",
+      "Analgesia con opioides IV",
+      "Primero beta-bloqueador IV (esmolol o labetalol) para FC <60 lpm",
+      "Después, si persiste la hipertensión, vasodilatador (nitroprusiato/nicardipino) con objetivo TAS 100-120 mmHg",
+      "Interconsulta inmediata a cirugía cardiotorácica para reparación quirúrgica urgente",
+      "Dos accesos venosos, tipificar y cruzar, línea arterial en el brazo con mayor presión"
+    ],
+    "teachingPoints": [
+      "Dolor de inicio súbito, máximo desde el inicio, desgarrante, que migra = piensa en disección.",
+      "Diferencia de TAS >20 mmHg entre brazos, déficit de pulso y soplo de insuficiencia aórtica son hallazgos clave.",
+      "Dar vasodilatador antes del beta-bloqueador causa taquicardia refleja y aumenta la fuerza de cizallamiento."
+    ],
+    "reference": "Isselbacher EM, et al. 2022 ACC/AHA Guideline for the Diagnosis and Management of Aortic Disease. Circulation 2022;146:e334-e482."
+  },
+  {
+    "id": "evc-isquemico",
+    "specialty": "Neurología",
+    "difficulty": "Avanzado",
+    "setting": "Urgencias — hospital con centro de ictus y neurointervencionismo",
+    "patient": { "name": "Guadalupe Herrera", "age": "68 años", "sex": "Femenino", "informant": "Andrés, su hijo" },
+    "chiefComplaint": "Mi mamá de repente no podía hablar y no movía el brazo derecho.",
+    "triageNote": "Llega en ambulancia 70 minutos después del inicio. La paciente no puede hablar; su hijo da la historia.",
+    "vitals": { "TA": "168/92 mmHg", "FC": "104 lpm, irregular", "FR": "18 rpm", "Temp": "36.8 °C", "SpO2": "96 % aire ambiente", "Glucosa capilar": "128 mg/dL" },
+    "persona": "Hijo nervioso pero preciso con las horas porque estaba con ella. Pregunta qué se puede hacer.",
+    "history": {
+      "enfermedadActual": "Estaban desayunando a las 8:10 a. m. y ella estaba perfectamente. De repente se le cayó la taza, se le 'chuequeó' la cara, no podía hablar ni entender lo que le decían y no movía el brazo ni la pierna derecha. Llamaron a la ambulancia de inmediato. No convulsionó ni se golpeó la cabeza.",
+      "antecedentes": "Hipertensión. Le dijeron hace un año que tenía el 'corazón irregular' (fibrilación auricular) y le dieron un anticoagulante, pero lo dejó porque le daba miedo sangrar. Sin cirugías recientes, sin sangrados, sin EVC previo.",
+      "medicamentos": "Losartán 50 mg c/12 h. Hace 6 meses dejó apixabán. No toma aspirina.",
+      "alergias": "Ninguna.",
+      "habitos": "No fuma ni toma alcohol. Independiente para todo.",
+      "familiares": "Sin relevancia.",
+      "revisionSistemas": "Sin dolor de cabeza antes del evento. Sin fiebre. Sin caídas recientes."
+    },
+    "physicalExam": {
+      "general": "Alerta, no obedece órdenes complejas. NIHSS calculado: 14.",
+      "cabeza": "Desviación conjugada de la mirada hacia la izquierda.",
+      "cardio": "Ruidos cardiacos arrítmicos, sin soplos. Sin soplo carotídeo.",
+      "resp": "Campos pulmonares limpios.",
+      "abdomen": "Sin alteraciones.",
+      "neuro": "Afasia global. Parálisis facial central derecha. Hemiparesia derecha faciobraquiocrural (brazo 1/5, pierna 3/5). Hemianopsia derecha a la amenaza. Babinski derecho. Sin rigidez de nuca.",
+      "piel": "Sin hematomas ni datos de traumatismo."
+    },
+    "labs": {
+      "tacc": "Sin hemorragia intracraneal. Signo de la arteria cerebral media hiperdensa izquierda. Borramiento sutil de la ínsula izquierda. ASPECTS 9.",
+      "angiotacc": "Oclusión del segmento M1 de la arteria cerebral media izquierda. Circulación colateral moderada. Carótidas sin estenosis significativa.",
+      "ecg": "Fibrilación auricular con respuesta ventricular de 104 lpm. Sin alteraciones agudas del ST.",
+      "coag": "TP 12 s, INR 1.0, TTPa 30 s. Plaquetas 230,000.",
+      "bh": "Hb 13.6, leucocitos 8,900, plaquetas 230,000.",
+      "qs": "Glucosa 130, BUN 18, creatinina 0.9, Na 140, K 4.1.",
+      "trop": "Troponina I-hs 12 ng/L. Negativa.",
+      "eco": "Aurícula izquierda dilatada (46 mm). FEVI 58%. Sin trombo visible por vía transtorácica."
+    },
+    "diagnosis": "Evento vascular cerebral isquémico agudo por oclusión de la ACM izquierda (M1) de origen cardioembólico por fibrilación auricular",
+    "acceptedDiagnoses": ["evento vascular cerebral isquemico", "EVC isquemico", "ACV isquemico", "ictus isquemico", "infarto cerebral", "accidente cerebrovascular isquemico", "EVC", "ictus", "oclusion de arteria cerebral media"],
+    "differentials": ["Hemorragia intracerebral", "Hipoglucemia", "Crisis convulsiva con parálisis de Todd", "Tumor cerebral", "Migraña con aura"],
+    "keyTests": ["tacc", "angiotacc", "coag"],
+    "management": [
+      "Activar código ictus; confirmar hora de última vez visto bien (08:10) y glucosa capilar",
+      "TAC simple urgente para descartar hemorragia; angioTAC para buscar oclusión de gran vaso",
+      "Trombólisis IV (alteplasa 0.9 mg/kg, máx. 90 mg, o tenecteplasa 0.25 mg/kg) dentro de las primeras 4.5 h",
+      "Mantener TA <185/110 antes y <180/105 durante 24 h tras la trombólisis (labetalol o nicardipino)",
+      "Trombectomía mecánica por oclusión de M1 con NIHSS ≥6 y ASPECTS ≥6",
+      "Sin antiagregantes ni anticoagulantes en las primeras 24 h posteriores a la trombólisis; anticoagulación de la FA diferida según tamaño del infarto"
+    ],
+    "teachingPoints": [
+      "'Tiempo es cerebro': cada minuto de oclusión se pierden ~1.9 millones de neuronas.",
+      "La desviación de la mirada hacia el lado de la lesión + afasia + hemiparesia sugiere oclusión proximal de la ACM dominante.",
+      "La hipoglucemia puede imitar un EVC: verifica siempre la glucosa."
+    ],
+    "reference": "Powers WJ, et al. Guidelines for the Early Management of Patients With Acute Ischemic Stroke: 2019 Update. Stroke 2019;50:e344-e418."
+  },
+  {
+    "id": "insuficiencia-cardiaca",
+    "specialty": "Cardiología",
+    "difficulty": "Básico",
+    "setting": "Urgencias",
+    "patient": { "name": "Manuel Aguirre", "age": "74 años", "sex": "Masculino" },
+    "chiefComplaint": "No puedo respirar acostado y se me hincharon mucho las piernas.",
+    "triageNote": "Sentado al borde de la camilla, inclinado hacia adelante, con disnea al hablar.",
+    "vitals": { "TA": "158/94 mmHg", "FC": "108 lpm", "FR": "28 rpm", "Temp": "36.7 °C", "SpO2": "86 % aire ambiente" },
+    "persona": "Señor mayor amable, habla entrecortado. Admite con algo de culpa que comió mal y dejó la pastilla de la orina.",
+    "history": {
+      "enfermedadActual": "Desde hace 1 semana le falta el aire cada vez con menos esfuerzo. Ahora duerme con 3 almohadas y anoche se despertó 2 veces ahogándose y tuvo que sentarse en la ventana. Las piernas se le han hinchado y subió 4 kg. Tiene tos seca en las noches.",
+      "antecedentes": "Infarto hace 3 años. Le dijeron que tiene 'el corazón débil'. Hipertensión, dislipidemia.",
+      "medicamentos": "Furosemida 40 mg/día (la dejó hace 10 días porque lo hacía orinar mucho en una boda), metoprolol, sacubitrilo/valsartán, espironolactona, atorvastatina, aspirina.",
+      "alergias": "Ninguna.",
+      "habitos": "Exfumador. En la boda y los días siguientes comió barbacoa, tamales y botanas saladas.",
+      "familiares": "Sin relevancia.",
+      "revisionSistemas": "Sin dolor de pecho en estos días. Sin fiebre. Sin palpitaciones sostenidas."
+    },
+    "physicalExam": {
+      "general": "Disnea en reposo, ortopnea, habla en frases cortas.",
+      "cabeza": "Ingurgitación yugular a 45° hasta el ángulo de la mandíbula. Reflujo hepatoyugular positivo.",
+      "cardio": "Taquicardia rítmica, ápex desplazado a línea axilar anterior, tercer ruido (galope S3). Soplo holosistólico mitral II/VI.",
+      "resp": "Estertores crepitantes bilaterales hasta campos medios. Matidez en ambas bases.",
+      "abdomen": "Hepatomegalia dolorosa 3 cm bajo el reborde costal. Sin ascitis franca.",
+      "neuro": "Sin déficit.",
+      "piel": "Edema con fóvea +++ bilateral hasta rodillas. Extremidades tibias."
+    },
+    "labs": {
+      "bnp": "NT-proBNP 8,400 pg/mL. Muy elevado.",
+      "rxt": "Cardiomegalia (índice cardiotorácico 0.62), redistribución del flujo hacia ápices, líneas B de Kerley, edema intersticial perihiliar 'en alas de mariposa' y derrame pleural bilateral pequeño.",
+      "ecg": "Taquicardia sinusal 108 lpm. Ondas Q en V1-V4 (necrosis anterior antigua). Sin cambios agudos del ST.",
+      "trop": "Troponina I-hs 42 ng/L; repetida a las 3 h: 44 ng/L (elevación estable, sin curva).",
+      "eco": "Ventrículo izquierdo dilatado, FEVI 28%, acinesia anterior y apical. Insuficiencia mitral funcional moderada. Vena cava inferior dilatada sin colapso.",
+      "qs": "Glucosa 118, BUN 30, creatinina 1.5 mg/dL (basal 1.2), Na 134, K 4.6, Cl 100, HCO₃ 25.",
+      "gasa": "pH 7.32, PaCO₂ 46 mmHg, PaO₂ 54 mmHg, HCO₃ 24, lactato 1.6.",
+      "bh": "Hb 12.9, leucocitos 8,700, plaquetas 210,000.",
+      "pfh": "AST 62, ALT 58, bilirrubina total 1.6, albúmina 3.5 (congestión hepática).",
+      "tsh": "TSH 2.1 mUI/L, T4L 1.1. Normal.",
+      "pcr": "PCR 0.8 mg/dL, procalcitonina 0.04 ng/mL."
+    },
+    "diagnosis": "Insuficiencia cardiaca aguda descompensada (perfil húmedo-caliente) con FEVI reducida, desencadenada por abandono de diurético y transgresión de sodio",
+    "acceptedDiagnoses": ["insuficiencia cardiaca", "insuficiencia cardiaca aguda", "insuficiencia cardiaca descompensada", "ICA", "edema agudo pulmonar", "falla cardiaca", "IC descompensada"],
+    "differentials": ["Síndrome coronario agudo", "Neumonía", "EPOC exacerbado", "Tromboembolia pulmonar", "Síndrome nefrótico"],
+    "keyTests": ["bnp", "rxt", "ecg", "eco", "trop"],
+    "management": [
+      "Posición sentada, oxígeno; ventilación mecánica no invasiva (CPAP/BiPAP) si hay distrés o acidosis respiratoria",
+      "Diurético de asa IV: furosemida en dosis ≥ al equivalente de la dosis oral habitual (p. ej., 40-80 mg IV) y vigilar diuresis/natriuresis",
+      "Vasodilatador (nitroglicerina IV) si TAS >110 mmHg",
+      "Buscar desencadenante (SCA, arritmia, infección, apego) — aquí: abandono del diurético y exceso de sal",
+      "Continuar terapia modificadora (betabloqueador si no hay choque, ARNI, ARM, añadir iSGLT2)",
+      "Educación: restricción de sodio, pesaje diario y apego al tratamiento"
+    ],
+    "teachingPoints": [
+      "Clasifica al paciente por perfil hemodinámico: congestión (húmedo/seco) y perfusión (caliente/frío).",
+      "Una troponina estable discretamente elevada es común en IC; la curva dinámica orienta a SCA.",
+      "Los 4 pilares en FEVI reducida: ARNI/IECA, betabloqueador, antagonista mineralocorticoide e iSGLT2."
+    ],
+    "reference": "McDonagh TA, et al. 2021 ESC Guidelines for the diagnosis and treatment of acute and chronic heart failure (and 2023 focused update). Eur Heart J 2021;42:3599-3726."
+  },
+  {
+    "id": "pancreatitis-biliar",
+    "specialty": "Gastroenterología",
+    "difficulty": "Básico",
+    "setting": "Urgencias",
+    "patient": { "name": "Rosa María Treviño", "age": "45 años", "sex": "Femenino" },
+    "chiefComplaint": "Tengo un dolor horrible en la boca del estómago que me atraviesa a la espalda.",
+    "triageNote": "Se encuentra en posición fetal, inclinada hacia adelante. Vomitando.",
+    "vitals": { "TA": "112/70 mmHg", "FC": "110 lpm", "FR": "22 rpm", "Temp": "37.8 °C", "SpO2": "95 % aire ambiente" },
+    "persona": "Señora conversadora pero muy adolorida; se queja constantemente. Cuenta que ya le habían dicho que tenía 'piedras'.",
+    "history": {
+      "enfermedadActual": "Anoche cenó pozole y tostadas. 2 horas después empezó un dolor en la boca del estómago, muy fuerte (10/10), constante, que se va a la espalda 'como un cinturón'. Mejora un poco inclinándose hacia adelante. Ha vomitado 6 veces, primero comida y luego líquido amarillo; el vómito no le quita el dolor.",
+      "antecedentes": "Hace un año le dijeron que tenía 'piedras en la vesícula' por un ultrasonido; le recomendaron operarse pero no lo hizo. Le daban cólicos después de comer grasa. Obesidad. 3 embarazos.",
+      "medicamentos": "Ninguno. Sin diuréticos, sin azatioprina, sin otros.",
+      "alergias": "Ninguna.",
+      "habitos": "No toma alcohol. No fuma.",
+      "familiares": "Su mamá también tuvo piedras en la vesícula.",
+      "revisionSistemas": "Hoy nota la orina más oscura. Sin diarrea, sin sangrado. Sin dolor de pecho."
+    },
+    "physicalExam": {
+      "general": "Adolorida, inquieta. Ligero tinte ictérico en escleras.",
+      "cabeza": "Escleras subictéricas, mucosas secas.",
+      "cardio": "Taquicardia rítmica, sin soplos.",
+      "resp": "Hipoventilación leve en base izquierda.",
+      "abdomen": "Distensión leve, dolor intenso a la palpación en epigastrio e hipocondrio derecho con defensa voluntaria, sin rebote. Murphy dudoso. Peristalsis disminuida. Sin equimosis periumbilical (Cullen) ni en flancos (Grey-Turner).",
+      "neuro": "Sin alteraciones.",
+      "piel": "Sin alteraciones. IMC 33."
+    },
+    "labs": {
+      "lipasa": "Lipasa 2,450 U/L (más de 3 veces el límite superior). Amilasa 1,180 U/L.",
+      "pfh": "AST 210, ALT 280 U/L, fosfatasa alcalina 220, GGT 340, bilirrubina total 2.4 (directa 1.8), albúmina 3.8.",
+      "bh": "Hb 14.6, Hto 46%, leucocitos 15,200/µL, plaquetas 280,000.",
+      "qs": "Glucosa 168, BUN 22 mg/dL, creatinina 1.0, Na 137, K 3.8, Ca 8.6 mg/dL, triglicéridos 180 mg/dL.",
+      "usabd": "Vesícula con múltiples litos de hasta 8 mm, pared de 3 mm. Colédoco de 7 mm sin litos visibles. Páncreas aumentado de tamaño y edematoso, parcialmente valorable por gas. Sin líquido libre.",
+      "tacabd": "Páncreas aumentado de tamaño con edema peripancreático y una colección líquida aguda pequeña; realce homogéneo sin áreas de necrosis (Balthazar C). Colelitiasis.",
+      "pcr": "PCR 9 mg/dL a las 12 h de evolución.",
+      "gasa": "pH 7.38, PaCO₂ 34, PaO₂ 78, HCO₃ 21, lactato 1.8.",
+      "rxt": "Pequeño derrame pleural izquierdo. Sin consolidación.",
+      "ecg": "Taquicardia sinusal 110 lpm, sin alteraciones del ST."
+    },
+    "diagnosis": "Pancreatitis aguda de origen biliar (leve a moderadamente grave por criterios de Atlanta)",
+    "acceptedDiagnoses": ["pancreatitis aguda", "pancreatitis biliar", "pancreatitis aguda biliar", "pancreatitis"],
+    "differentials": ["Colecistitis aguda", "Colangitis aguda", "Úlcera péptica perforada", "Isquemia mesentérica", "Infarto agudo de miocardio de cara inferior"],
+    "keyTests": ["lipasa", "pfh", "usabd", "bh", "qs"],
+    "management": [
+      "Diagnóstico con 2 de 3 criterios: dolor típico + lipasa >3 veces el límite superior (la TAC no es necesaria inicialmente)",
+      "Hidratación IV moderada con Ringer lactato (bolo 10 mL/kg si hay hipovolemia, luego 1.5 mL/kg/h) con reevaluación frecuente",
+      "Analgesia adecuada (los opioides son aceptables)",
+      "Reinicio temprano de la vía oral según tolerancia; no ayuno prolongado",
+      "No usar antibióticos profilácticos",
+      "CPRE urgente solo si hay colangitis u obstrucción biliar persistente",
+      "Colecistectomía durante la misma hospitalización en pancreatitis biliar leve"
+    ],
+    "teachingPoints": [
+      "ALT >150 U/L en las primeras 48 h tiene alto valor predictivo positivo para origen biliar.",
+      "La gravedad se define por falla orgánica (Atlanta revisada), no por el nivel de lipasa.",
+      "La TAC temprana (<72 h) no mejora el manejo y puede subestimar la necrosis."
+    ],
+    "reference": "Tenner S, et al. American College of Gastroenterology Guidelines: Management of Acute Pancreatitis. Am J Gastroenterol 2024;119:419-437."
+  },
+  {
+    "id": "dengue-alarma",
+    "specialty": "Infectología",
+    "difficulty": "Intermedio",
+    "setting": "Urgencias de un hospital en zona endémica (sureste de México)",
+    "patient": { "name": "Fernanda Canul", "age": "24 años", "sex": "Femenino" },
+    "chiefComplaint": "Ya se me quitó la fiebre pero ahora me duele mucho la panza y no paro de vomitar.",
+    "triageNote": "Pálida, decaída. Se observan petequias en antebrazos.",
+    "vitals": { "TA": "108/80 mmHg", "FC": "104 lpm", "FR": "22 rpm", "Temp": "37.0 °C", "SpO2": "95 % aire ambiente" },
+    "persona": "Joven tranquila pero cansada. Cuenta que en su colonia hay mucha gente con 'dengue'.",
+    "history": {
+      "enfermedadActual": "Hace 5 días empezó con fiebre alta (40 °C), dolor de cabeza detrás de los ojos, dolor de músculos y huesos 'como si la hubieran golpeado' y ronchitas rojas en el cuerpo. Desde ayer ya no tiene fiebre, pero empezó con dolor fuerte y continuo en la panza (arriba a la derecha), vómitos 5 veces hoy, y le sangran las encías al lavarse los dientes. Orina poco y se siente muy cansada y mareada al pararse.",
+      "antecedentes": "Sana. Tuvo dengue hace 3 años (le dijeron en el centro de salud).",
+      "medicamentos": "Paracetamol. Ayer una vecina le dio un ibuprofeno para el dolor.",
+      "alergias": "Ninguna.",
+      "habitos": "Vive en Mérida. Hay casos de dengue en su colonia. Tiene macetas y cubetas con agua en el patio.",
+      "familiares": "Su hermano tuvo fiebre la semana pasada.",
+      "revisionSistemas": "Última menstruación hace 10 días, normal. Sin heces negras. Sin tos. Sin ardor al orinar."
+    },
+    "physicalExam": {
+      "general": "Decaída, alerta. Mucosas secas. Ortostatismo positivo.",
+      "cabeza": "Gingivorragia leve. Conjuntivas hiperémicas.",
+      "cardio": "Taquicardia rítmica. Presión de pulso de 28 mmHg. Pulsos periféricos presentes.",
+      "resp": "Hipoventilación y matidez en base pulmonar derecha.",
+      "abdomen": "Dolor a la palpación en hipocondrio derecho, hepatomegalia dolorosa 3 cm bajo el reborde costal. Matidez cambiante leve.",
+      "neuro": "Sin alteraciones. Sin rigidez de nuca.",
+      "piel": "Petequias en antebrazos y piernas, prueba del torniquete positiva (>20 petequias). Exantema maculopapular en resolución con 'islas blancas en mar rojo'. Llenado capilar 2 s."
+    },
+    "labs": {
+      "bh": "Hb 15.8 g/dL, Hto 48% (Hto previo hace 1 año: 38%), leucocitos 2,800/µL (linfocitos 48%), plaquetas 38,000/µL.",
+      "dengue": "NS1 negativo (día 5). IgM positiva. IgG positiva (infección secundaria).",
+      "pfh": "AST 280 U/L, ALT 160 U/L, bilirrubina 0.9, albúmina 3.1 g/dL.",
+      "usabd": "Engrosamiento de la pared vesicular (6 mm) sin litos, ascitis leve perihepática y derrame pleural derecho pequeño. Hepatomegalia leve.",
+      "qs": "Glucosa 90, BUN 20, creatinina 0.8, Na 134, K 3.6.",
+      "coag": "TP 13.5 s, INR 1.1, TTPa 42 s (ligeramente prolongado), fibrinógeno 180 mg/dL.",
+      "rxt": "Derrame pleural derecho pequeño.",
+      "ego": "Densidad 1.030. Sin datos de infección.",
+      "gasa": "pH 7.37, PaCO₂ 34, PaO₂ 80, HCO₃ 20, lactato 2.0 mmol/L.",
+      "bhcg": "β-hCG <5 mUI/mL. Negativa.",
+      "hemocultivo": "Sin desarrollo a las 48 h."
+    },
+    "diagnosis": "Dengue con signos de alarma (fase crítica, infección secundaria) con fuga plasmática",
+    "acceptedDiagnoses": ["dengue con signos de alarma", "dengue", "dengue grave", "fiebre por dengue con signos de alarma", "dengue hemorragico"],
+    "differentials": ["Chikungunya", "Zika", "Leptospirosis", "Malaria", "Hepatitis viral aguda", "Sepsis bacteriana"],
+    "keyTests": ["bh", "dengue", "usabd"],
+    "management": [
+      "Hospitalización: tiene signos de alarma (dolor abdominal intenso, vómito persistente, acumulación de líquidos, sangrado de mucosas, hepatomegalia, aumento del Hto con caída de plaquetas)",
+      "Cristaloides isotónicos 5-7 mL/kg/h por 1-2 h, luego reducir gradualmente según respuesta clínica y hematocrito",
+      "Hematocrito seriado y vigilancia estrecha de signos de choque (presión de pulso ≤20, llenado capilar, diuresis ≥0.5 mL/kg/h)",
+      "Paracetamol para el dolor/fiebre; suspender AINEs (ibuprofeno) y evitar inyecciones IM",
+      "No transfundir plaquetas de forma profiláctica",
+      "Notificación epidemiológica obligatoria y control de criaderos en el hogar"
+    ],
+    "teachingPoints": [
+      "La fase crítica empieza con la defervescencia (días 3-7): ahí es cuando aparecen la fuga plasmática y el choque.",
+      "El aumento de hematocrito con descenso de plaquetas es el marcador de laboratorio de fuga plasmática.",
+      "El NS1 se negativiza después del día 5; en ese momento la serología IgM es más útil."
+    ],
+    "reference": "Organización Panamericana de la Salud. Directrices para el diagnóstico clínico y el tratamiento del dengue, el chikunguña y el zika. Washington, D.C.: OPS; 2022."
+  },
+  {
+    "id": "organofosforados",
+    "specialty": "Toxicología",
+    "difficulty": "Avanzado",
+    "setting": "Urgencias de un hospital rural",
+    "patient": { "name": "Ramiro Pérez", "age": "35 años", "sex": "Masculino", "informant": "Don Julián, su compañero de trabajo" },
+    "chiefComplaint": "Estaba fumigando y se puso malo: babea, vomita y no puede respirar bien.",
+    "triageNote": "Paciente con abundantes secreciones orales, ropa húmeda con olor fuerte a solvente/ajo. Llega en camioneta.",
+    "vitals": { "TA": "92/58 mmHg", "FC": "48 lpm", "FR": "28 rpm", "Temp": "36.4 °C", "SpO2": "88 % aire ambiente" },
+    "persona": "Campesino mayor, sencillo, asustado. Sabe que usaban un 'líquido para la plaga' pero no recuerda el nombre; trae la etiqueta en una foto en el celular si se la piden.",
+    "history": {
+      "enfermedadActual": "Hoy en la mañana estuvieron fumigando con bomba de mochila en la parcela de jitomate durante unas 4 horas, con mucho calor. Ramiro no usaba guantes ni mascarilla y la mochila goteaba sobre su espalda. Hace 1 hora empezó a sudar muchísimo, a babear, le lloraban los ojos, dijo que veía borroso, vomitó varias veces, tuvo diarrea y se orinó. Luego empezó a tener 'brincos' en los músculos y le costaba respirar.",
+      "antecedentes": "Sano según su compañero. No toma medicamentos.",
+      "medicamentos": "Ninguno.",
+      "alergias": "No sabe.",
+      "habitos": "Jornalero agrícola. Toma alcohol los fines de semana.",
+      "familiares": "Desconocidos.",
+      "revisionSistemas": "La etiqueta del producto dice 'clorpirifos etil'. No se lo tomó a propósito, según su compañero. No se golpeó."
+    },
+    "physicalExam": {
+      "general": "Somnoliento, diaforesis profusa, sialorrea abundante. Olor a ajo/solvente en piel y ropa.",
+      "cabeza": "Miosis puntiforme bilateral. Lagrimeo y rinorrea abundantes.",
+      "cardio": "Bradicardia rítmica.",
+      "resp": "Broncorrea, estertores gruesos bilaterales y sibilancias difusas. Uso de músculos accesorios.",
+      "abdomen": "Peristalsis aumentada, dolor difuso tipo cólico. Incontinencia urinaria y fecal.",
+      "neuro": "Fasciculaciones en párpados, cara y pantorrillas. Debilidad generalizada (fuerza 4/5). Glasgow 13.",
+      "piel": "Piel húmeda y fría, ropa impregnada de pesticida."
+    },
+    "labs": {
+      "colinesterasa": "Colinesterasa eritrocitaria (acetilcolinesterasa) al 22% de lo normal. Colinesterasa plasmática 1,100 U/L (ref 5,300-12,900). Muy disminuidas.",
+      "ecg": "Bradicardia sinusal 48 lpm. QTc 490 ms (prolongado). Sin alteraciones del ST.",
+      "gasa": "pH 7.30, PaCO₂ 48 mmHg, PaO₂ 58 mmHg, HCO₃ 23, lactato 2.6. Acidosis respiratoria con hipoxemia.",
+      "bh": "Hb 15.5, leucocitos 13,400, plaquetas 260,000.",
+      "qs": "Glucosa 168, BUN 16, creatinina 1.0, Na 138, K 3.4, HCO₃ 22.",
+      "lipasa": "Lipasa 140 U/L (elevación leve).",
+      "ck": "CK 480 U/L.",
+      "rxt": "Infiltrado alveolar bilateral perihiliar por broncorrea. Sin neumotórax.",
+      "tox": "Panel de drogas en orina negativo. Etanol no detectable."
+    },
+    "diagnosis": "Intoxicación aguda por organofosforados (clorpirifos) por exposición ocupacional dérmica/inhalatoria — síndrome colinérgico",
+    "acceptedDiagnoses": ["intoxicacion por organofosforados", "intoxicacion por organofosforado", "sindrome colinergico", "intoxicacion por plaguicidas", "intoxicacion por inhibidores de colinesterasa", "intoxicacion por clorpirifos", "organofosforados", "intoxicacion por carbamatos"],
+    "differentials": ["Intoxicación por carbamatos", "Gastroenteritis grave", "Intoxicación por hongos muscarínicos", "Exposición a agentes nerviosos", "Edema pulmonar cardiogénico"],
+    "keyTests": ["colinesterasa", "gasa", "ecg"],
+    "management": [
+      "Protección del personal (guantes, bata) y descontaminación: retirar toda la ropa y lavar piel y cabello con agua y jabón",
+      "Vía aérea: aspiración de secreciones, oxígeno; intubación si es necesario (evitar succinilcolina)",
+      "Atropina 1-2 mg IV y duplicar la dosis cada 5 min hasta la atropinización (secreciones bronquiales secas, FC >80, TAS >80), luego infusión",
+      "Oxima (pralidoxima) en intoxicación moderada-grave según disponibilidad",
+      "Benzodiacepinas si hay convulsiones o agitación",
+      "Vigilancia en UCI por síndrome intermedio (debilidad proximal y respiratoria a las 24-96 h)",
+      "Notificar como intoxicación laboral y orientar sobre equipo de protección"
+    ],
+    "teachingPoints": [
+      "Mnemotecnia DUMBELS: Diarrea, Urination, Miosis, Bradicardia/Broncorrea/Broncoespasmo, Emesis, Lagrimeo, Salivación.",
+      "El objetivo de la atropina es secar las secreciones bronquiales, no revertir la miosis.",
+      "La exposición dérmica ocupacional es una causa frecuente en zonas agrícolas de Latinoamérica."
+    ],
+    "reference": "Eddleston M, et al. Management of acute organophosphorus pesticide poisoning. Lancet 2008;371:597-607."
+  },
+  {
+    "id": "sangrado-tubo-digestivo",
+    "specialty": "Gastroenterología",
+    "difficulty": "Intermedio",
+    "setting": "Urgencias",
+    "patient": { "name": "Arturo Gómez", "age": "63 años", "sex": "Masculino" },
+    "chiefComplaint": "Llevo dos días haciendo popó negra y hoy vomité como café molido. Me desmayé en el baño.",
+    "triageNote": "Pálido, diaforético. Su esposa refiere que se desmayó en casa al levantarse.",
+    "vitals": { "TA": "94/60 mmHg (al sentarse 78/50)", "FC": "118 lpm", "FR": "20 rpm", "Temp": "36.5 °C", "SpO2": "97 % aire ambiente" },
+    "persona": "Señor serio, minimiza sus síntomas ('es una infección'). Toma pastillas para las rodillas que compra sin receta.",
+    "history": {
+      "enfermedadActual": "Desde hace 2 días hace evacuaciones negras, pegajosas, como chapopote y muy olorosas. Hoy en la mañana vomitó algo oscuro 'como café molido' dos veces. Al pararse del baño se mareó y se desmayó unos segundos. Desde hace un mes tiene ardor en la boca del estómago que se le quita al comer.",
+      "antecedentes": "Artrosis de rodillas. Hipertensión. Nunca le han hecho una endoscopia. No tiene enfermedad del hígado conocida.",
+      "medicamentos": "Naproxeno 500 mg dos o tres veces al día desde hace 3 meses (sin receta). Enalapril. No toma anticoagulantes ni clopidogrel.",
+      "alergias": "Ninguna.",
+      "habitos": "Toma 2-3 cervezas los fines de semana. Fuma 5 cigarros al día.",
+      "familiares": "Sin relevancia.",
+      "revisionSistemas": "No ha bajado de peso. Sin ictericia. Sin vómitos con sangre roja brillante."
+    },
+    "physicalExam": {
+      "general": "Pálido, diaforético, alerta.",
+      "cabeza": "Conjuntivas pálidas. Sin ictericia. Sin telangiectasias.",
+      "cardio": "Taquicardia rítmica, soplo sistólico expulsivo funcional.",
+      "resp": "Campos pulmonares limpios.",
+      "abdomen": "Blando, dolor leve en epigastrio, sin rebote. Peristalsis aumentada. Sin ascitis ni circulación colateral.",
+      "rectal": "Tacto rectal: melena franca en guante.",
+      "neuro": "Sin déficit.",
+      "piel": "Fría, llenado capilar 3 s. Sin eritema palmar ni arañas vasculares."
+    },
+    "labs": {
+      "bh": "Hb 7.4 g/dL, Hto 22%, VCM 88 fL, leucocitos 10,200, plaquetas 280,000.",
+      "qs": "Glucosa 125, BUN 58 mg/dL, creatinina 1.1 mg/dL (relación BUN/Cr >30), Na 138, K 4.4.",
+      "coag": "TP 12.5 s, INR 1.1, TTPa 31 s.",
+      "pfh": "AST 22, ALT 18, bilirrubina 0.8, albúmina 3.6. Normal.",
+      "endoscopia": "Úlcera en cara anterior del bulbo duodenal de 1.5 cm con vaso visible no sangrante (Forrest IIa). Se realiza terapia endoscópica dual (adrenalina + clips). Biopsia gástrica: Helicobacter pylori positivo.",
+      "ecg": "Taquicardia sinusal 118 lpm, sin alteraciones isquémicas.",
+      "trop": "Troponina I-hs 15 ng/L. Negativa.",
+      "gasa": "pH 7.34, PaCO₂ 34, PaO₂ 90, HCO₃ 18, lactato 3.2 mmol/L."
+    },
+    "diagnosis": "Hemorragia de tubo digestivo alto no variceal por úlcera duodenal (Forrest IIa) asociada a AINEs y H. pylori",
+    "acceptedDiagnoses": ["hemorragia de tubo digestivo alto", "sangrado de tubo digestivo alto", "STDA", "HTDA", "ulcera duodenal sangrante", "ulcera peptica sangrante", "hemorragia digestiva alta", "ulcera peptica"],
+    "differentials": ["Varices esofágicas", "Síndrome de Mallory-Weiss", "Cáncer gástrico", "Esofagitis erosiva", "Lesión de Dieulafoy"],
+    "keyTests": ["bh", "qs", "coag", "endoscopia"],
+    "management": [
+      "Dos accesos venosos periféricos de grueso calibre, reanimación con cristaloides, tipificar y cruzar",
+      "Transfusión con estrategia restrictiva (umbral Hb <7 g/dL; <8 si cardiopatía)",
+      "Calcular Glasgow-Blatchford (alto: requiere intervención hospitalaria)",
+      "Inhibidor de bomba de protones IV en dosis altas (p. ej., bolo de 80 mg y luego en infusión o bolos)",
+      "Endoscopia en las primeras 24 h tras la reanimación con terapia endoscópica de lesiones de alto riesgo",
+      "Suspender AINEs, buscar y erradicar H. pylori, y confirmar la erradicación"
+    ],
+    "teachingPoints": [
+      "Una relación BUN/creatinina >30 sugiere sangrado alto (digestión de sangre).",
+      "Las lesiones Forrest Ia, Ib y IIa requieren tratamiento endoscópico.",
+      "AINEs y H. pylori son las dos causas principales de enfermedad ulcerosa péptica."
+    ],
+    "reference": "Laine L, et al. ACG Clinical Guideline: Upper Gastrointestinal and Ulcer Bleeding. Am J Gastroenterol 2021;116:899-917."
+  },
+  {
+    "id": "anafilaxia",
+    "specialty": "Urgencias / Alergología",
+    "difficulty": "Básico",
+    "setting": "Urgencias",
+    "patient": { "name": "Sofía Ramírez", "age": "30 años", "sex": "Femenino" },
+    "chiefComplaint": "Me salieron ronchas en todo el cuerpo, se me hinchó la boca y siento que me ahogo.",
+    "triageNote": "Llega caminando con su pareja desde un restaurante cercano. Habla con voz ronca.",
+    "vitals": { "TA": "78/44 mmHg", "FC": "128 lpm", "FR": "28 rpm", "Temp": "36.8 °C", "SpO2": "90 % aire ambiente" },
+    "persona": "Mujer joven muy asustada y ansiosa; habla con dificultad, voz ronca. Se rasca constantemente.",
+    "history": {
+      "enfermedadActual": "Hace 20 minutos estaba comiendo un coctel de camarón en un restaurante. A los 5-10 minutos empezó a sentir comezón en la boca y las manos, luego ronchas en todo el cuerpo, se le hincharon los labios, siente la garganta cerrada, le cuesta respirar y silba el pecho. Vomitó una vez y tuvo cólicos. Se siente mareada, como que se va a desmayar.",
+      "antecedentes": "Asma leve en la infancia. Una vez le dio comezón en la boca con mariscos pero 'nada grave'.",
+      "medicamentos": "Ninguno. No toma betabloqueadores.",
+      "alergias": "Sospecha de mariscos, nunca estudiada.",
+      "habitos": "No fuma. Tomó una copa de vino con la comida.",
+      "familiares": "Su hermana es alérgica a la penicilina.",
+      "revisionSistemas": "Ninguna picadura de insecto. No tomó medicamentos nuevos hoy."
+    },
+    "physicalExam": {
+      "general": "Ansiosa, diaforética, con disfonía.",
+      "cabeza": "Angioedema de labios y lengua. Úvula edematosa. Estridor inspiratorio leve.",
+      "cardio": "Taquicardia rítmica, pulsos periféricos débiles.",
+      "resp": "Sibilancias espiratorias difusas bilaterales, tiempo espiratorio prolongado.",
+      "abdomen": "Dolor difuso leve, peristalsis aumentada.",
+      "neuro": "Alerta, sin déficit.",
+      "piel": "Urticaria generalizada con habones confluentes y eritema difuso. Extremidades frías."
+    },
+    "labs": {
+      "gasa": "pH 7.34, PaCO₂ 36, PaO₂ 62, HCO₃ 19, lactato 3.4 mmol/L.",
+      "bh": "Hb 14.8, Hto 45%, leucocitos 11,500 (eosinófilos 4%), plaquetas 300,000.",
+      "ecg": "Taquicardia sinusal 128 lpm, sin alteraciones del ST.",
+      "qs": "Glucosa 105, BUN 12, creatinina 0.8, Na 139, K 3.8.",
+      "rxt": "Hiperinsuflación leve, sin infiltrados.",
+      "trop": "Troponina I-hs 6 ng/L. Negativa.",
+      "bhcg": "β-hCG <5 mUI/mL. Negativa."
+    },
+    "diagnosis": "Anafilaxia con choque anafiláctico por alergia alimentaria (mariscos)",
+    "acceptedDiagnoses": ["anafilaxia", "choque anafilactico", "shock anafilactico", "reaccion anafilactica"],
+    "differentials": ["Angioedema por IECA / hereditario", "Crisis asmática grave", "Reacción vasovagal", "Escombroidosis (intoxicación por histamina)", "Crisis de pánico"],
+    "keyTests": [],
+    "management": [
+      "Adrenalina IM 0.5 mg (0.01 mg/kg de solución 1 mg/mL) en la cara anterolateral del muslo, inmediatamente; repetir cada 5-15 min si no hay respuesta",
+      "Posición supina con piernas elevadas (o semisentada si predomina la disnea); no ponerla de pie",
+      "Oxígeno a alto flujo y vigilancia de la vía aérea (preparar vía aérea difícil por angioedema)",
+      "Cristaloides IV en bolo 1-2 L (20 mL/kg) por hipotensión",
+      "Broncodilatador inhalado (salbutamol) para el broncoespasmo; adrenalina nebulizada para el estridor",
+      "Antihistamínicos y corticoides solo como adyuvantes (nunca en lugar de adrenalina)",
+      "Observación ≥6-12 h por reacción bifásica; al alta: autoinyector de adrenalina, plan escrito y referencia a alergología"
+    ],
+    "teachingPoints": [
+      "El diagnóstico es clínico: no esperes laboratorios. La adrenalina IM es el tratamiento de primera línea.",
+      "El retraso en la adrenalina es el principal factor asociado a muerte por anafilaxia.",
+      "La triptasa sérica tomada entre 30 min y 2 h puede apoyar el diagnóstico retrospectivamente."
+    ],
+    "reference": "Cardona V, et al. World Allergy Organization Anaphylaxis Guidance 2020. World Allergy Organ J 2020;13:100472."
+  }
+]

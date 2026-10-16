@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SimClínica IA</title>
+  <meta name="description" content="Simulador de casos clínicos con pacientes virtuales impulsados por DeepSeek." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230f766e'/><path d='M13 7h6v6h6v6h-6v6h-6v-6H7v-6h6z' fill='white'/></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="#/" class="brand"><span class="logo">+</span> SimClínica <b>IA</b></a>
+    <div class="topbar-right">
+      <span id="ai-status" class="pill">…</span>
+      <button id="btn-settings" class="btn ghost" title="Ajustes">⚙ Ajustes</button>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+  <dialog id="settings">
+    <form method="dialog" class="dialog-body">
+      <h2>Ajustes</h2>
+      <p class="muted">
+        El paciente virtual y la evaluación usan la API de DeepSeek. Si el servidor ya tiene una
+        <code>DEEPSEEK_API_KEY</code> configurada no necesitas poner nada aquí. Si no, puedes usar tu propia key:
+        se guarda solo en este navegador y se envía al servidor de esta app, que la reenvía a DeepSeek.
+      </p>
+      <label>API key de DeepSeek
+        <input id="api-key" type="password" placeholder="sk-..." autocomplete="off" />
+      </label>
+      <p class="muted small">Obtén una en <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">platform.deepseek.com</a>.</p>
+      <div class="row end">
+        <button value="cancel" class="btn ghost">Cancelar</button>
+        <button id="save-settings" value="ok" class="btn primary">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer class="footer">
+    Herramienta educativa para estudiantes de medicina. Los casos están basados en presentaciones clínicas reales y guías publicadas, con datos de pacientes ficticios. No sustituye el juicio clínico.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
