@@ -201,7 +201,7 @@ function renderHome() {
 
 // ---------- caso ----------
 
-async function renderCase(id, tab = "historia") {
+async function renderCase(id, tab) {
   let c;
   try {
     c = await api(`/api/case?id=${encodeURIComponent(id)}`);
@@ -210,7 +210,8 @@ async function renderCase(id, tab = "historia") {
     return;
   }
   const p = loadProgress(id);
-  state.view = { c, p, tab };
+  // Un caso ya evaluado se reabre directamente en sus resultados.
+  state.view = { c, p, tab: tab || (p.evaluation ? "diagnostico" : "historia") };
   drawCase();
 }
 
